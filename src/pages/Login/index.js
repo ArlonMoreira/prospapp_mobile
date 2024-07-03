@@ -1,5 +1,10 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+//Hooks
+import { useNavigation } from '@react-navigation/native';
+//Container
+import ButtonLg from '../../components/ButtonLg';
+import ButtonLgLight from '../../components/ButtonLgLight';
 //Styles
 import { LinearGradient } from 'expo-linear-gradient';
 import { 
@@ -11,6 +16,16 @@ import {
 
 const Login = () => {
 
+  const navigation = useNavigation();
+
+  const accessSignIn = () => {
+    navigation.navigate('SignIn');
+  };
+
+  const accessRegister = () => {
+    navigation.navigate('Register');
+  };
+
   return (
     <LinearGradient
       colors={['#008C81', '#0C6661']}
@@ -21,7 +36,9 @@ const Login = () => {
         <LogoTitle>Bem vindo(a) ao ProspApp!</LogoTitle>
       </LogoArea>
       <Container>
-
+        <ButtonLg title="Entrar" action={accessSignIn}/>
+        <View style={styles.buttonSpacing}/>
+        <ButtonLgLight title="criar conta" action={accessRegister}/>
       </Container>
     </LinearGradient>
   )
@@ -31,7 +48,10 @@ const styles = StyleSheet.create({
   background:{
     flex: 1,
     paddingTop: 20
-  }
+  },
+  buttonSpacing: {
+    height: 20,
+  }  
 })
 
 export default Login;
