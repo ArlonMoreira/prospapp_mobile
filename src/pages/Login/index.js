@@ -52,6 +52,6 @@ const styles = StyleSheet.create({
   buttonSpacing: {
     height: 20,
   }  
-})
+});
 
 export default Login;
