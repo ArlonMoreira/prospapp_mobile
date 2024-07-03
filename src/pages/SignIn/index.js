@@ -4,6 +4,13 @@ import { Text, StyleSheet } from 'react-native';
 import Header from '../../components/Header';
 //Styles
 import { LinearGradient } from 'expo-linear-gradient';
+import { 
+  Introduction,
+  IntroductionText,
+  FormArea,
+  RegisterArea,
+  Footer
+} from './styles';
 
 const SignIn = () => {
   return (
@@ -12,6 +19,14 @@ const SignIn = () => {
       style={styles.background}    
       >
       <Header/>
+      <Introduction>
+        <IntroductionText>
+          Preencha os campos abaixo para acessar.
+        </IntroductionText>
+      </Introduction>
+      <FormArea/>
+      <RegisterArea/>
+      <Footer/>
     </LinearGradient>
   )
 };
