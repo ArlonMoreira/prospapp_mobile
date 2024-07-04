@@ -15,11 +15,11 @@ export const Logo = styled.Image`
 
 export const LogoTitle = styled.Text`
     color: #ffffff;
-    font-size: 25px;
+    font-size: 20px;
     font-weight: bolder;
     width: 60%;
     text-align: center;
-    fontFamily: 'montserrat-bold';
+    fontFamily: 'montserrat-semibold';
 `;
 
 export const Container = styled.View`
