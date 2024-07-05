@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, KeyboardAvoidingView,  ScrollView, Platform } from 'react-native';
 //Hooks
 import { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 //Components
 import Header from '../../components/Header';
 import InputForm from '../../components/InputForm';
@@ -25,6 +26,8 @@ import {
 
 const SignIn = () => {
 
+  const navigation = useNavigation();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -46,8 +49,8 @@ const SignIn = () => {
           </Introduction>
 
           <FormArea>
-            <InputForm label='Digite seu e-mail' setValue={setEmail} value={email}/>
-            <InputForm label='Digite sua senha' setValue={setPassword} value={password}/>
+            <InputForm label='Digite seu e-mail' setValue={setEmail} value={email} secureTextEntry={false}/>
+            <InputForm label='Digite sua senha' setValue={setPassword} value={password} secureTextEntry={true}/>
             <RecoverPassword>
               <RecoverPasswordButton>
                 <RecoverPasswordText>Esqueceu a senha ?</RecoverPasswordText>
@@ -60,7 +63,7 @@ const SignIn = () => {
 
           <RegisterArea>
             <RegisterAreaLabel>Não possui uma conta?</RegisterAreaLabel>
-            <LinkRegister>
+            <LinkRegister onPress={() => navigation.navigate('Register')}>
               <LinkRegisterText>Cadastre-se agora!</LinkRegisterText>
             </LinkRegister>
           </RegisterArea>  

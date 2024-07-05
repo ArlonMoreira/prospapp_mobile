@@ -7,7 +7,7 @@ import {
   Button,
   Text
 } from './styles';
-import { FontAwesome, Entypo } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 
 const Header = () => {
 

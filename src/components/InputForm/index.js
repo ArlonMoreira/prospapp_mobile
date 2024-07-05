@@ -1,16 +1,20 @@
 import React from 'react'
-import { View, TextInput, Text, Animated, StyleSheet } from 'react-native';
+import { Animated, TouchableOpacity } from 'react-native';
 //Hooks
 import { useState, useEffect, useRef } from 'react';
 //Styles
 import { 
     Container,
-    Input
+    Input,
+    Stick,
+    ShowPassword
 } from './styles';
+import { Feather } from '@expo/vector-icons'; 
 
-const InputForm = ({label, value, setValue}) => {
+const InputForm = ({label, value, setValue, secureTextEntry}) => {
 
     const [isFocused, setIsFocused] = useState(false);
+    const [isPasswordSecure, setIsPasswordSecure] = useState(secureTextEntry);
     const animetedIsFocused = useRef(new Animated.Value(value ? 1: 0)).current;
     
     useEffect(()=>{
@@ -26,15 +30,25 @@ const InputForm = ({label, value, setValue}) => {
         position: 'absolute',
         color: '#ffffff',
         fontFamily: 'montserrat-regular',
-        left: 10,
+        fontSize: 11,
+        left: 12,
         top: animetedIsFocused.interpolate({
             inputRange: [0, 1],
             outputRange: [40, 5],
         })
     };
 
+    const handleShowPassword = () => {
+        if(isPasswordSecure){
+            setIsPasswordSecure(false);
+        } else {
+            setIsPasswordSecure(true);
+        }
+    };
+
     return (
         <Container>
+            <Stick/>
             <Animated.Text style={labelStyle}>
                 {label}
             </Animated.Text>        
@@ -42,9 +56,17 @@ const InputForm = ({label, value, setValue}) => {
                 value={value}
                 onChangeText={(text) => setValue(text)}
                 onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}               
+                onBlur={() => setIsFocused(false)}
+                secureTextEntry={isPasswordSecure}          
             >
             </Input>
+            {
+                secureTextEntry && (
+                    <ShowPassword onPress={() => handleShowPassword()}>
+                        <Feather name={isPasswordSecure ? 'eye': 'eye-off'} size={28} color="#fff" />
+                    </ShowPassword>
+                )
+            }    
         </Container>
     )
 
