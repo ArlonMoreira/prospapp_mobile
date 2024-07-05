@@ -3,6 +3,9 @@ import { StyleSheet, KeyboardAvoidingView,  ScrollView, Platform } from 'react-n
 //Hooks
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+//Redux
+import { signin } from '../../slices/authSlice';
 //Components
 import Header from '../../components/Header';
 import InputForm from '../../components/InputForm';
@@ -26,14 +29,24 @@ import {
 
 const SignIn = () => {
 
+  //Dispatch redux para realizar autenticação
+  const dispatch = useDispatch();
+
   const navigation = useNavigation();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleAuth = () => {
-    console.log(email)
-    console.log(password)
+  const handleSubmit = async () => {
+
+    const data = {
+      email,
+      password
+    };
+
+    //Autenticação
+    await dispatch(signin(data));
+
   };
 
   return (
@@ -57,7 +70,7 @@ const SignIn = () => {
               </RecoverPasswordButton>
             </RecoverPassword>
             <SubmitButton>
-              <ButtonLg title="entrar" action={handleAuth}/>
+              <ButtonLg title="entrar" action={handleSubmit}/>
             </SubmitButton>            
           </FormArea>
 

@@ -5,6 +5,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 //Routes
 import Routes from './src/routes';
+//Redux
+import { Provider } from 'react-redux';
+import { store } from './store';
 
 export default function App() {
 
@@ -36,13 +39,15 @@ export default function App() {
   }  
 
   return (
-    <NavigationContainer>
-      <StatusBar 
-        translucent
-        backgroundColor="transparent"
-        style="light"
-        barStyle="light-content"/>
-      <Routes/>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <StatusBar 
+          translucent
+          backgroundColor="transparent"
+          style="light"
+          barStyle="light-content"/>
+        <Routes/>
+      </NavigationContainer>
+    </Provider>
   );
 }
