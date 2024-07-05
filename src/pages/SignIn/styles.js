@@ -1,7 +1,7 @@
 import styled from 'styled-components/native';
 
 export const Introduction = styled.View`
-    flex: 1;
+    flex: 2;
     align-items: center;
     justify-content: center;
 `;
@@ -16,7 +16,7 @@ export const IntroductionText = styled.Text`
 `;
 
 export const FormArea = styled.View`
-    flex: 3;
+    flex: 1;
     gap: 20px;
     margin: 10px;
 `;
@@ -47,17 +47,26 @@ export const SubmitButton = styled.View`
 `;
 
 export const RegisterArea = styled.View`
-    flex: 1;
+    flex: 2;
     align-items: center;
-    justify-content: center;  
+    justify-content: center;
 `;
 
 export const RegisterAreaLabel = styled.Text`
     color: #fff;
     font-family: 'montserrat-light';
-    font-size: 14px;
-`
+    font-size: 16px;
+`;
 
-export const Footer = styled.View`
-    flex: 1;
+export const LinkRegister = styled.TouchableOpacity`
+    width: 50%;
+    text-align: center;
+    padding: 1px;
+`;
+
+export const LinkRegisterText = styled.Text`
+    color: #fff;
+    font-family: 'montserrat-bold';
+    font-size: 14px;
+    text-align: center;
 `;
