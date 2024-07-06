@@ -1,8 +1,10 @@
 //Redux
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+//Hooks
+import useAuthentication from "../hooks/useAuthentication";
 
 const initialState = {
-    userAuth: {},
+    userAuth: null,
     success: false,
     loading: false
 };
@@ -11,7 +13,14 @@ const initialState = {
 export const signin = createAsyncThunk(
     'auth/signin',
     async(data, {rejectWithValue}) => {
-        console.log(data);
+        const response = await useAuthentication().login(data);
+
+        if(response.success){
+            return response;
+        } else {
+            rejectWithValue(response);
+        }
+
     }
 );
 
@@ -32,10 +41,14 @@ export const authSlice = createSlice({
             //Sucesso
             .addCase(signin.fulfilled, (state, action) => {
                 state.loading = false;
+                state.userAuth = action.payload.data;
+                state.success = true;
             })
             //Erro
             .addCase(signin.rejected, (state, action) => {
                 state.loading = false;
+                state.userAuth = null;
+                state.success = false;
             })
     }
 });

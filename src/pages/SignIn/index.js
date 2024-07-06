@@ -3,7 +3,7 @@ import { StyleSheet, KeyboardAvoidingView,  ScrollView, Platform } from 'react-n
 //Hooks
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 //Redux
 import { signin } from '../../slices/authSlice';
 //Components
@@ -31,6 +31,7 @@ const SignIn = () => {
 
   //Dispatch redux para realizar autenticação
   const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.auth)
 
   const navigation = useNavigation();
 
@@ -70,7 +71,7 @@ const SignIn = () => {
               </RecoverPasswordButton>
             </RecoverPassword>
             <SubmitButton>
-              <ButtonLg title="entrar" action={handleSubmit}/>
+              <ButtonLg title="entrar" action={handleSubmit} loading={loading}/>
             </SubmitButton>            
           </FormArea>
 
