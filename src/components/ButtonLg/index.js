@@ -7,9 +7,9 @@ import {
     Content
 } from './styles';
 
-const ButtonLg = ({title, action, loading=false}) => {
+const ButtonLg = ({title, action, loading=false, disabled=false}) => {
   return (
-    <Container onPress={() => action()}>
+    <Container onPress={() => action()} disabled={disabled}>
       <Content>
         {
           loading ? (

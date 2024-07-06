@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, KeyboardAvoidingView,  ScrollView, Platform } from 'react-native';
+import { StyleSheet, KeyboardAvoidingView,  ScrollView, Platform, Keyboard, } from 'react-native';
 //Hooks
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
@@ -30,9 +30,12 @@ import {
 
 const SignIn = () => {
 
+  //disabilitar botão de submit
+  const [disabledButton, setDisabledButton] = useState(true);
+
   //Dispatch redux para realizar autenticação
   const dispatch = useDispatch();
-  const { loading, errorMensage } = useSelector((state) => state.auth)
+  const { loading, errorMensage } = useSelector((state) => state.auth);
 
   //Usado para navegação
   const navigation = useNavigation();
@@ -50,6 +53,7 @@ const SignIn = () => {
 
     //Autenticação
     await dispatch(signin(data));
+
   };
 
   //Alerta de erros
@@ -86,8 +90,29 @@ const SignIn = () => {
 
   }, [showAlertError]);
 
+  //Disabilitar botão caso os campos não tiverem sido preenchidos
+  useEffect(()=>{
+    if(email == '' || password == ''){
+      setDisabledButton(true);
+    } else {
+      setDisabledButton(false);
+    }
 
+  }, [email, password]);
 
+  //Sumir certos elementos quando abrir o teclado.
+  const [showElements, setShowElements] = useState(true);
+
+  useEffect(()=>{
+    Keyboard.addListener('keyboardDidShow', () => {
+      setShowElements(false); 
+    });
+
+    Keyboard.addListener('keyboardDidHide', () => {
+      setShowElements(true);
+    });    
+
+  }, []);
   return (
     <LinearGradient colors={['#008C81', '#0C6661']} style={styles.background}>
       <Header/>
@@ -97,11 +122,15 @@ const SignIn = () => {
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }} keyboardVerticalOffset={0}>
         <ScrollView contentContainerStyle={{ flexGrow: 2 }}>
           
-          <Introduction>
-            <IntroductionText>
-              Preencha os campos abaixo para acessar.
-            </IntroductionText>
-          </Introduction>
+          {
+            showElements && (
+              <Introduction>
+                <IntroductionText>
+                  Preencha os campos abaixo para acessar.
+                </IntroductionText>
+              </Introduction>      
+            )
+          }
 
           <FormArea>
             <InputForm label='Digite seu e-mail' setValue={setEmail} value={email} secureTextEntry={false}/>
@@ -112,18 +141,26 @@ const SignIn = () => {
               </RecoverPasswordButton>
             </RecoverPassword>
             <SubmitButton>
-              <ButtonLg title="entrar" action={handleSubmit} loading={loading}/>
+              <ButtonLg title="entrar" action={handleSubmit} loading={loading} disabled={disabledButton}/>
             </SubmitButton>            
           </FormArea>
 
-          <RegisterArea>
-            <RegisterAreaLabel>Não possui uma conta?</RegisterAreaLabel>
-            <LinkRegister onPress={() => navigation.navigate('Register')}>
-              <LinkRegisterText>Cadastre-se agora!</LinkRegisterText>
-            </LinkRegister>
-          </RegisterArea>  
-
-          <Footer/>
+          {
+            showElements && (
+              <RegisterArea>
+                <RegisterAreaLabel>Não possui uma conta?</RegisterAreaLabel>
+                <LinkRegister onPress={() => navigation.navigate('Register')}>
+                  <LinkRegisterText>Cadastre-se agora!</LinkRegisterText>
+                </LinkRegister>
+              </RegisterArea>               
+            )
+          }
+ 
+          {
+            showElements && (
+              <Footer/>
+            )
+          }
 
         </ScrollView>
       </KeyboardAvoidingView>

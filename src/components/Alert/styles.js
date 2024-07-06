@@ -23,6 +23,7 @@ export const Toast = styled.View`
     border-radius: 10px;
     border: 1px solid #664d03;
     padding: 10px;
+    opacity: .86;    
 `;
 
 export const Text = styled.Text`
