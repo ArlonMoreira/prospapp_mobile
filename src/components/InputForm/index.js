@@ -1,5 +1,5 @@
 import React from 'react'
-import { Animated, TouchableOpacity } from 'react-native';
+import { Animated } from 'react-native';
 //Hooks
 import { useState, useEffect, useRef } from 'react';
 //Styles

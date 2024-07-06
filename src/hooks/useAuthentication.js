@@ -1,11 +1,13 @@
 import React from 'react';
 
+const URL = process.env.EXPO_PUBLIC_API_URL;
+
 const useAuthentication = () => {
 
     const login = async(data) => {
-
+  
         try {
-            const response = await fetch(``, {
+            const response = await fetch(`${URL}user/signin/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -25,7 +27,7 @@ const useAuthentication = () => {
         } catch(error){
             return {
                 success: false,
-                message: 'Erro interno no sistema. Contate o administrador.'
+                message: 'Falha de comunicação com o servidor.'
             };
         }
 

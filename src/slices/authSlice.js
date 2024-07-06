@@ -6,7 +6,9 @@ import useAuthentication from "../hooks/useAuthentication";
 const initialState = {
     userAuth: null,
     success: false,
-    loading: false
+    loading: false,
+    errorMensage: null,
+    errors: []
 };
 
 
@@ -14,11 +16,10 @@ export const signin = createAsyncThunk(
     'auth/signin',
     async(data, {rejectWithValue}) => {
         const response = await useAuthentication().login(data);
-
         if(response.success){
             return response;
-        } else {
-            rejectWithValue(response);
+        } else {         
+            return rejectWithValue(response);
         }
 
     }
@@ -28,8 +29,8 @@ export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        reset: (state) => {
-
+        resetErrorMensage: (state) => {
+            state.errorMensage = null;
         }
     },
     extraReducers: (builder) => {
@@ -43,15 +44,19 @@ export const authSlice = createSlice({
                 state.loading = false;
                 state.userAuth = action.payload.data;
                 state.success = true;
+                state.errorMensage = null;
+                state.errors = [];
             })
             //Erro
             .addCase(signin.rejected, (state, action) => {
                 state.loading = false;
                 state.userAuth = null;
                 state.success = false;
+                state.errorMensage = action.payload.message;
+                state.errors = action.payload.data;
             })
     }
 });
 
-export const { reset } = authSlice.actions;
+export const { resetErrorMensage } = authSlice.actions;
 export default authSlice.reducer;
