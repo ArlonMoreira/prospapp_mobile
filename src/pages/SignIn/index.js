@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 //Redux
-import { signin, resetErrorMensage } from '../../slices/authSlice';
+import { signin, resetErrorMessage } from '../../slices/authSlice';
 //Components
 import Header from '../../components/Header';
 import InputForm from '../../components/InputForm';
@@ -35,7 +35,7 @@ const SignIn = () => {
 
   //Dispatch redux para realizar autenticação
   const dispatch = useDispatch();
-  const { loading, errorMensage } = useSelector((state) => state.auth);
+  const { loading, errorMessage } = useSelector((state) => state.auth);
 
   //Usado para navegação
   const navigation = useNavigation();
@@ -61,29 +61,29 @@ const SignIn = () => {
 
   //Caso tiver mensagem erro eu apresento o alerta, caso contrário, não apresento o alerta.
   useEffect(()=>{
-    if(errorMensage){
-      setShowAlertError(true);           
+    if(errorMessage){
+      setShowAlertError(true);
     } else {
-      setShowAlertError(false);        
-    }    
+      setShowAlertError(false);
+    }
 
-  }, [errorMensage, setShowAlertError]);
+  }, [errorMessage, setShowAlertError]);
 
   //A primeira vez que ocorre a falha de autenticação a mensagem de erro é preenchida e é exibida através do código acima. Pois, a apresentação
   //da mensagem ocorre baseado na leitura da mensagem de erro.
-  //O problema ocorre quando ocorre um segundo erro, pois o código acima fica escutando a variavel errorMensage, e como nenhum mudança ocorreu. O código acima não é acionado.
+  //O problema ocorre quando ocorre um segundo erro, pois o código acima fica escutando a variavel errorMessage, e como nenhum mudança ocorreu. O código acima não é acionado.
   //Por conta disso, preciso limpar a mensagem sempre que o alerta de erro de autenticação for fechado.
   useEffect(()=>{
-    if(!showAlertError){
-      dispatch(resetErrorMensage()); 
+    if(!showAlertError){ //Resetar o estado de errorMessage caso não tiver mais visível o alerta.
+      dispatch(resetErrorMessage());
 
-    } else {
-      const timeOutClearMensage = setTimeout(()=>{
-        dispatch(resetErrorMensage());
+    } else { //Caso estiver aberto a mensagem de erro, 1 segundo depois será fechada sozinha.
+      const timeoutClearMessage = setTimeout(()=>{
+        dispatch(resetErrorMessage());
       }, 6000);
 
       return () => {
-        clearTimeout(timeOutClearMensage);
+        clearTimeout(timeoutClearMessage);
       }
 
     }
@@ -117,7 +117,7 @@ const SignIn = () => {
     <LinearGradient colors={['#008C81', '#0C6661']} style={styles.background}>
       <Header/>
       {
-        showAlertError && <Alert message={errorMensage} setShow={setShowAlertError}/>
+        showAlertError && <Alert message={errorMessage} setShow={setShowAlertError}/>
       }
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }} keyboardVerticalOffset={0}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>

@@ -23,7 +23,7 @@ export const FormArea = styled.View`
 
 export const SubmitButton = styled.View`
     width: 100%;
-    min-height: 100px;
+    min-height: 85px;
     align-items: center;
     justify-content: center;
     margin-top: 20px;

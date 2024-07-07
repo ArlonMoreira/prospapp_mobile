@@ -1,13 +1,13 @@
 //Redux
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 //Hooks
-import useAuthentication from "../hooks/useAuthentication";
+import useRequest from "../hooks/useRequest";
 
 const initialState = {
     userAuth: null,
     success: false,
     loading: false,
-    errorMensage: null,
+    errorMessage: null,
     errors: []
 };
 
@@ -15,7 +15,8 @@ const initialState = {
 export const signin = createAsyncThunk(
     'auth/signin',
     async(data, {rejectWithValue}) => {
-        const response = await useAuthentication().login(data);
+        const response = await useRequest().login(data);
+        
         if(response.success){
             return response;
         } else {         
@@ -29,14 +30,14 @@ export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        resetErrorMensage: (state) => {
-            state.errorMensage = null;
+        resetErrorMessage: (state) => {
+            state.errorMessage = null;
         }
     },
     extraReducers: (builder) => {
         builder
             //Carregamento
-            .addCase(signin.pending, (state, action) => {
+            .addCase(signin.pending, (state) => {
                 state.loading = true;
             })
             //Sucesso
@@ -44,7 +45,7 @@ export const authSlice = createSlice({
                 state.loading = false;
                 state.userAuth = action.payload.data;
                 state.success = true;
-                state.errorMensage = null;
+                state.errorMessage = null;
                 state.errors = [];
             })
             //Erro
@@ -52,11 +53,11 @@ export const authSlice = createSlice({
                 state.loading = false;
                 state.userAuth = null;
                 state.success = false;
-                state.errorMensage = action.payload.message;
+                state.errorMessage = action.payload.message;
                 state.errors = action.payload.data;
             })
     }
 });
 
-export const { resetErrorMensage } = authSlice.actions;
+export const { resetErrorMessage } = authSlice.actions;
 export default authSlice.reducer;

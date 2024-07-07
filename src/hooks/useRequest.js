@@ -2,12 +2,12 @@ import React from 'react';
 
 const URL = process.env.EXPO_PUBLIC_API_URL;
 
-const useAuthentication = () => {
+const useRequest = () => {
 
-    const login = async(data) => {
+    const request = async({data, endpoint}) => {
   
         try {
-            const response = await fetch(`${URL}user/signin/`, {
+            const response = await fetch(`${URL}${endpoint}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -34,9 +34,14 @@ const useAuthentication = () => {
     };
 
     return {
-        login
+        login: (data) => {
+            return request({data, endpoint: 'user/signin/'});
+        },
+        register: (data) => {
+            return request({data, endpoint: 'user/register/'});
+        }
     };
 
 };
 
-export default useAuthentication;
+export default useRequest;
