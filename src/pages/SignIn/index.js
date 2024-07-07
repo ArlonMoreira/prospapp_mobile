@@ -120,7 +120,7 @@ const SignIn = () => {
         showAlertError && <Alert message={errorMensage} setShow={setShowAlertError}/>
       }
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }} keyboardVerticalOffset={0}>
-        <ScrollView contentContainerStyle={{ flexGrow: 2 }}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           
           {
             showElements && (
