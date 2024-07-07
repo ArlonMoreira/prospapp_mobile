@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 //Redux
 import { signin, resetErrorMessage } from '../../slices/authSlice';
+import { resetForm } from '../../slices/registerSlice';
 //Components
 import Header from '../../components/Header';
 import InputForm from '../../components/InputForm';
@@ -29,6 +30,11 @@ import {
 } from './styles';
 
 const SignIn = () => {
+
+  //Resetar o campo de cadastro de usuário.
+  useEffect(()=>{
+    dispatch(resetForm());
+  }, []);
 
   //disabilitar botão de submit
   const [disabledButton, setDisabledButton] = useState(true);
@@ -113,6 +119,7 @@ const SignIn = () => {
     });    
 
   }, []);
+  
   return (
     <LinearGradient colors={['#008C81', '#0C6661']} style={styles.background}>
       <Header/>

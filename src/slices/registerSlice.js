@@ -28,6 +28,13 @@ export const registerSlice = createSlice({
     name: 'register', //Nome do slice
     initialState, //Estado inicial
     reducers: { //Reducers, funções para manipulação do estado
+        resetForm: (state) => {
+            state.data = null;
+            state.loading = false;
+            state.success = false;
+            state.errorMessage = null;
+            state.errors = [];
+        },        
         resetErrorMessage: (state) => {
             state.errorMessage = null;
         } 
@@ -54,7 +61,7 @@ export const registerSlice = createSlice({
     }
 });
 
-export const { resetErrorMessage } = registerSlice.actions;
+export const { resetErrorMessage, resetForm } = registerSlice.actions;
 export default registerSlice.reducer;
 
 

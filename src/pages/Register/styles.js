@@ -21,6 +21,20 @@ export const FormArea = styled.View`
     margin: 10px;
 `;
 
+export const ItemFormArea = styled.View`
+    flex: 1;
+`;
+
+export const Errors = styled.View`
+    margin-left: 10px;
+`
+
+export const Error = styled.Text`
+    color: #E6D68E;
+    font-size: 10px;
+    font-family: 'montserrat-regular';
+`;
+
 export const SubmitButton = styled.View`
     width: 100%;
     min-height: 85px;

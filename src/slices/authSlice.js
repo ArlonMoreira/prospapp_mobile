@@ -11,7 +11,6 @@ const initialState = {
     errors: []
 };
 
-
 export const signin = createAsyncThunk(
     'auth/signin',
     async(data, {rejectWithValue}) => {

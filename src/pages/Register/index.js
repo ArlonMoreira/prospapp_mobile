@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Platform, ScrollView } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Platform, ScrollView, Keyboard } from 'react-native';
 //Hooks
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 //Redux
-import { register, resetErrorMessage } from '../../slices/registerSlice';
+import { register, resetErrorMessage, resetForm } from '../../slices/registerSlice';
 //Components
 import Header from '../../components/Header';
 import InputForm from '../../components/InputForm';
@@ -16,12 +17,15 @@ import {
   Introduction,
   IntroductionText,
   FormArea,
-  SubmitButton
+  SubmitButton,
+  ItemFormArea,
+  Errors,
+  Error
 } from './styles';
 
 const Register = () => {
 
-  const { loading, errorMessage, errors } = useSelector((state) => state.register);
+  const { loading, errorMessage, errors, success } = useSelector((state) => state.register);
 
   //Formulário de cadastro
   const dispatch = useDispatch();
@@ -44,6 +48,27 @@ const Register = () => {
     await dispatch(register(data));
 
   };
+
+  //Navegar para página de login quando autenticado.
+  const navigation = useNavigation();
+
+  useEffect(()=>{
+    if(success){
+      setFullName('');
+      setDocNumber('');
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');       
+      navigation.navigate('SignIn');
+    }
+
+  }, [success]);
+
+  //Limpar formulário assim que acessar a página de cadastro.
+  useEffect(()=>{   
+    dispatch(resetForm());
+
+  }, []);  
 
   //Alert mensagem
   const [showAlertError, setShowAlertError] = useState(false);
@@ -75,6 +100,20 @@ const Register = () => {
 
   }, [showAlertError]);
 
+  //Sumir certos elementos quando abrir o teclado.
+  const [showElements, setShowElements] = useState(true);
+
+  useEffect(()=>{
+    Keyboard.addListener('keyboardDidShow', () => {
+      setShowElements(false); 
+    });
+
+    Keyboard.addListener('keyboardDidHide', () => {
+      setShowElements(true);
+    });    
+
+  }, []);  
+
   return (
     <LinearGradient
       colors={['#008C81', '#0C6661']}
@@ -87,18 +126,57 @@ const Register = () => {
       <KeyboardAvoidingView behavior={Platform.OS === 'os' ? 'padding': 'height'} style={{flex: 1}} keyboardVerticalOffset={0}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 
-          <Introduction>
-            <IntroductionText>
-              Preencha os campos abaixo para cadastro.
-            </IntroductionText>
-          </Introduction>
+          {
+            showElements && (
+              <Introduction>
+                <IntroductionText>
+                  Preencha os campos abaixo para cadastro.
+                </IntroductionText>
+              </Introduction>
+            )
+          }
 
           <FormArea>
-            <InputForm label='Nome completo' setValue={setFullName} value={full_name} secureTextEntry={false}/>
-            <InputForm label='CPF' setValue={setDocNumber} value={doc_number} secureTextEntry={false}/>
-            <InputForm label='E-mail' setValue={setEmail} value={email} secureTextEntry={false}/>
-            <InputForm label='Senha' setValue={setPassword} value={password} secureTextEntry={true}/>
-            <InputForm label='Confirmar Senha' setValue={setConfirmPassword} value={confirm_password} secureTextEntry={true}/>
+            <ItemFormArea>
+              <InputForm label='Nome completo' setValue={setFullName} value={full_name} secureTextEntry={false}/>
+              <Errors>
+                {
+                  errors.full_name && errors.full_name.map((error, i)=> <Error key={i}>{error}</Error>) 
+                }
+              </Errors>
+            </ItemFormArea>
+            <ItemFormArea>
+              <InputForm label='CPF' setValue={setDocNumber} value={doc_number} secureTextEntry={false}/>
+              <Errors>
+                {
+                  errors.doc_number && errors.doc_number.map((error, i)=> <Error key={i}>{error}</Error>) 
+                }
+              </Errors>
+            </ItemFormArea>
+            <ItemFormArea>
+              <InputForm label='E-mail' setValue={setEmail} value={email} secureTextEntry={false}/>
+              <Errors>
+                {
+                  errors.email && errors.email.map((error, i)=> <Error key={i}>{error}</Error>) 
+                }
+              </Errors>            
+            </ItemFormArea>
+            <ItemFormArea>
+              <InputForm label='Senha' setValue={setPassword} value={password} secureTextEntry={true}/>
+              <Errors>
+                {
+                  errors.password && errors.password.map((error, i)=> <Error key={i}>{error}</Error>) 
+                }
+              </Errors>
+            </ItemFormArea>
+            <ItemFormArea>
+              <InputForm label='Confirmar Senha' setValue={setConfirmPassword} value={confirm_password} secureTextEntry={true}/>
+              <Errors>
+                {
+                  errors.confirm_password && errors.confirm_password.map((error, i)=> <Error key={i}>{error}</Error>) 
+                }
+              </Errors>
+            </ItemFormArea>
             <SubmitButton>
               <ButtonLg title="cadastrar" action={handleSubmit} loading={loading} disabled={loading}></ButtonLg>
             </SubmitButton>
