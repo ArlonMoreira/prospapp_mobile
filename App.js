@@ -45,7 +45,8 @@ export default function App() {
           translucent
           backgroundColor="transparent"
           style="light"
-          barStyle="light-content"/>
+          barStyle="light-content"
+        />
         <Routes/>
       </NavigationContainer>
     </Provider>
