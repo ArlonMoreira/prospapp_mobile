@@ -1,5 +1,9 @@
-import React from 'react'
-import { StyleSheet, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
+import React, { useEffect } from 'react'
+import { StyleSheet, View} from 'react-native';
+//Hooks
+import { useDispatch } from 'react-redux';
+//Redux
+import { list } from '../../slices/companysSlice';
 //Components
 import Footer from '../../components/Footer';
 //Styles
@@ -11,10 +15,26 @@ import {
   PerfilContainer,
   NamePerfil,
   WelcomeMensage,
-  PhotoContainer
+  PhotoContainer,
+  Main,
+  CompanyTitleContainer,
+  CompanyTitle,
+  SearchContainer,
+  Search,
+  SearchIconArea
 } from './styles';
+import { AntDesign } from '@expo/vector-icons'; 
 
 const Company = () => {
+
+  //Redux
+  const dispatch = useDispatch();
+
+  //Listar todas companias
+  useEffect(()=>{
+    dispatch(list());
+  }, []);
+
   return (
     <Container>
 
@@ -36,16 +56,30 @@ const Company = () => {
           </PerfilContainer>
           <PerfilContainer>
             <PhotoContainer>
-              
+
             </PhotoContainer>
           </PerfilContainer>          
         </Perfil>
       </LinearGradient>
 
-      <KeyboardAvoidingView behavior={Platform.OS === 'os' ? 'padding': 'height'} style={{flex: 1}} keyboardVerticalOffset={0}>
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        </ScrollView>
-      </KeyboardAvoidingView>   
+      <Main>
+
+        <CompanyTitleContainer>
+          <CompanyTitle>
+            Busque aqui por sua empresa!
+          </CompanyTitle>
+        </CompanyTitleContainer>
+
+        <SearchContainer>
+          <View style={{flex: 1, flexDirection: 'row'}}>
+            <Search></Search>
+            <SearchIconArea>
+              <AntDesign name='search1' size={32} color='#008C81'></AntDesign>
+            </SearchIconArea>
+          </View>
+        </SearchContainer>
+
+      </Main>
 
     </Container>
   )

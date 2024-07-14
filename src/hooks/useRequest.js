@@ -4,16 +4,10 @@ const URL = process.env.EXPO_PUBLIC_API_URL;
 
 const useRequest = () => {
 
-    const request = async({data, endpoint}) => {
+    const request = async({endpoint, params}) => {
   
         try {
-            const response = await fetch(`${URL}${endpoint}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            });
+            const response = await fetch(`${URL}${endpoint}`, params);
 
             const result = await response.json();
 
@@ -35,10 +29,39 @@ const useRequest = () => {
 
     return {
         login: (data) => {
-            return request({data, endpoint: 'user/signin/'});
+            return request({
+                endpoint: 'user/signin/',
+                params: {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }
+            });
         },
         register: (data) => {
-            return request({data, endpoint: 'user/register/'});
+            return request({
+                endpoint: 'user/register/',
+                params: {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }                
+            });
+        },
+        companyList: (token) => {
+            return request({
+                endpoint: 'companys/pending/',
+                params: {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }                
+            });            
         }
     };
 
