@@ -1,5 +1,5 @@
 import styled from 'styled-components/native';
-import { View } from 'react-native';
+import { View, Image } from 'react-native';
 
 export const Container = styled(View).attrs({
     shadowColor: "#939393",
@@ -38,7 +38,9 @@ export const InfoArea = styled.View`
     padding-left: 20px;
 `;
 
-export const Logo = styled.Image`
+export const Logo = styled(Image).attrs({
+    resizeMode: 'contain'    
+})`
     width: 75px;
     height: 75px;
 `;

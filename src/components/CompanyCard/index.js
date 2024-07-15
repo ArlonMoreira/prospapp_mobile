@@ -23,8 +23,8 @@ const CompanyCard = ({data}) => {
                 <Logo source={{uri:`${URL}files/${data.item.logo}`}}/>
             </LogoArea>
             <InfoArea>
-                <Title>{data.item.trade_name}</Title>
-                <SubTitle>00.000.000/0000-00</SubTitle>
+                <Title>{data.item.slug_name}</Title>
+                <SubTitle>{data.item.identification_number}</SubTitle>
             </InfoArea>
         </Container>
     )
