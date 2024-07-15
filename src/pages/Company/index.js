@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react'
-import { StyleSheet, View} from 'react-native';
+import React, { useEffect, useState} from 'react'
+import { StyleSheet, View, FlatList} from 'react-native';
 //Hooks
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 //Redux
 import { list } from '../../slices/companysSlice';
 //Components
 import Footer from '../../components/Footer';
+import CompanyCard from '../../components/CompanyCard';
 //Styles
 import { LinearGradient } from 'expo-linear-gradient';
 import { 
@@ -21,19 +22,30 @@ import {
   CompanyTitle,
   SearchContainer,
   Search,
-  SearchIconArea
+  SearchIconArea,
+  CompanysContainer,
+  CompanysTitleContainer,
+  CompanysTitle,
+  Companys,
 } from './styles';
-import { AntDesign } from '@expo/vector-icons'; 
+import { AntDesign, FontAwesome } from '@expo/vector-icons'; 
 
 const Company = () => {
 
   //Redux
   const dispatch = useDispatch();
+  const { data } = useSelector((state) => state.companys);
+  const [ companys, setCompanys ] = useState([]);
 
   //Listar todas companias
   useEffect(()=>{
     dispatch(list());
-  }, []);
+  }, [dispatch]);
+
+  useEffect(()=>{
+    setCompanys(data.filter((company) => !company.is_pending && !company.is_joined));
+
+  }, [data]);
 
   return (
     <Container>
@@ -70,14 +82,31 @@ const Company = () => {
           </CompanyTitle>
         </CompanyTitleContainer>
 
-        <SearchContainer>
+        {/* <SearchContainer>
           <View style={{flex: 1, flexDirection: 'row'}}>
             <Search></Search>
             <SearchIconArea>
-              <AntDesign name='search1' size={32} color='#008C81'></AntDesign>
+              <AntDesign name='search1' size={32} color='#008C81'/>
             </SearchIconArea>
           </View>
-        </SearchContainer>
+        </SearchContainer> */}
+
+        <CompanysContainer>
+
+          <CompanysTitleContainer>
+            <FontAwesome name='building-o' size={20} color='#008C81'/>
+            <CompanysTitle>Empresas</CompanysTitle>
+          </CompanysTitleContainer>
+
+          <Companys>
+            <FlatList
+              data={companys}
+              keyExtractor={(item) => item.company}
+              renderItem={(item) => <CompanyCard data={item}/>}
+            />            
+          </Companys>
+
+        </CompanysContainer>
 
       </Main>
 

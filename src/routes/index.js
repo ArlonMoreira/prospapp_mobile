@@ -11,7 +11,8 @@ const Routes = () => {
   const { auth } = userAuth();
 
   return (
-    auth ? <Company/> : <AuthRoutes/>
+    <Company/>
+    // auth ? <Company/> : <AuthRoutes/>
   )
 }
 

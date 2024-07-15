@@ -42,14 +42,15 @@ export const PhotoContainer = styled.View`
 
 export const Main = styled.View`
     flex: 1;
-    padding-right: 20px;
-    padding-left: 20px;
+    align-items: center;
+    justify-content: center;     
 `;
 
 export const CompanyTitleContainer = styled.View`
-    height: 126px;
+    width: 90%;
+    height: 146px;
     align-items: start;
-    justify-content: center;
+    justify-content: center;    
 `;
 
 export const CompanyTitle = styled.Text`
@@ -66,12 +67,12 @@ export const SearchContainer = styled.View`
 
 export const Search = styled.TextInput`
     height: 100%;
-    width: 84%;
+    width: 90%;
     padding: 10px;
     padding-left: 20px;
     color: #008C81;
     font-size: 18px;
-    font-family: 'montserrat-semibold';
+    font-family: 'montserrat-bold';
 `;
 
 export const SearchIconArea = styled.View`
@@ -82,3 +83,26 @@ export const SearchIconArea = styled.View`
     justify-content: center;
 `;
 
+export const CompanysContainer = styled.View`
+    width: 100%;
+    flex: 1;
+    align-items: start;
+    justify-content: flex-end;
+`
+export const CompanysTitleContainer = styled.View`
+    flex-direction: row;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+`;
+
+export const CompanysTitle = styled.Text`
+    margin-left: 5px;
+    color: #008C81;
+    font-size: 18px;
+    font-family: 'montserrat-semibold';
+`; 
+
+export const Companys = styled.View`
+    flex: 1;
+`;
