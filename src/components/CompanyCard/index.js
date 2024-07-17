@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { View } from 'react-native';
 //Styles
 import { 
     Container,
@@ -23,8 +24,10 @@ const CompanyCard = ({data}) => {
                 <Logo source={{uri:`${URL}files/${data.item.logo}`}}/>
             </LogoArea>
             <InfoArea>
-                <Title>{data.item.slug_name}</Title>
-                <SubTitle>{data.item.identification_number}</SubTitle>
+                <View style={{flex:1}}>
+                    <Title>{data.item.slug_name}</Title>
+                    <SubTitle>{data.item.identification_number}</SubTitle>
+                </View>
             </InfoArea>
         </Container>
     )
