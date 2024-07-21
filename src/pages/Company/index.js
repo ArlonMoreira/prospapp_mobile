@@ -20,15 +20,12 @@ import {
   Main,
   CompanyTitleContainer,
   CompanyTitle,
-  SearchContainer,
-  Search,
-  SearchIconArea,
   CompanysContainer,
   CompanysTitleContainer,
   CompanysTitle,
   Companys,
 } from './styles';
-import { AntDesign, FontAwesome } from '@expo/vector-icons'; 
+import { FontAwesome } from '@expo/vector-icons'; 
 
 const Company = () => {
 
@@ -42,10 +39,16 @@ const Company = () => {
     dispatch(list());
   }, [dispatch]);
 
+  //Serão listadas todas as empresas não associadas e não pendentes.
   useEffect(()=>{
     setCompanys(data.filter((company) => !company.is_pending && !company.is_joined));
-
   }, [data]);
+
+  const handleSubmit = ({company, setShowModal}) => {
+    console.log(company)
+    //Encerrar modal;
+    setShowModal(false);
+  };
 
   return (
     <Container>
@@ -82,15 +85,6 @@ const Company = () => {
           </CompanyTitle>
         </CompanyTitleContainer>
 
-        {/* <SearchContainer>
-          <View style={{flex: 1, flexDirection: 'row'}}>
-            <Search></Search>
-            <SearchIconArea>
-              <AntDesign name='search1' size={32} color='#008C81'/>
-            </SearchIconArea>
-          </View>
-        </SearchContainer> */}
-
         <CompanysContainer>
 
           <CompanysTitleContainer>
@@ -102,7 +96,7 @@ const Company = () => {
             <FlatList
               data={companys}
               keyExtractor={(item) => item.company}
-              renderItem={(item) => <CompanyCard data={item}/>}
+              renderItem={(item) => <CompanyCard data={item} handleSubmit={handleSubmit}/>}
             />            
           </Companys>
 
