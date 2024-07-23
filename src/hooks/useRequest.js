@@ -62,6 +62,19 @@ const useRequest = () => {
                     }
                 }                
             });            
+        },
+        companyPending: ({data, token}) => {
+            return request({
+                endpoint: 'companys/pending/',
+                params: {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }                
+            }); 
         }
     };
 

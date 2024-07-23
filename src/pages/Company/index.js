@@ -3,7 +3,7 @@ import { StyleSheet, View, FlatList} from 'react-native';
 //Hooks
 import { useDispatch, useSelector } from 'react-redux';
 //Redux
-import { list } from '../../slices/companysSlice';
+import { list, pending } from '../../slices/companysSlice';
 //Components
 import Footer from '../../components/Footer';
 import CompanyCard from '../../components/CompanyCard';
@@ -41,13 +41,16 @@ const Company = () => {
 
   //Serão listadas todas as empresas não associadas e não pendentes.
   useEffect(()=>{
-    setCompanys(data.filter((company) => !company.is_pending && !company.is_joined));
+    setCompanys(data);
+    //setCompanys(data.filter((company) => !company.is_pending && !company.is_joined));
   }, [data]);
 
-  const handleSubmit = ({company, setShowModal}) => {
-    console.log(company)
-    //Encerrar modal;
-    setShowModal(false);
+  const handleSubmit = (company) => {
+
+    dispatch(pending({
+      company: company.company
+    }));
+
   };
 
   return (

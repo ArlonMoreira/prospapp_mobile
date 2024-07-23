@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { View, Modal, TouchableWithoutFeedback } from 'react-native';
+//Hooks
+import { useSelector } from 'react-redux';
 //Components
 import ButtonLg from '../ButtonLg';
 //Styles
@@ -23,6 +25,8 @@ import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 const URL = process.env.EXPO_PUBLIC_API_URL;
 
 const CompanyCard = ({data, handleSubmit}) => {
+    //Carregamento da solicitação.
+    const { loadingPending } = useSelector((state) => state.companys);
 
     const [showModal, setShowModal] = useState(false);
 
@@ -37,15 +41,29 @@ const CompanyCard = ({data, handleSubmit}) => {
                 <TouchableWithoutFeedback onPress={() => setShowModal(false)}>
                     <ModalContainer>
                         <ModalContent>
-                            <ModalTitle>Deseja associar à {data.item.slug_name}?</ModalTitle>
-                            <ModalMensage>Ao clicar no botão abaixo, será enviado uma solicitação a empresa {data.item.slug_name}. Aguarde até que ela aceite.</ModalMensage>
-                            <ButtonLg title="Confirmar" action={() => handleSubmit({company: data.item, setShowModal})}/>
+                            {
+                                data.item.is_pending && (
+                                    <>
+                                        <ModalTitle>Deseja cancelar a solicitação ?</ModalTitle>
+                                        <ModalMensage>Ao clicar no botão abaixo, será cancelado o pedido de associação à empresa {data.item.slug_name}. É possível cancelar o pedido de associação antes que a empresa aceite a solicitação.</ModalMensage>
+                                    </>
+                                )
+                            }
+                            {        
+                                (!data.item.is_pending && !data.item.is_joined) && (
+                                    <>
+                                        <ModalTitle>Deseja associar à {data.item.slug_name}?</ModalTitle>
+                                        <ModalMensage>Ao clicar no botão abaixo será enviado uma solicitação a empresa {data.item.slug_name}. Aguarde até que ela aceite.</ModalMensage>
+                                    </>
+                                )
+                            }
+                            <ButtonLg title={data.item.is_pending ? "Cancelar" : "Confirmar"} action={() => handleSubmit(data.item)} loading={loadingPending}/>
                         </ModalContent>
                     </ModalContainer>
                 </TouchableWithoutFeedback>
             </Modal>
             <Container>
-                <Button onPress={() => setShowModal(true)}>
+                <Button onPress={() => setShowModal(true)} disabled={loadingPending}>
                     <LogoArea>
                         <Logo source={{uri:`${URL}files/${data.item.logo}`}}/>
                     </LogoArea>
