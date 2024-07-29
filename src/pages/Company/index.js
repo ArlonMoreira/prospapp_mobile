@@ -1,5 +1,5 @@
 import React, { useEffect, useState} from 'react'
-import { StyleSheet, View, FlatList} from 'react-native';
+import { StyleSheet, ScrollView} from 'react-native';
 //Hooks
 import { useDispatch, useSelector } from 'react-redux';
 //Redux
@@ -25,14 +25,18 @@ import {
   CompanysTitle,
   Companys,
 } from './styles';
-import { FontAwesome } from '@expo/vector-icons'; 
+import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons'; 
 
 const Company = () => {
 
+  //Close modal
+  const [ closeModal, setCloseModal ] = useState(false);
+
   //Redux
   const dispatch = useDispatch();
-  const { data } = useSelector((state) => state.companys);
+  const { data, loadingPending } = useSelector((state) => state.companys);
   const [ companys, setCompanys ] = useState([]);
+  const [ companysPending, setCompanysPending ] = useState([]);
 
   //Listar todas companias
   useEffect(()=>{
@@ -41,17 +45,26 @@ const Company = () => {
 
   //Serão listadas todas as empresas não associadas e não pendentes.
   useEffect(()=>{
-    setCompanys(data);
-    //setCompanys(data.filter((company) => !company.is_pending && !company.is_joined));
+    setCompanys(data.filter((company) => !company.is_pending && !company.is_joined));
+    setCompanysPending(data.filter((company) => company.is_pending && !company.is_joined))
   }, [data]);
 
-  const handleSubmit = (company) => {
-
-    dispatch(pending({
+  const handleSubmit = async (company) => {
+    await dispatch(pending({
       company: company.company
     }));
 
   };
+
+  //Ao fim do carregamento encerrar o modal.
+  useEffect(()=>{
+    if(!loadingPending){
+      setCloseModal(true);
+    } else {
+      setCloseModal(false);
+    }
+
+  }, [loadingPending]);
 
   return (
     <Container>
@@ -88,22 +101,44 @@ const Company = () => {
           </CompanyTitle>
         </CompanyTitleContainer>
 
-        <CompanysContainer>
-
-          <CompanysTitleContainer>
-            <FontAwesome name='building-o' size={20} color='#008C81'/>
-            <CompanysTitle>Empresas</CompanysTitle>
-          </CompanysTitleContainer>
-
-          <Companys>
-            <FlatList
-              data={companys}
-              keyExtractor={(item) => item.company}
-              renderItem={(item) => <CompanyCard data={item} handleSubmit={handleSubmit}/>}
-            />            
-          </Companys>
-
-        </CompanysContainer>
+        <ScrollView scrollEnabled={true} style={{width: '100%'}}>
+          {
+            companysPending.length > 0 && (
+              <CompanysContainer>
+                <CompanysTitleContainer>
+                  <FontAwesome6 name='hourglass-end' size={20} color='#008C81'/>
+                  <CompanysTitle>Aguardando confirmação</CompanysTitle>
+                </CompanysTitleContainer>
+    
+                <Companys>
+                  {
+                    companysPending.map((item) => (
+                      <CompanyCard key={item.company} data={item} handleSubmit={handleSubmit} close={closeModal}/>
+                    ))
+                  }
+                </Companys>
+              </CompanysContainer>
+            )
+          }
+          {
+            companys.length > 0 && (
+              <CompanysContainer>
+                <CompanysTitleContainer>
+                  <MaterialIcons name='business-center' size={22} color='#008C81'/>
+                  <CompanysTitle>Empresas</CompanysTitle>
+                </CompanysTitleContainer>
+    
+                <Companys>
+                  {
+                    companys.map((item) => (
+                      <CompanyCard key={item.company} data={item} handleSubmit={handleSubmit} close={closeModal}/>
+                    ))
+                  }         
+                </Companys>
+              </CompanysContainer>
+            )
+          }
+        </ScrollView>
 
       </Main>
 

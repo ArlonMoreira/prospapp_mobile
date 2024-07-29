@@ -24,11 +24,19 @@ import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 
 const URL = process.env.EXPO_PUBLIC_API_URL;
 
-const CompanyCard = ({data, handleSubmit}) => {
+const CompanyCard = ({data, handleSubmit, close}) => {
     //Carregamento da solicitação.
     const { loadingPending } = useSelector((state) => state.companys);
 
     const [showModal, setShowModal] = useState(false);
+
+    //Fechar o modal automaticamente quando ocorrer sucesso na requisição.
+    useEffect(()=>{
+        if(close){
+            setShowModal(false);
+        }
+        
+    }, [close]);
 
     return (
         <View style={{flex: 1}}>
@@ -42,22 +50,22 @@ const CompanyCard = ({data, handleSubmit}) => {
                     <ModalContainer>
                         <ModalContent>
                             {
-                                data.item.is_pending && (
+                                data.is_pending && (
                                     <>
                                         <ModalTitle>Deseja cancelar a solicitação ?</ModalTitle>
-                                        <ModalMensage>Ao clicar no botão abaixo, será cancelado o pedido de associação à empresa {data.item.slug_name}. É possível cancelar o pedido de associação antes que a empresa aceite a solicitação.</ModalMensage>
+                                        <ModalMensage>Ao clicar no botão abaixo, será cancelado o pedido de associação à empresa {data.slug_name}. É possível cancelar o pedido de associação antes que a empresa aceite a solicitação.</ModalMensage>
                                     </>
                                 )
                             }
                             {        
-                                (!data.item.is_pending && !data.item.is_joined) && (
+                                (!data.is_pending && !data.is_joined) && (
                                     <>
-                                        <ModalTitle>Deseja associar à {data.item.slug_name}?</ModalTitle>
-                                        <ModalMensage>Ao clicar no botão abaixo será enviado uma solicitação a empresa {data.item.slug_name}. Aguarde até que ela aceite.</ModalMensage>
+                                        <ModalTitle>Deseja associar à {data.slug_name}?</ModalTitle>
+                                        <ModalMensage>Ao clicar no botão abaixo será enviado uma solicitação a empresa {data.slug_name}. Aguarde até que ela aceite.</ModalMensage>
                                     </>
                                 )
                             }
-                            <ButtonLg title={data.item.is_pending ? "Cancelar" : "Confirmar"} action={() => handleSubmit(data.item)} loading={loadingPending}/>
+                            <ButtonLg title={data.is_pending ? "Cancelar" : "Confirmar"} action={() => handleSubmit(data)} loading={loadingPending}/>
                         </ModalContent>
                     </ModalContainer>
                 </TouchableWithoutFeedback>
@@ -65,16 +73,16 @@ const CompanyCard = ({data, handleSubmit}) => {
             <Container>
                 <Button onPress={() => setShowModal(true)} disabled={loadingPending}>
                     <LogoArea>
-                        <Logo source={{uri:`${URL}files/${data.item.logo}`}}/>
+                        <Logo source={{uri:`${URL}files/${data.logo}`}}/>
                     </LogoArea>
                     <InfoArea>
                         <View style={{flex:1, justifyContent: 'space-between'}}>
                             <View>
-                                <Title>{data.item.slug_name}</Title>
-                                <SubTitle>{data.item.identification_number}</SubTitle>
+                                <Title>{data.slug_name}</Title>
+                                <SubTitle>{data.identification_number}</SubTitle>
                             </View>
                             {
-                                data.item.is_pending && (
+                                data.is_pending && (
                                     <Status>
                                         <MaterialIcons name='hourglass-top' size={18} color='#008C81'/>
                                         <StatusLabel>Pendente</StatusLabel>
@@ -82,7 +90,7 @@ const CompanyCard = ({data, handleSubmit}) => {
                                 )
                             }
                             {
-                                (!data.item.is_pending && !data.item.is_joined) && (
+                                (!data.is_pending && !data.is_joined) && (
                                     <Status>
                                         <MaterialCommunityIcons name='cancel' size={18} color='#008C81'/>
                                         <StatusLabel>Não associado</StatusLabel>

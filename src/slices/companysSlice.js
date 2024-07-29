@@ -13,7 +13,7 @@ export const list = createAsyncThunk(
     'companys/list',
     async(_, { getState, rejectWithValue }) => {
         //const userAuth = await getState().auth.userAuth; //Obter token que encontra-se no estado de autenticação
-        const response = await useRequest().companyList('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIxOTQ2OTkwLCJpYXQiOjE3MjE1MTQ5OTAsImp0aSI6IjJhMWVkYzg2YzY4MDRjYzQ5ZTc1YWQ4MGQ2NTExNjNlIiwidXNlcl9pZCI6MX0.Kp1EDJ2uKHVogwFHIL2IxNPcYfuhRi_2FdbLCJVJ3GM');
+        const response = await useRequest().companyList('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIyNjM3OTM4LCJpYXQiOjE3MjIyMDU5MzgsImp0aSI6IjFmZDBmNmQyYmVhZDQxNDI5ZWY2YmZhM2RkNWZkMWFjIiwidXNlcl9pZCI6MX0.pg8u0HJrmDe8xcFbtqDammS_mFpXmb8mxt-p2OAcm5U');
 
         if(response.success){          
             return response;
@@ -30,7 +30,7 @@ export const pending = createAsyncThunk(
         //const userAuth = await getState().auth.userAuth; //Obter token que encontra-se no estado de autenticação
         const response = await useRequest().companyPending({
             data,
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIxOTQ2OTkwLCJpYXQiOjE3MjE1MTQ5OTAsImp0aSI6IjJhMWVkYzg2YzY4MDRjYzQ5ZTc1YWQ4MGQ2NTExNjNlIiwidXNlcl9pZCI6MX0.Kp1EDJ2uKHVogwFHIL2IxNPcYfuhRi_2FdbLCJVJ3GM'
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIyNjM3OTM4LCJpYXQiOjE3MjIyMDU5MzgsImp0aSI6IjFmZDBmNmQyYmVhZDQxNDI5ZWY2YmZhM2RkNWZkMWFjIiwidXNlcl9pZCI6MX0.pg8u0HJrmDe8xcFbtqDammS_mFpXmb8mxt-p2OAcm5U'
         });
 
         if(response.success){

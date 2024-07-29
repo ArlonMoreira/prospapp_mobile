@@ -88,12 +88,13 @@ export const CompanysContainer = styled.View`
     flex: 1;
     align-items: start;
     justify-content: flex-end;
+    margin-bottom: 20px;
 `
 export const CompanysTitleContainer = styled.View`
     flex-direction: row;
-    margin-bottom: 10px;
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-bottom: 5px;
+    margin-left: 15px;
+    margin-right: 15px;
 `;
 
 export const CompanysTitle = styled.Text`
