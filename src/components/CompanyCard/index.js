@@ -21,6 +21,7 @@ import {
     StatusLabel
 } from './style';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { cnpj } from 'cpf-cnpj-validator';
 
 const URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -79,7 +80,7 @@ const CompanyCard = ({data, handleSubmit, close}) => {
                         <View style={{flex:1, justifyContent: 'space-between'}}>
                             <View>
                                 <Title>{data.slug_name}</Title>
-                                <SubTitle>{data.identification_number}</SubTitle>
+                                <SubTitle>{cnpj.format(data.identification_number)}</SubTitle>
                             </View>
                             {
                                 data.is_pending && (
