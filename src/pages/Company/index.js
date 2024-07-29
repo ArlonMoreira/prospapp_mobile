@@ -7,6 +7,7 @@ import { list, pending } from '../../slices/companysSlice';
 //Components
 import Footer from '../../components/Footer';
 import CompanyCard from '../../components/CompanyCard';
+import SkeletonPlaceholder from '../../components/SkeletonPlaceholder';
 //Styles
 import { LinearGradient } from 'expo-linear-gradient';
 import { 
@@ -101,7 +102,9 @@ const Company = () => {
           </CompanyTitle>
         </CompanyTitleContainer>
 
-        <ScrollView scrollEnabled={true} style={{width: '100%'}}>
+        <ScrollView scrollEnabled={true} style={{width: '100%'}}>  
+          <SkeletonPlaceholder height={25} width={200}/>
+          <CompanyCard handleSubmit={handleSubmit} close={closeModal}/>       
           {
             companysPending.length > 0 && (
               <CompanysContainer>

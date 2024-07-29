@@ -21,6 +21,7 @@ import {
     StatusLabel
 } from './style';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+//libs
 import { cnpj } from 'cpf-cnpj-validator';
 
 const URL = process.env.EXPO_PUBLIC_API_URL;
@@ -41,49 +42,57 @@ const CompanyCard = ({data, handleSubmit, close}) => {
 
     return (
         <View style={{flex: 1}}>
-            <Modal
-                transparent={true}
-                animationType='slide'
-                visible={showModal}
-                onRequestClose={() => setShowModal(false)} // For Android back button
-            >
-                <TouchableWithoutFeedback onPress={() => setShowModal(false)}>
-                    <ModalContainer>
-                        <ModalContent>
-                            {
-                                data.is_pending && (
-                                    <>
-                                        <ModalTitle>Deseja cancelar a solicitação ?</ModalTitle>
-                                        <ModalMensage>Ao clicar no botão abaixo, será cancelado o pedido de associação à empresa {data.slug_name}. É possível cancelar o pedido de associação antes que a empresa aceite a solicitação.</ModalMensage>
-                                    </>
-                                )
-                            }
-                            {        
-                                (!data.is_pending && !data.is_joined) && (
-                                    <>
-                                        <ModalTitle>Deseja associar à {data.slug_name}?</ModalTitle>
-                                        <ModalMensage>Ao clicar no botão abaixo será enviado uma solicitação a empresa {data.slug_name}. Aguarde até que ela aceite.</ModalMensage>
-                                    </>
-                                )
-                            }
-                            <ButtonLg title={data.is_pending ? "Cancelar" : "Confirmar"} action={() => handleSubmit(data)} loading={loadingPending}/>
-                        </ModalContent>
-                    </ModalContainer>
-                </TouchableWithoutFeedback>
-            </Modal>
+            {
+                data && (
+                    <Modal
+                        transparent={true}
+                        animationType='slide'
+                        visible={showModal}
+                        onRequestClose={() => setShowModal(false)} // For Android back button
+                    >
+                        <TouchableWithoutFeedback onPress={() => setShowModal(false)}>
+                            <ModalContainer>
+                                <ModalContent>
+                                    {
+                                        data.is_pending && (
+                                            <>
+                                                <ModalTitle>Deseja cancelar a solicitação ?</ModalTitle>
+                                                <ModalMensage>Ao clicar no botão abaixo, será cancelado o pedido de associação à empresa {data && data.slug_name}. É possível cancelar o pedido de associação antes que a empresa aceite a solicitação.</ModalMensage>
+                                            </>
+                                        )
+                                    }
+                                    {        
+                                        (!data.is_pending && !data.is_joined) && (
+                                            <>
+                                                <ModalTitle>Deseja associar à {data.slug_name}?</ModalTitle>
+                                                <ModalMensage>Ao clicar no botão abaixo será enviado uma solicitação a empresa {data && data.slug_name}. Aguarde até que ela aceite.</ModalMensage>
+                                            </>
+                                        )
+                                    }
+                                    <ButtonLg title={data.is_pending ? "Cancelar" : "Confirmar"} action={() => handleSubmit(data)} loading={loadingPending}/>
+                                </ModalContent>
+                            </ModalContainer>
+                        </TouchableWithoutFeedback>
+                    </Modal>
+                )
+            }
             <Container>
                 <Button onPress={() => setShowModal(true)} disabled={loadingPending}>
                     <LogoArea>
-                        <Logo source={{uri:`${URL}files/${data.logo}`}}/>
+                        {
+                            data && (
+                                <Logo source={{uri:`${URL}files/${data.logo}`}}/>
+                            )
+                        }
                     </LogoArea>
                     <InfoArea>
                         <View style={{flex:1, justifyContent: 'space-between'}}>
                             <View>
-                                <Title>{data.slug_name}</Title>
-                                <SubTitle>{cnpj.format(data.identification_number)}</SubTitle>
+                                <Title>{data && data.slug_name}</Title>
+                                <SubTitle>{data && cnpj.format(data.identification_number)}</SubTitle>
                             </View>
                             {
-                                data.is_pending && (
+                                data && data.is_pending && (
                                     <Status>
                                         <MaterialIcons name='hourglass-top' size={18} color='#008C81'/>
                                         <StatusLabel>Pendente</StatusLabel>
@@ -91,7 +100,7 @@ const CompanyCard = ({data, handleSubmit, close}) => {
                                 )
                             }
                             {
-                                (!data.is_pending && !data.is_joined) && (
+                                data && (!data.is_pending && !data.is_joined) && (
                                     <Status>
                                         <MaterialCommunityIcons name='cancel' size={18} color='#008C81'/>
                                         <StatusLabel>Não associado</StatusLabel>
