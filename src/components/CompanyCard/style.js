@@ -1,10 +1,10 @@
 import styled from 'styled-components/native';
-import { Image, TouchableOpacity, View } from 'react-native';
+import { Image, View } from 'react-native';
 
 
 export const ModalContainer = styled.View`
     flex: 1;
-    justify-content: flex-end;  
+    justify-content: flex-end;
 `;
 
 export const ModalContent = styled(View).attrs({
@@ -42,23 +42,23 @@ export const ModalMensage = styled.Text`
 `;
 
 export const Container = styled(View).attrs({
-    shadowColor: '#4c4c4c',
+    shadowColor: '#d1d1d1',
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
 })`
     height: 125px;
     border-radius: 16px;
-    background-color: #fff;
+    background-color: #f7f7f7;
     margin-left: 20px;
     margin-right: 20px;  
     margin-top: 16px;  
     margin-bottom: 12px;
-    border: 1px solid #dddddd;
+    border: 1px solid #ebebeb;
 `;
 
 export const Button = styled.TouchableOpacity`
@@ -71,7 +71,7 @@ export const Button = styled.TouchableOpacity`
 
 export const LogoArea = styled.View`
     width: 30%;
-    background: #f7f7f7;
+    background: #fff;
     border-radius: 10px;
     flex: 1;
     align-items: center;

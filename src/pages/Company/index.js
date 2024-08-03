@@ -3,7 +3,7 @@ import { StyleSheet, ScrollView} from 'react-native';
 //Hooks
 import { useDispatch, useSelector } from 'react-redux';
 //Redux
-import { list, pending } from '../../slices/companysSlice';
+import { list, sendRequest } from '../../slices/companysSlice';
 //Components
 import Footer from '../../components/Footer';
 import CompanyCard from '../../components/CompanyCard';
@@ -35,7 +35,7 @@ const Company = () => {
 
   //Redux
   const dispatch = useDispatch();
-  const { data, loadingPending } = useSelector((state) => state.companys);
+  const { data, loadingPending, loadingList } = useSelector((state) => state.companys);
   const [ companys, setCompanys ] = useState([]);
   const [ companysPending, setCompanysPending ] = useState([]);
 
@@ -50,8 +50,8 @@ const Company = () => {
     setCompanysPending(data.filter((company) => company.is_pending && !company.is_joined))
   }, [data]);
 
-  const handleSubmit = async (company) => {
-    await dispatch(pending({
+  const handleSubmit = (company) => {
+    dispatch(sendRequest({
       company: company.company
     }));
 
@@ -103,10 +103,22 @@ const Company = () => {
         </CompanyTitleContainer>
 
         <ScrollView scrollEnabled={true} style={{width: '100%'}}>  
-          <SkeletonPlaceholder height={25} width={200}/>
-          <CompanyCard handleSubmit={handleSubmit} close={closeModal}/>       
           {
-            companysPending.length > 0 && (
+            loadingList && (
+              <CompanysContainer>
+                <CompanysTitleContainer>
+                  <SkeletonPlaceholder height={20} width={230}/>
+                </CompanysTitleContainer>
+    
+                <Companys>
+                  <CompanyCard isLoading={true}/>
+                  <CompanyCard isLoading={true}/>
+                </Companys>
+              </CompanysContainer>
+            )
+          }
+          {
+            (!loadingList && companysPending.length > 0) && (
               <CompanysContainer>
                 <CompanysTitleContainer>
                   <FontAwesome6 name='hourglass-end' size={20} color='#008C81'/>
@@ -124,7 +136,7 @@ const Company = () => {
             )
           }
           {
-            companys.length > 0 && (
+            (!loadingList && companys.length > 0) && (
               <CompanysContainer>
                 <CompanysTitleContainer>
                   <MaterialIcons name='business-center' size={22} color='#008C81'/>

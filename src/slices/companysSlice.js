@@ -12,8 +12,8 @@ const initialState = {
 export const list = createAsyncThunk(
     'companys/list',
     async(_, { getState, rejectWithValue }) => {
-        //const userAuth = await getState().auth.userAuth; //Obter token que encontra-se no estado de autenticação
-        const response = await useRequest().companyList('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIyNjM3OTM4LCJpYXQiOjE3MjIyMDU5MzgsImp0aSI6IjFmZDBmNmQyYmVhZDQxNDI5ZWY2YmZhM2RkNWZkMWFjIiwidXNlcl9pZCI6MX0.pg8u0HJrmDe8xcFbtqDammS_mFpXmb8mxt-p2OAcm5U');
+        const userAuth = await getState().auth.userAuth; //Obter token que encontra-se no estado de autenticação
+        const response = await useRequest().companyList(userAuth.token)//('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIzMTE0NDk3LCJpYXQiOjE3MjI2ODI0OTcsImp0aSI6IjYwNTViMzhkOWIzYTQ3MThiOTI4YmI1MzA3NzM4ZGIzIiwidXNlcl9pZCI6MX0.Zy0HBVb0XCsaiFScZF1or2AoyjyvSeKNMYWpCuuaVBk');
 
         if(response.success){          
             return response;
@@ -24,13 +24,13 @@ export const list = createAsyncThunk(
     }
 );
 
-export const pending = createAsyncThunk(
+export const sendRequest = createAsyncThunk(
     'companys/pending',
-    async(data, {rejectWithValue}) => {
-        //const userAuth = await getState().auth.userAuth; //Obter token que encontra-se no estado de autenticação
+    async(data, {getState, rejectWithValue}) => {
+        const userAuth = await getState().auth.userAuth; //Obter token que encontra-se no estado de autenticação
         const response = await useRequest().companyPending({
             data,
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIyNjM3OTM4LCJpYXQiOjE3MjIyMDU5MzgsImp0aSI6IjFmZDBmNmQyYmVhZDQxNDI5ZWY2YmZhM2RkNWZkMWFjIiwidXNlcl9pZCI6MX0.pg8u0HJrmDe8xcFbtqDammS_mFpXmb8mxt-p2OAcm5U'
+            token: userAuth.token//'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIzMTE0NDk3LCJpYXQiOjE3MjI2ODI0OTcsImp0aSI6IjYwNTViMzhkOWIzYTQ3MThiOTI4YmI1MzA3NzM4ZGIzIiwidXNlcl9pZCI6MX0.Zy0HBVb0XCsaiFScZF1or2AoyjyvSeKNMYWpCuuaVBk'
         });
 
         if(response.success){
@@ -53,10 +53,10 @@ export const companysSlice = createSlice({
                 state.loadingList = false;
                 state.data = action.payload.data;
             })
-            .addCase(pending.pending, (state)=>{
+            .addCase(sendRequest.pending, (state)=>{
                 state.loadingPending = true;
             })
-            .addCase(pending.fulfilled, (state, action)=>{
+            .addCase(sendRequest.fulfilled, (state, action)=>{
                 state.loadingPending = false;
                 state.data = action.payload.data;
             });

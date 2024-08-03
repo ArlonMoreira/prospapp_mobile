@@ -4,6 +4,7 @@ import { View, Modal, TouchableWithoutFeedback } from 'react-native';
 import { useSelector } from 'react-redux';
 //Components
 import ButtonLg from '../ButtonLg';
+import SkeletonPlaceholder from '../SkeletonPlaceholder';
 //Styles
 import { 
     Container,
@@ -26,7 +27,7 @@ import { cnpj } from 'cpf-cnpj-validator';
 
 const URL = process.env.EXPO_PUBLIC_API_URL;
 
-const CompanyCard = ({data, handleSubmit, close}) => {
+const CompanyCard = ({data, handleSubmit, close, isLoading}) => {
     //Carregamento da solicitação.
     const { loadingPending } = useSelector((state) => state.companys);
 
@@ -40,6 +41,13 @@ const CompanyCard = ({data, handleSubmit, close}) => {
         
     }, [close]);
 
+    const handleCloseModal = () => { //Permite que o modal seja fecha só se o carregamento não tiver ocorrendo o processamento de uma requisição, enquanto isso, o usuário não pode fechar o modal.
+        if(!loadingPending){
+            setShowModal(false);
+        }
+        
+    };
+
     return (
         <View style={{flex: 1}}>
             {
@@ -48,9 +56,9 @@ const CompanyCard = ({data, handleSubmit, close}) => {
                         transparent={true}
                         animationType='slide'
                         visible={showModal}
-                        onRequestClose={() => setShowModal(false)} // For Android back button
+                        onRequestClose={() => handleCloseModal()} //Permite fechar o modal quando clicado em uma área fora
                     >
-                        <TouchableWithoutFeedback onPress={() => setShowModal(false)}>
+                        <TouchableWithoutFeedback onPress={() => handleCloseModal()}>
                             <ModalContainer>
                                 <ModalContent>
                                     {
@@ -76,11 +84,16 @@ const CompanyCard = ({data, handleSubmit, close}) => {
                     </Modal>
                 )
             }
-            <Container>
+            <Container disabled={isLoading} activeOpacity={isLoading ? 1 : 0.2}>
                 <Button onPress={() => setShowModal(true)} disabled={loadingPending}>
                     <LogoArea>
                         {
-                            data && (
+                            isLoading && (
+                                <SkeletonPlaceholder height={105} width={100}/>
+                            )
+                        }
+                        {
+                            !isLoading && data && (
                                 <Logo source={{uri:`${URL}files/${data.logo}`}}/>
                             )
                         }
@@ -88,8 +101,24 @@ const CompanyCard = ({data, handleSubmit, close}) => {
                     <InfoArea>
                         <View style={{flex:1, justifyContent: 'space-between'}}>
                             <View>
-                                <Title>{data && data.slug_name}</Title>
-                                <SubTitle>{data && cnpj.format(data.identification_number)}</SubTitle>
+                                {
+                                    isLoading && (
+                                        <View style={{marginTop: 10}}>
+                                            <SkeletonPlaceholder height={20} width={180}/>
+                                            <View style={{marginTop: 5}}>
+                                                <SkeletonPlaceholder height={15} width={130}/>
+                                            </View>
+                                        </View>
+                                    ) 
+                                }
+                                {
+                                    !isLoading && data && (
+                                        <>
+                                            <Title>{data && data.slug_name}</Title>
+                                            <SubTitle>{data && cnpj.format(data.identification_number)}</SubTitle>                                        
+                                        </>
+                                    )
+                                }
                             </View>
                             {
                                 data && data.is_pending && (

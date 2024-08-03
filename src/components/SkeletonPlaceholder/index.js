@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#dfdfdf',
         overflow: 'hidden',
-        borderRadius: 5
+        borderRadius: 8
     }
 });
 

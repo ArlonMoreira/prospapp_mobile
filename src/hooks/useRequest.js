@@ -8,7 +8,6 @@ const useRequest = () => {
   
         try {
             const response = await fetch(`${URL}${endpoint}`, params);
-
             const result = await response.json();
 
             const request = {
