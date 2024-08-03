@@ -27,7 +27,7 @@ import { cnpj } from 'cpf-cnpj-validator';
 
 const URL = process.env.EXPO_PUBLIC_API_URL;
 
-const CompanyCard = ({data, handleSubmit, close, isLoading}) => {
+const CompanyCard = ({data, handleSubmit, close, isLoading, setShowFade}) => {
     //Carregamento da solicitação.
     const { loadingPending } = useSelector((state) => state.companys);
 
@@ -47,6 +47,17 @@ const CompanyCard = ({data, handleSubmit, close, isLoading}) => {
         }
         
     };
+
+    useEffect(()=>{
+        if(setShowFade){
+            if(showModal){
+                setShowFade(true);
+            } else {
+                setShowFade(false);
+            }
+        }
+        
+    }, [showModal, setShowFade])
 
     return (
         <View style={{flex: 1}}>

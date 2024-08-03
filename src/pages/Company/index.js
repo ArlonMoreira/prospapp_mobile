@@ -8,6 +8,7 @@ import { list, sendRequest } from '../../slices/companysSlice';
 import Footer from '../../components/Footer';
 import CompanyCard from '../../components/CompanyCard';
 import SkeletonPlaceholder from '../../components/SkeletonPlaceholder';
+import Fade from '../../components/Fade';
 //Styles
 import { LinearGradient } from 'expo-linear-gradient';
 import { 
@@ -29,6 +30,9 @@ import {
 import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons'; 
 
 const Company = () => {
+
+  //Show fase
+  const [ showFade, setShowFade ] = useState(false);
 
   //Close modal
   const [ closeModal, setCloseModal ] = useState(false);
@@ -69,7 +73,7 @@ const Company = () => {
 
   return (
     <Container>
-
+      { showFade && <Fade/> }
       <LinearGradient
         colors={['#008C81', '#0C6661']}
         style={styles.background}
@@ -128,7 +132,7 @@ const Company = () => {
                 <Companys>
                   {
                     companysPending.map((item) => (
-                      <CompanyCard key={item.company} data={item} handleSubmit={handleSubmit} close={closeModal}/>
+                      <CompanyCard key={item.company} data={item} handleSubmit={handleSubmit} close={closeModal} setShowFade={setShowFade}/>
                     ))
                   }
                 </Companys>
@@ -146,7 +150,7 @@ const Company = () => {
                 <Companys>
                   {
                     companys.map((item) => (
-                      <CompanyCard key={item.company} data={item} handleSubmit={handleSubmit} close={closeModal}/>
+                      <CompanyCard key={item.company} data={item} handleSubmit={handleSubmit} close={closeModal} setShowFade={setShowFade}/>
                     ))
                   }         
                 </Companys>
