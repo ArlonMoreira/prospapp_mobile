@@ -5,11 +5,11 @@ const URL = process.env.EXPO_PUBLIC_API_URL;
 const useRequest = () => {
 
     const request = async({endpoint, params}) => {
-  
+        
         try {
             const response = await fetch(`${URL}/${endpoint}`, params);
             const result = await response.json();
-
+            console.log(params)
             const request = {
                 success: response.ok,
                 ...result
@@ -51,6 +51,19 @@ const useRequest = () => {
                 }                
             });
         },
+        logout: ({data, token}) => {
+            return request({
+                endpoint: 'user/logout/',
+                params: {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(data)
+                }                
+            });
+        },        
         me: (token) => {
             return request({
                 endpoint: 'user/me/',

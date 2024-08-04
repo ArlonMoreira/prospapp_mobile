@@ -1,9 +1,10 @@
 import React, { useEffect, useState} from 'react'
-import { StyleSheet, ScrollView} from 'react-native';
+import { StyleSheet, ScrollView, View} from 'react-native';
 //Hooks
 import { useDispatch, useSelector } from 'react-redux';
 //Redux
 import { list, sendRequest } from '../../slices/companysSlice';
+import { logout } from '../../slices/authSlice';
 //Components
 import LogoArea from '../../components/LogoArea';
 import CompanyCard from '../../components/CompanyCard';
@@ -26,13 +27,19 @@ import {
   CompanysTitleContainer,
   CompanysTitle,
   Companys,
-  Photo
+  Photo,
+  ExitContainerButton,
+  ExitContainerButtonText
 } from './styles';
 import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons';
+import { ActivityIndicator } from 'react-native'
 
 const URL = process.env.EXPO_PUBLIC_API_URL;
 
 const Company = () => {
+
+  //Auth data
+  const { loadingLogout } = useSelector((state) => state.auth);
 
   //Obter dados do usuário.
   const { userData } = useSelector((state) => state.me);
@@ -104,12 +111,23 @@ const Company = () => {
         </Header>
         <Perfil>
           <PerfilContainer>
-            <NamePerfil>
-              {name}
-            </NamePerfil>
-            <WelcomeMensage>
-              Seja Bem Vindo(a)! 
-            </WelcomeMensage>
+            <View>
+              <NamePerfil>
+                {name}
+              </NamePerfil>
+              <WelcomeMensage>
+                Seja Bem Vindo(a)! 
+              </WelcomeMensage>
+            </View>
+            <ExitContainerButton onPress={() => dispatch(logout())} disabled={loadingLogout}>
+              {
+                loadingLogout ? (
+                  <ActivityIndicator size="small" color="#FFFFFF"/>
+                ): (
+                  <ExitContainerButtonText>Desconectar</ExitContainerButtonText>
+                )
+              }
+            </ExitContainerButton>
           </PerfilContainer>
           <PerfilContainer>
             <PhotoContainer>

@@ -6,6 +6,7 @@ import useRequest from "../hooks/useRequest";
 const initialState = {
     userAuth: null,
     success: false,
+    loadingLogout: false,
     loading: false,
     errorMessage: null,
     errors: []
@@ -25,6 +26,26 @@ export const signin = createAsyncThunk(
     }
 );
 
+export const logout = createAsyncThunk(
+    'auth/logout',
+    async(_, {getState, rejectWithValue}) => {
+        const userAuth = await getState().auth.userAuth;
+        const response = await useRequest().logout({
+            data: {
+                refresh: userAuth.refresh
+            },
+            token: userAuth.token
+        });
+
+        if(response.success){
+            return response;
+        } else {
+            return rejectWithValue(response);
+        }
+
+    }
+);
+
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
@@ -35,11 +56,19 @@ export const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            //Carregamento
+            .addCase(logout.pending, (state) => {
+                state.loadingLogout = true;
+            })
+            //Sucesso logout
+            .addCase(logout.fulfilled, (state) => {
+                state.userAuth = null;
+                state.loadingLogout = false;
+            })
+            //Carregamento login
             .addCase(signin.pending, (state) => {
                 state.loading = true;
             })
-            //Sucesso
+            //Sucesso login
             .addCase(signin.fulfilled, (state, action) => {
                 state.loading = false;
                 state.userAuth = action.payload.data;
@@ -47,7 +76,7 @@ export const authSlice = createSlice({
                 state.errorMessage = null;
                 state.errors = [];
             })
-            //Erro
+            //Erro logout
             .addCase(signin.rejected, (state, action) => {
                 state.loading = false;
                 state.userAuth = null;

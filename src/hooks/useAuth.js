@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 const userAuth = () => {
-
+    //Automaticamente quando userAuth for atualizado, irá identificar como sendo autenticado ou não;
     const [ auth, setAuth ] = useState(false);
     const { userAuth } = useSelector((state) => state.auth);
 

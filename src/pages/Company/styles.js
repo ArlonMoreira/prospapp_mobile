@@ -8,6 +8,22 @@ export const Container = styled.View`
     elevation: 0;    
 `;
 
+export const ExitContainerButton = styled.TouchableOpacity`
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    background: #16443E;
+    height: 42px;
+    width: 100%;
+    border-radius: 50px;
+`;
+
+export const ExitContainerButtonText = styled.Text`
+    color: #fff;
+    font-size: 14px;
+    font-family: 'montserrat-semibold';
+`;
+
 export const Header = styled.View`
     margin-top: 30px;
     max-height: 35px;
@@ -35,6 +51,7 @@ export const WelcomeMensage = styled.Text`
 export const PerfilContainer = styled.View`
     width: 50%;
     padding: 20px;
+    justify-content: space-between;
 `;
 
 export const PhotoContainer = styled.View`
