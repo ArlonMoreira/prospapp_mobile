@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 //Redux
 import { list, sendRequest } from '../../slices/companysSlice';
 //Components
-import Footer from '../../components/Footer';
+import LogoArea from '../../components/LogoArea';
 import CompanyCard from '../../components/CompanyCard';
 import SkeletonPlaceholder from '../../components/SkeletonPlaceholder';
 import Fade from '../../components/Fade';
@@ -26,19 +26,26 @@ import {
   CompanysTitleContainer,
   CompanysTitle,
   Companys,
+  Photo
 } from './styles';
-import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons'; 
+import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons';
+
+const URL = process.env.EXPO_PUBLIC_API_URL;
 
 const Company = () => {
 
   //Obter dados do usuário.
   const { userData } = useSelector((state) => state.me);
   const [ name, setName ] = useState('');
+  const [ photoPerfil, setPhotoPerfil ] = useState(null);
 
   useEffect(()=>{
     if(userData){
       const full_name = userData.full_name.split(' ');
-      setName(`${full_name.shift()}`);
+      full_name.length > 0 ? setName(`${full_name.shift()}`) : '';
+
+      const profileImage = userData.profileImage
+      setPhotoPerfil(`${URL}${profileImage}`);
     }
 
   }, [userData]);  
@@ -93,7 +100,7 @@ const Company = () => {
         style={styles.background}
       >
         <Header>
-          <Footer/>
+          <LogoArea/>
         </Header>
         <Perfil>
           <PerfilContainer>
@@ -106,7 +113,9 @@ const Company = () => {
           </PerfilContainer>
           <PerfilContainer>
             <PhotoContainer>
-
+              {
+                photoPerfil && <Photo source={{uri: photoPerfil}}/>
+              }
             </PhotoContainer>
           </PerfilContainer>          
         </Perfil>

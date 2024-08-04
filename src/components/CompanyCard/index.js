@@ -105,7 +105,7 @@ const CompanyCard = ({data, handleSubmit, close, isLoading, setShowFade}) => {
                         }
                         {
                             !isLoading && data && (
-                                <Logo source={{uri:`${URL}files/${data.logo}`}}/>
+                                <Logo source={{uri:`${URL}/files/${data.logo}`}}/>
                             )
                         }
                     </LogoArea>

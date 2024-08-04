@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import { Image } from 'react-native';
 
 export const Container = styled.View`
     flex: 1;
@@ -20,11 +21,6 @@ export const Perfil = styled.View`
     flex-direction: row;
 `;
 
-export const PerfilContainer = styled.View`
-    width: 50%;
-    padding: 20px;
-`;
-
 export const NamePerfil = styled.Text`
     color: #fff;
     font-size: 24px;
@@ -36,10 +32,26 @@ export const WelcomeMensage = styled.Text`
     font-family: 'montserrat-medium';
 `;
 
+export const PerfilContainer = styled.View`
+    width: 50%;
+    padding: 20px;
+`;
+
 export const PhotoContainer = styled.View`
     flex: 1;
     background: #f1f1f1;
     border-radius: 20px;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #f1f1f1;
+`;
+
+export const Photo = styled(Image).attrs({
+    resizeMode: 'cover'    
+})`
+    width: 100%;
+    height: 100%;
 `;
 
 export const Main = styled.View`

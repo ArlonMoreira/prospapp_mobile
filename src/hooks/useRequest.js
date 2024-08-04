@@ -7,7 +7,7 @@ const useRequest = () => {
     const request = async({endpoint, params}) => {
   
         try {
-            const response = await fetch(`${URL}${endpoint}`, params);
+            const response = await fetch(`${URL}/${endpoint}`, params);
             const result = await response.json();
 
             const request = {
