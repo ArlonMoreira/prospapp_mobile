@@ -31,6 +31,18 @@ import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons';
 
 const Company = () => {
 
+  //Obter dados do usuário.
+  const { userData } = useSelector((state) => state.me);
+  const [ name, setName ] = useState('');
+
+  useEffect(()=>{
+    if(userData){
+      const full_name = userData.full_name.split(' ');
+      setName(`${full_name.shift()}`);
+    }
+
+  }, [userData]);  
+
   //Show fase
   const [ showFade, setShowFade ] = useState(false);
 
@@ -42,6 +54,7 @@ const Company = () => {
   const { data, loadingPending, loadingList } = useSelector((state) => state.companys);
   const [ companys, setCompanys ] = useState([]);
   const [ companysPending, setCompanysPending ] = useState([]);
+  const [ companysJoined, setCompanysJoined ] = useState([]);
 
   //Listar todas companias
   useEffect(()=>{
@@ -50,6 +63,7 @@ const Company = () => {
 
   //Serão listadas todas as empresas não associadas e não pendentes.
   useEffect(()=>{
+    setCompanysJoined(data.filter((company) => company.is_joined));
     setCompanys(data.filter((company) => !company.is_pending && !company.is_joined));
     setCompanysPending(data.filter((company) => company.is_pending && !company.is_joined))
   }, [data]);
@@ -84,7 +98,7 @@ const Company = () => {
         <Perfil>
           <PerfilContainer>
             <NamePerfil>
-              Samantha
+              {name}
             </NamePerfil>
             <WelcomeMensage>
               Seja Bem Vindo(a)! 
@@ -106,7 +120,25 @@ const Company = () => {
           </CompanyTitle>
         </CompanyTitleContainer>
 
-        <ScrollView scrollEnabled={true} style={{width: '100%'}}>  
+        <ScrollView scrollEnabled={true} style={{width: '100%'}}>
+          {
+            (!loadingList && companysJoined.length > 0) && (
+              <CompanysContainer>
+                <CompanysTitleContainer>
+                  <FontAwesome6 name='hourglass-end' size={20} color='#008C81'/>
+                  <CompanysTitle>Minhas empresas</CompanysTitle>
+                </CompanysTitleContainer>
+    
+                <Companys>
+                  {
+                    companysJoined.map((item) => (
+                      <CompanyCard key={item.company} data={item}/>
+                    ))
+                  }
+                </Companys>
+              </CompanysContainer>              
+            )
+          }  
           {
             loadingList && (
               <CompanysContainer>

@@ -51,6 +51,17 @@ const useRequest = () => {
                 }                
             });
         },
+        me: (token) => {
+            return request({
+                endpoint: 'user/me/',
+                params: {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }                
+            }); 
+        },
         companyList: (token) => {
             return request({
                 endpoint: 'companys/pending/',
