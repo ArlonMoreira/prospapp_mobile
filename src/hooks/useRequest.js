@@ -9,7 +9,7 @@ const useRequest = () => {
         try {
             const response = await fetch(`${URL}/${endpoint}`, params);
             const result = await response.json();
-            console.log(params)
+
             const request = {
                 success: response.ok,
                 ...result

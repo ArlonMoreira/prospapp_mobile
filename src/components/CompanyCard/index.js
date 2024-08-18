@@ -59,6 +59,12 @@ const CompanyCard = ({data, handleSubmit, close, isLoading, setShowFade}) => {
         
     }, [showModal, setShowFade])
 
+    useEffect(()=>{
+        if(data){
+        console.log(`${URL}/files/${data.logo}`)
+        }
+    }, [data]);
+
     return (
         <View style={{flex: 1}}>
             {
