@@ -29,45 +29,47 @@ const Routes = () => {
   //Obter dados do usuário.
   const { loading, userData } = useSelector((state) => state.me);
   const [ accessHome, setAccessHome ] = useState(false);
+  const [ accessCompany, setAccessCompany ] = useState(false);
 
   //Direcionar pra página Home automaticamente caso estiver associado a uma empresa;
   useEffect(()=>{
     if(!loading && userData){
-      if(userData.companys_joined.length == 1){
+      if(userData.companys_joined.length){
         setAccessHome(true);
+        setAccessCompany(false);
+
       }
+
+      if(!userData.companys_joined.length){
+        setAccessCompany(true);
+        setAccessHome(false);
+      }
+
     }
     
   }, [userData, loading]);  
 
-  if(loading){
+  if (loading) {
     return (
       <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#F0F4FF'
-          }}
-        >
-        <ActivityIndicator size="large" color="#131313"/>
-      </View>      
-    )
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: '#F0F4FF',
+        }}
+      >
+        <ActivityIndicator size="large" color="#131313" />
+      </View>
+    );
   }
 
   return (
     <>
-      {
-        !loading && auth && accessHome && <AppRoutes/>
-      }
-      {
-        !loading && auth && !accessHome && <Company/>
-      }
-      {
-        !auth && <AuthRoutes/>
-      }
+      {auth && accessHome && <AppRoutes />}
+      {auth && accessCompany && <Company />}
+      {!auth && <AuthRoutes />}
     </>
-
   )
 };
 

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 //Redux
 import { useSelector } from 'react-redux';
 //Styles
-import { View, Text } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import {
     Container,
@@ -27,7 +26,7 @@ const Home = () => {
     const [ namePerfil, setNamePerfil ] = useState('');
 
     useEffect(()=>{
-        console.log(userData)
+
         if(userData){
             if(userData.companys_joined.length){
                 setLogo(`${URL}/files/${userData.companys_joined[0].logo}`);
