@@ -1,5 +1,5 @@
 import styled from 'styled-components/native';
-import { Image } from 'react-native';
+import { Image, View } from 'react-native';
 
 export const Container = styled.View`
     flex: 1;
@@ -61,4 +61,75 @@ export const Photo = styled(Image).attrs({
 })`
     width: 100%;
     height: 100%;
+`;
+
+export const Body = styled.View`
+    flex: 1;
+    padding: 15px
+`;
+
+export const ScrollArea = styled.ScrollView`
+    width: 100%;
+    height: 100%;
+`;
+
+export const TitleArea = styled.View`
+    height: 100px;
+    justify-content: center;   
+`;
+
+export const Title = styled.Text`
+    font-size: 22px;
+    font-family: 'montserrat-bold';
+    font-align: start;
+    color: #fff;    
+`;
+
+export const ModuleContainer = styled.TouchableOpacity`
+    height: 240px;
+    width: 100%;
+    border-radius: 20px;
+    background: #fff;
+    overflow: hidden;
+    shadow-color: #000;
+    elevation: 5;  
+    position: relative;
+    align-items: center;
+    margin-top: 20px; 
+`;
+
+export const ImageContent = styled(Image).attrs({
+    resizeMode: 'cover'     
+})`
+    width: 100%;
+    height: 100%;
+`;
+
+export const TextArea = styled(View).attrs({
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 8,    
+})`
+    width: 94%;
+    height: 36px;
+    margin: 5px;
+    border-radius: 50px;
+    position: absolute;
+    bottom: 5px;  
+    background: #fff;
+    align-items: center;
+    justify-content: center;     
+`;
+
+export const TitleModule = styled.Text`
+    font-size: 18px;
+    font-family: 'montserrat-semibold';
+    text-align: center;
+    align-items: center;
+    margin-left: 5px;    
 `;

@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+//Navigation
+import { useNavigation } from '@react-navigation/native';
 //Redux
 import { useSelector } from 'react-redux';
 //Styles
@@ -12,12 +14,23 @@ import {
     LoadArea,
     PerfilLabel,
     PhotoContainer,
-    Photo
+    Photo,
+    Body,
+    ScrollArea,
+    TitleArea,
+    Title,
+    ModuleContainer,
+    ImageContent,
+    TextArea,
+    TitleModule    
 } from './styles';
 
 const URL = process.env.EXPO_PUBLIC_API_URL;
 
 const Home = () => {
+
+    //Navegação
+    const navigation = useNavigation();
 
     const { userData } = useSelector((state) => state.me);
     const [ logo, setLogo ] = useState(null);
@@ -26,7 +39,6 @@ const Home = () => {
     const [ namePerfil, setNamePerfil ] = useState('');
 
     useEffect(()=>{
-
         if(userData){
             if(userData.companys_joined.length){
                 setLogo(`${URL}/files/${userData.companys_joined[0].logo}`);
@@ -70,6 +82,25 @@ const Home = () => {
                     </PhotoContainer>
                 </PerfilArea>
             </Header>
+            <Body>
+                <TitleArea>
+                    <Title>Escolha o módulo que deseja acessar</Title>
+                </TitleArea>
+                <ScrollArea>
+                    <ModuleContainer onPress={() => navigation.navigate('ElectronicCall')}>
+                        <ImageContent source={require('../../public/ponto_eletronico.png')}/>
+                        <TextArea>
+                            <TitleModule style={{color: primaryColor}}>Ponto Eletrônico</TitleModule>
+                        </TextArea>
+                    </ModuleContainer>
+                    <ModuleContainer onPress={() => navigation.navigate('ElectronicPoint')}>
+                        <ImageContent source={require('../../public/ponto_eletronico.png')}/>
+                        <TextArea>
+                            <TitleModule style={{color: primaryColor}}>Chamada Eletrônica</TitleModule>
+                        </TextArea>
+                    </ModuleContainer>                    
+                </ScrollArea>
+            </Body>
         </Container>
     )
 

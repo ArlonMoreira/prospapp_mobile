@@ -4,9 +4,9 @@ import { useSelector } from 'react-redux';
 //Styles
 import Feather from 'react-native-vector-icons/Feather';
 //Pages
-import Home from '../pages/Home';
 import Perfil from '../pages/Perfil';
 //Navigation
+import HomeRoutes from './home.routes';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const Tab = createBottomTabNavigator();
@@ -38,24 +38,24 @@ const AppRoutes = () => {
 
       }}    
     >
-      <Tab.Screen
-        name="Home"
-        component={Home}
-        options={{
-          tabBarIcon: ({ color, size }) => {
-            return <Feather name="home" color={color} size={size} />
-          },
-        }}
-      />
-      <Tab.Screen
-        name="Perfil"
-        component={Perfil}
-        options={{
-          tabBarIcon: ({ color, size }) => {
-            return <Feather name="user" color={color} size={size} />
-          },
-        }}
-      />
+    <Tab.Screen
+      name="HomeRoutes"
+      component={HomeRoutes}
+      options={{
+        tabBarIcon: ({ color, size }) => {
+          return <Feather name="home" color={color} size={size} />
+        },
+      }}
+    />
+    <Tab.Screen
+      name="Perfil"
+      component={Perfil}
+      options={{
+        tabBarIcon: ({ color, size }) => {
+          return <Feather name="user" color={color} size={size} />
+        },
+      }}
+    />
     </Tab.Navigator>
   )
 }
