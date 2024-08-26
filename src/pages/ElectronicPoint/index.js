@@ -1,12 +1,34 @@
-import React from 'react'
-import { Text } from 'react-native'
+import React, { useState, useEffect } from 'react';
+//Components
+import Header from '../../components/Header';
+//Redux
+import { useSelector } from 'react-redux';
 //Styles
+import { StatusBar } from 'expo-status-bar';
 import { Container } from './styles'
 
 const ElectronicPoint = () => {
+
+  const { userData } = useSelector((state) => state.me);
+  const [ primaryColor, setPrimaryColor ] = useState('#fff');
+  
+  useEffect(()=>{
+    if(userData){
+      if(userData.companys_joined.length){
+        setPrimaryColor(userData.companys_joined[0].primary_color);
+      }
+
+    }
+
+  }, [userData]);  
+
   return (
     <Container>
-        <Text>ElectronicPoint</Text>
+      <StatusBar 
+        translucent
+        backgroundColor="transparent"
+      />      
+      <Header themeColor={primaryColor}/>
     </Container>
   )
 };

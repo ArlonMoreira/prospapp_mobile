@@ -4,12 +4,14 @@ import authReducer from './src/slices/authSlice';
 import registerReducer  from './src/slices/registerSlice';
 import companysReducer from "./src/slices/companysSlice";
 import meReducer from './src/slices/meSlice';
+import classReducer from './src/slices/classSlice';
 
 export const store = configureStore({
     reducer: {
         auth: authReducer,
         register: registerReducer,
         companys: companysReducer,
-        me: meReducer
+        me: meReducer,
+        class: classReducer
     }
 });

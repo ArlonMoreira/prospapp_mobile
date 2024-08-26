@@ -87,13 +87,13 @@ const Home = () => {
                     <Title>Escolha o módulo que deseja acessar</Title>
                 </TitleArea>
                 <ScrollArea>
-                    <ModuleContainer onPress={() => navigation.navigate('ElectronicCall')}>
+                    <ModuleContainer onPress={() => navigation.navigate('ElectronicPoint')}>
                         <ImageContent source={require('../../public/ponto_eletronico.png')}/>
                         <TextArea>
                             <TitleModule style={{color: primaryColor}}>Ponto Eletrônico</TitleModule>
                         </TextArea>
                     </ModuleContainer>
-                    <ModuleContainer onPress={() => navigation.navigate('ElectronicPoint')}>
+                    <ModuleContainer onPress={() => navigation.navigate('ElectronicCall')}>
                         <ImageContent source={require('../../public/ponto_eletronico.png')}/>
                         <TextArea>
                             <TitleModule style={{color: primaryColor}}>Chamada Eletrônica</TitleModule>

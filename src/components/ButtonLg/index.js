@@ -7,15 +7,15 @@ import {
     Content
 } from './styles';
 
-const ButtonLg = ({title, action, loading=false, disabled=false}) => {
+const ButtonLg = ({title, action, loading=false, disabled=false, color='#fff', fontColor='#16443E', largeWidth='292px'}) => {
   return (
-    <Container onPress={() => action()} disabled={disabled}>
+    <Container onPress={() => action()} disabled={disabled} style={{backgroundColor: color, width: largeWidth}}>
       <Content>
         {
           loading ? (
-            <ActivityIndicator size="small" color="#16443E"/>
+            <ActivityIndicator size="small" color={fontColor}/>
           ): (
-            <Text>{title}</Text>            
+            <Text style={{color: fontColor}}>{title}</Text>            
           )
         }
       </Content>

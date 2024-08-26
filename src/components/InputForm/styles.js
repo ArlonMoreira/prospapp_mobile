@@ -8,10 +8,8 @@ export const Container = styled.View`
 
 export const Input = styled.TextInput`
     height: 100%;
-    color: #fff;
     padding: 5px;
     border-bottom-width: 1px;
-    border-bottom-color: #fff;
     font-size: 18px;
 `;
 
@@ -21,7 +19,6 @@ export const Stick = styled.View`
     bottom: 8px;
     height: 10px;
     width: 1px;
-    background: #fff;
     border: 0;
 `;
 

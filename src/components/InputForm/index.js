@@ -11,7 +11,7 @@ import {
 } from './styles';
 import { Feather } from '@expo/vector-icons'; 
 
-const InputForm = ({label, value, setValue, secureTextEntry}) => {
+const InputForm = ({label, value, setValue, secureTextEntry, color='#fff'}) => {
 
     const [isFocused, setIsFocused] = useState(false);
     const [isPasswordSecure, setIsPasswordSecure] = useState(secureTextEntry);
@@ -28,7 +28,7 @@ const InputForm = ({label, value, setValue, secureTextEntry}) => {
 
     const labelStyle = {
         position: 'absolute',
-        color: '#ffffff',
+        color,
         fontFamily: 'montserrat-regular',
         fontSize: 11,
         left: 12,
@@ -48,7 +48,7 @@ const InputForm = ({label, value, setValue, secureTextEntry}) => {
 
     return (
         <Container>
-            <Stick/>
+            <Stick style={{backgroundColor: color}}/>
             <Animated.Text style={labelStyle}>
                 {label}
             </Animated.Text>        
@@ -57,13 +57,14 @@ const InputForm = ({label, value, setValue, secureTextEntry}) => {
                 onChangeText={(text) => setValue(text)}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
-                secureTextEntry={isPasswordSecure}          
+                secureTextEntry={isPasswordSecure}   
+                style={{borderBottomColor: color, color: color}}       
             >
             </Input>
             {
                 secureTextEntry && (
                     <ShowPassword onPress={() => handleShowPassword()}>
-                        <Feather name={isPasswordSecure ? 'eye': 'eye-off'} size={28} color="#fff" />
+                        <Feather name={isPasswordSecure ? 'eye': 'eye-off'} size={28} color={color} />
                     </ShowPassword>
                 )
             }    

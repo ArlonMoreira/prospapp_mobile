@@ -98,6 +98,19 @@ const useRequest = () => {
                     body: JSON.stringify(data)
                 }                
             }); 
+        },
+        classRegister: ({data, token}) => {
+            return request({
+                endpoint: 'call/register/',
+                params: {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }                
+            }); 
         }
     };
 
