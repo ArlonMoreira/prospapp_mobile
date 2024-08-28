@@ -12,7 +12,7 @@ import Header from '../../components/Header';
 import InputForm from '../../components/InputForm';
 import ButtonLg from '../../components/ButtonLg';
 import Footer from '../../components/Footer';
-import Alert from '../../components/Alert/alert';
+import Alert from '../../components/Alert';
 //Styles
 import { LinearGradient } from 'expo-linear-gradient';
 import { 

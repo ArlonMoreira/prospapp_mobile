@@ -60,7 +60,7 @@ export const ToolsArea = styled.View`
 `;
 
 export const ButtonAction = styled.TouchableOpacity`
-    background: #ccc;
+    background: #dddddd;
     min-width: 132px;
     border-radius: 50px;
     flex-direction: row;
