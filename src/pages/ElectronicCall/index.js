@@ -8,7 +8,7 @@ import ButtonLg from '../../components/ButtonLg';
 import Alert from '../../components/Alert';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { register, resetErrorStatus } from '../../slices/classSlice';
+import { register, list } from '../../slices/classSlice';
 //Styles
 import { StatusBar } from 'expo-status-bar';
 import { 
@@ -25,19 +25,28 @@ import {
   ModalView,
   ModalContent,
   ModalTitle,
-  ModalResume
+  ModalResume,
+  ContainerClass,
+  ClassCard,
+  Stick,
+  TextArea,
+  IconArea,
+  NameClass
 } from './styles'
 import { EvilIcons, Ionicons } from '@expo/vector-icons';
 
 const ElectronicCall = () => {
 
   const { userData } = useSelector((state) => state.me);
+
   const [ primaryColor, setPrimaryColor ] = useState('#fff');
+  const [ company, setCompany ] = useState(null);
   
   useEffect(()=>{
     if(userData){
       if(userData.companys_joined.length){
         setPrimaryColor(userData.companys_joined[0].primary_color);
+        setCompany(userData.companys_joined[0].company_id_annotated);
       }
 
     }
@@ -45,7 +54,7 @@ const ElectronicCall = () => {
   }, [userData]);  
 
   //Register class
-  const { success, loading, error } = useSelector((state) => state.class);
+  const { success, loading, error, data } = useSelector((state) => state.class);
   
   const dispatch = useDispatch();
 
@@ -57,7 +66,7 @@ const ElectronicCall = () => {
 
   const handleSubmit = () => {
     const data = {
-      company: userData.companys_joined[0].company_id_annotated,
+      company,
       name
     };
 
@@ -131,6 +140,14 @@ const ElectronicCall = () => {
 
   }, [showAlertError]);
 
+  //Listar
+  useEffect(() => {
+    if(company){
+      dispatch(list(company));
+    }
+
+  }, [dispatch, company]);
+
   return (
     <Container>
       {showAlertError && <Alert message='Falha ao cadastrar turma' setShow={setShowAlertError}/>}
@@ -175,6 +192,21 @@ const ElectronicCall = () => {
             <ButtonActionTitle style={{color: primaryColor}}>Adicionar{"\n"}Turma</ButtonActionTitle>
           </ButtonAction>         
         </ToolsArea>
+        <ContainerClass>
+          {
+            data && data.length > 0 && data.map((item, i) => (
+              <ClassCard key={item.id}>
+                <Stick/>
+                <TextArea>
+                  <NameClass style={{color: primaryColor}}>{item.name}</NameClass>
+                </TextArea>
+                <IconArea>
+                  <Ionicons name='enter-outline' size={28} color={primaryColor}/>
+                </IconArea>
+              </ClassCard>              
+            ))
+          }
+        </ContainerClass>
       </Body>
     </Container>
   )

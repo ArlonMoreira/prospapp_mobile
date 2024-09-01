@@ -7,7 +7,7 @@ import {
     Content
 } from './styles';
 
-const ButtonLg = ({title, action, loading=false, disabled=false, color='#fff', fontColor='#16443E', largeWidth='292px'}) => {
+const ButtonLg = ({title, action, loading=false, disabled=false, color='#fff', fontColor='#16443E', largeWidth=292}) => {
   return (
     <Container onPress={() => action()} disabled={disabled} style={{backgroundColor: color, width: largeWidth}}>
       <Content>

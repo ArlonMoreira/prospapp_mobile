@@ -120,7 +120,7 @@ export const CompanysContainer = styled.View`
     align-items: start;
     justify-content: flex-end;
     margin-bottom: 20px;
-`
+`;
 export const CompanysTitleContainer = styled.View`
     flex-direction: row;
     margin-bottom: 5px;

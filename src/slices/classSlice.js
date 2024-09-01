@@ -16,7 +16,7 @@ export const register = createAsyncThunk(
         const userAuth = await getState().auth.userAuth; //userAuth.token
         const response = await useRequest().classRegister({
             data,
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI1MDEzODkxLCJpYXQiOjE3MjQ1ODE4OTEsImp0aSI6ImZmZTUzNTgwOGE1NDQ2NGI5MmY2NGQ4OTU2NTU2NjkzIiwidXNlcl9pZCI6MX0.LqVSVxdPlKeK06eHqAOc3ac-z1WT0WbFJPnmgqMgtD0'
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI1NTg1MjY4LCJpYXQiOjE3MjUxNTMyNjgsImp0aSI6ImE1ZTdjMjAwZTExYjRhMmFiYmFlZTc3ZjM5MjA4MzFjIiwidXNlcl9pZCI6MX0.Dq970N987M4t1ASfL_iuJ6Tvq-1SHpOlvlfIMflu8Po'
         });
 
         if(response.success){
@@ -28,6 +28,24 @@ export const register = createAsyncThunk(
     }
 );
 
+export const list = createAsyncThunk(
+    'class/list',
+    async(company, {getState, rejectWithValue}) => {
+        const userAuth = await getState().auth.userAuth; //userAuth.token
+        const response = await useRequest().classList({
+            company,
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI1NTg1MjY4LCJpYXQiOjE3MjUxNTMyNjgsImp0aSI6ImE1ZTdjMjAwZTExYjRhMmFiYmFlZTc3ZjM5MjA4MzFjIiwidXNlcl9pZCI6MX0.Dq970N987M4t1ASfL_iuJ6Tvq-1SHpOlvlfIMflu8Po'
+        });
+
+        if(response.success){
+            return response;
+        } else {
+            return rejectWithValue(response);
+        }        
+
+    }
+)
+
 export const classSlice = createSlice({
     name: 'class',
     initialState,
@@ -38,21 +56,28 @@ export const classSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            //Aguardando cadastro
             .addCase(register.pending, (state) => {
                 state.loading = true;
                 state.success = false;
                 state.error = false;     
             })
+            //Sucesso cadastro
             .addCase(register.fulfilled, (state, action) => {
                 state.loading = false;
                 state.success = true;
                 state.error = false;
-                state.data = action.payload.data;
+                state.data.push(action.payload.data);
             })
+            //Falha do cadastro
             .addCase(register.rejected, (state) => {
                 state.loading = false;
                 state.success = false;
                 state.error = true;
+            })
+            //Listar grupos
+            .addCase(list.fulfilled, (state, action) => {
+                state.data = action.payload.data;
             })
     }
 });

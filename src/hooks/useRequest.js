@@ -111,6 +111,17 @@ const useRequest = () => {
                     body: JSON.stringify(data)
                 }                
             }); 
+        },
+        classList: ({company, token}) => {
+            return request({
+                endpoint: `call/list/${company}/`,
+                params: {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }                
+            });             
         }
     };
 
