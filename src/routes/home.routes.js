@@ -3,6 +3,7 @@ import React from 'react'
 import Home from '../pages/Home';
 import ElectronicCall from '../pages/ElectronicCall';
 import ElectronicPoint from '../pages/ElectronicPoint';
+import Call from '../pages/Call';
 //Navigation
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -31,7 +32,14 @@ const HomeRoutes = () => {
         options={{
           headerShown: false
         }}
-      />               
+      />    
+      <Stack.Screen
+        name="Call"
+        component={Call}
+        options={{
+          headerShown: false
+        }}
+      />                   
     </Stack.Navigator>
   )
 }

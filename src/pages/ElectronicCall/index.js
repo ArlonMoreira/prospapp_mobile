@@ -6,6 +6,8 @@ import Fade from '../../components/Fade';
 import InputForm from '../../components/InputForm';
 import ButtonLg from '../../components/ButtonLg';
 import Alert from '../../components/Alert';
+//Hooks
+import { useNavigation } from '@react-navigation/native';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
 import { register, list } from '../../slices/classSlice';
@@ -36,6 +38,8 @@ import {
 import { EvilIcons, Ionicons } from '@expo/vector-icons';
 
 const ElectronicCall = () => {
+
+  const navigation = useNavigation();  
 
   const { userData } = useSelector((state) => state.me);
 
@@ -195,7 +199,7 @@ const ElectronicCall = () => {
         <ContainerClass>
           {
             data && data.length > 0 && data.map((item, i) => (
-              <ClassCard key={item.id}>
+              <ClassCard key={item.id} onPress={() => navigation.navigate('Call', {classId: item.id, className: item.name})}>
                 <Stick/>
                 <TextArea>
                   <NameClass style={{color: primaryColor}}>{item.name}</NameClass>
