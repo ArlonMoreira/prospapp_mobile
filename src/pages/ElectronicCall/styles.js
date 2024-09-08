@@ -1,5 +1,5 @@
 import styled from 'styled-components/native';
-import { TouchableOpacity, View } from 'react-native';
+import { View } from 'react-native';
 
 export const Container = styled.View`
     flex: 1;
@@ -26,31 +26,6 @@ export const TitlePage = styled.Text`
     font-family: 'montserrat-semibold';
 `;
 
-export const SearchContainer = styled.View`
-    height: 55px;
-    border: 1px;
-    border-radius: 16px;
-    flex-direction: row;
-`;
-
-export const Search = styled.TextInput`
-    height: 100%;
-    width: 84%;
-    padding: 10px;
-    padding-left: 20px;
-    color: #008C81;
-    font-size: 18px;
-    font-family: 'montserrat-semibold';
-`;
-
-export const SearchIconArea = styled.View`
-    width: 16%;
-    flex: 1;
-    align-items: center;
-    justify-content: center;
-    padding-bottom: 10px;
-`;
-
 export const ToolsArea = styled.View`
     height: 50px;
     flex-direction: row;
@@ -60,8 +35,6 @@ export const ToolsArea = styled.View`
 `;
 
 export const ButtonAction = styled.TouchableOpacity`
-    background: #dddddd;
-    min-width: 132px;
     border-radius: 50px;
     flex-direction: row;
     align-items: center;
@@ -70,10 +43,8 @@ export const ButtonAction = styled.TouchableOpacity`
 `;
 
 export const ButtonActionTitle = styled.Text`
-    font-size: 12px;
+    font-size: 16px;
     font-family: 'montserrat-semibold';
-    max-width: 75px;
-    line-height: 14px;
     text-align: center;    
 `;
 

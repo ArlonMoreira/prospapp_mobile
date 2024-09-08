@@ -94,7 +94,7 @@ const Home = () => {
                         </TextArea>
                     </ModuleContainer>
                     <ModuleContainer onPress={() => navigation.navigate('ElectronicCall')}>
-                        <ImageContent source={require('../../public/ponto_eletronico.png')}/>
+                        <ImageContent source={require('../../public/call.jpeg')}/>
                         <TextArea>
                             <TitleModule style={{color: primaryColor}}>Chamada Eletrônica</TitleModule>
                         </TextArea>

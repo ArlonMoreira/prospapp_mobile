@@ -6,6 +6,7 @@ import Fade from '../../components/Fade';
 import InputForm from '../../components/InputForm';
 import ButtonLg from '../../components/ButtonLg';
 import Alert from '../../components/Alert';
+import SearchArea from '../../components/SearchArea';
 //Hooks
 import { useNavigation } from '@react-navigation/native';
 //Redux
@@ -18,9 +19,6 @@ import {
   Body,  
   TitleAreaPage,
   TitlePage,
-  SearchContainer,
-  Search,
-  SearchIconArea,
   ToolsArea,
   ButtonAction,
   ButtonActionTitle,
@@ -35,7 +33,7 @@ import {
   IconArea,
   NameClass
 } from './styles'
-import { EvilIcons, Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
 const ElectronicCall = () => {
 
@@ -184,16 +182,11 @@ const ElectronicCall = () => {
         <TitleAreaPage>
           <TitlePage>Turmas</TitlePage>
         </TitleAreaPage>
-        <SearchContainer style={{borderColor: primaryColor}}>
-          <Search style={{borderColor: primaryColor}}/>
-          <SearchIconArea>
-            <EvilIcons name="search" size={42} color={primaryColor} />
-          </SearchIconArea>
-        </SearchContainer>
+        <SearchArea color={primaryColor}/>
         <ToolsArea>
           <ButtonAction onPress={() => setShowModal(true)}>
             <Ionicons name="add-circle-outline" size={28} color={primaryColor}/>
-            <ButtonActionTitle style={{color: primaryColor}}>Adicionar{"\n"}Turma</ButtonActionTitle>
+            <ButtonActionTitle style={{color: primaryColor}}>Adicionar Turma</ButtonActionTitle>
           </ButtonAction>         
         </ToolsArea>
         <ContainerClass>

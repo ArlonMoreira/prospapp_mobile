@@ -14,7 +14,7 @@ export const me = createAsyncThunk(
     'auth/me',
     async(_, { getState, rejectWithValue }) => {
         const userAuth = await getState().auth.userAuth; //userAuth.token
-        const response = await useRequest().me('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI1NTg1MjY4LCJpYXQiOjE3MjUxNTMyNjgsImp0aSI6ImE1ZTdjMjAwZTExYjRhMmFiYmFlZTc3ZjM5MjA4MzFjIiwidXNlcl9pZCI6MX0.Dq970N987M4t1ASfL_iuJ6Tvq-1SHpOlvlfIMflu8Po');
+        const response = await useRequest().me('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI2MTY5MDE5LCJpYXQiOjE3MjU3MzcwMTksImp0aSI6ImM4NGU5YzY2OGU0NzRjZWQ4MDE1YjA3Yzk0ZmNkZGM0IiwidXNlcl9pZCI6MX0.QBGUe8Z0jgAy0wNj0to83KvygTKmaFz1zYv93dCidBM');
 
         if(response.success){
             return response;
