@@ -5,6 +5,7 @@ import registerReducer  from './src/slices/registerSlice';
 import companysReducer from "./src/slices/companysSlice";
 import meReducer from './src/slices/meSlice';
 import classReducer from './src/slices/classSlice';
+import studentReducer from './src/slices/studentSlice';
 
 export const store = configureStore({
     reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
         register: registerReducer,
         companys: companysReducer,
         me: meReducer,
-        class: classReducer
+        class: classReducer,
+        student: studentReducer
     }
 });

@@ -101,7 +101,7 @@ const useRequest = () => {
         },
         classRegister: ({data, token}) => {
             return request({
-                endpoint: 'call/register/',
+                endpoint: 'call/class/register/',
                 params: {
                     method: 'POST',
                     headers: {
@@ -114,7 +114,7 @@ const useRequest = () => {
         },
         classList: ({company, token}) => {
             return request({
-                endpoint: `call/list/${company}/`,
+                endpoint: `call/class/list/${company}/`,
                 params: {
                     method: 'GET',
                     headers: {
@@ -122,6 +122,19 @@ const useRequest = () => {
                     }
                 }                
             });             
+        },
+        studentRegister: ({data, token}) => {
+            return request({
+                endpoint: 'call/student/register/',
+                params: {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }                
+            }); 
         }
     };
 

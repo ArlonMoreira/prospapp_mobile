@@ -63,7 +63,7 @@ const Call = ({ route }) => {
             <InfoName>{currentDate}</InfoName>
           </InfoText>          
         </InfoArea>
-        <SearchArea color={primaryColor}/>   
+        <SearchArea color={'#939393'}/>   
       </Body>
     </Container>
   )

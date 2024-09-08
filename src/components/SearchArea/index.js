@@ -5,15 +5,15 @@ import {
     Search,
     SearchIconArea    
 } from './styles';
-import { EvilIcons } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 
 const SearchArea = ({color}) => {
   return (
     <SearchContainer>
-        <Search style={{borderColor: color}}/>
-        <SearchIconArea>
-            <EvilIcons name="search" size={42} color={color} />
-        </SearchIconArea>
+      <Search style={{borderColor: color}}/>
+      <SearchIconArea>
+        <FontAwesome name="search" size={28} color={color} />
+      </SearchIconArea>
     </SearchContainer>
   )
 }

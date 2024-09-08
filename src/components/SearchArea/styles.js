@@ -6,6 +6,8 @@ export const SearchContainer = styled.View`
     border-radius: 16px;
     flex-direction: row;
     background: #0000000d;
+    align-items: center;
+    justify-content: center;    
 `;
 
 export const Search = styled.TextInput`
@@ -19,9 +21,7 @@ export const Search = styled.TextInput`
 `;
 
 export const SearchIconArea = styled.View`
-    width: 16%;
     flex: 1;
     align-items: center;
     justify-content: center;
-    padding-bottom: 10px;
 `;

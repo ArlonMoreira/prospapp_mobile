@@ -182,7 +182,7 @@ const ElectronicCall = () => {
         <TitleAreaPage>
           <TitlePage>Turmas</TitlePage>
         </TitleAreaPage>
-        <SearchArea color={primaryColor}/>
+        <SearchArea color={'#939393'}/>
         <ToolsArea>
           <ButtonAction onPress={() => setShowModal(true)}>
             <Ionicons name="add-circle-outline" size={28} color={primaryColor}/>
