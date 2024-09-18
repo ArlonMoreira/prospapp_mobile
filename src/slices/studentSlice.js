@@ -16,7 +16,7 @@ export const register = createAsyncThunk(
         const userAuth = await getState().auth.userAuth; //userAuth.token
         const response = await useRequest().studentRegister({
             data,
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI2MTY5MDE5LCJpYXQiOjE3MjU3MzcwMTksImp0aSI6ImM4NGU5YzY2OGU0NzRjZWQ4MDE1YjA3Yzk0ZmNkZGM0IiwidXNlcl9pZCI6MX0.QBGUe8Z0jgAy0wNj0to83KvygTKmaFz1zYv93dCidBM'
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI3MDQ1MDA2LCJpYXQiOjE3MjY2MTMwMDYsImp0aSI6ImJlOWZlNzNkZTliMDQ5MDNhNTAyZTI3NjM4Mjk5OWE1IiwidXNlcl9pZCI6MX0.u2b0gawLA1ogEGgAeFSL37QdvZrnWqsYiV9gXS3o32A'
         });
 
         if(response.success){

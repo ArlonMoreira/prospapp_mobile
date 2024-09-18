@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { Modal, TouchableWithoutFeedback, View } from 'react-native';
 //Hooks
 import useCurrentDate from '../../hooks/useCurrentDate';
 //Components
 import Header from '../../components/Header';
 import SearchArea from '../../components/SearchArea';
+import Fade from '../../components/Fade';
+import InputForm from '../../components/InputForm';
+import ButtonLg from '../../components/ButtonLg';
 //Redux
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { register } from '../../slices/studentSlice';
 //Styles
 import { StatusBar } from 'expo-status-bar';
 import {
@@ -16,9 +21,16 @@ import {
   InfoArea,
   InfoText,
   InfoName,
-  Edit
+  Edit,
+  ToolsArea,
+  ButtonAction,
+  ButtonActionTitle,
+  ModalView,
+  ModalContent,
+  ModalTitle,
+  ModalResume
 } from './styles'
-import { SimpleLineIcons, MaterialIcons } from '@expo/vector-icons';
+import { SimpleLineIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';
 
 const Call = ({ route }) => {
 
@@ -39,8 +51,89 @@ const Call = ({ route }) => {
 
   }, [userData]);
 
+  //Register student  
+  const { success, loading, error, data } = useSelector((state) => state.student);
+  
+  const dispatch = useDispatch();
+
+  const [ showModal, setShowModal ] = useState(false);
+
+  const [ name, setName ] = useState('');
+  const [ identification_number, setIdentification_number ] = useState(0);
+
+  const [ disabledSubmit, setDisabledSubmit ] = useState(true);
+
+  const handleSubmit = () => {
+    const data = {
+      name,
+      identification_number,
+      classId
+    };
+
+    dispatch(register(data));
+    
+  };
+  
+  useEffect(()=>{
+    if(!error){
+      if(!loading){ //Fechar o modal quando finalizar o cadastro
+        setShowModal(false);
+      } else { //Desabilitar o botão quando estiver carregando.
+        setDisabledSubmit(true);
+      }
+
+    } else {
+      setDisabledSubmit(false);
+
+    }
+
+  }, [loading, error]);  
+  
+  const closeModal = () => { //Fechar modal
+    if(!loading){
+      setShowModal(false);
+    }
+  };
+
+  useEffect(()=>{ //Limpar o formulário caso ocorrer o cadastro com sucesso.
+    if(success){
+      setName('');
+      setIdentification_number(0);
+    }
+  }, [success]);
+
+  useEffect(()=>{ //Desabilitar o botão de submit quando o formulário estiver vazio.
+    if(name !== '' && identification_number !== ''){
+      setDisabledSubmit(false);
+    } else {
+      setDisabledSubmit(true);
+    }
+
+  }, [name, identification_number]);  
+
   return (
     <Container>
+      {showModal && <Fade/>}
+      <Modal
+        transparent={true}
+        animationType='slide'
+        visible={showModal}
+        onRequestClose={() => closeModal()} //Permite fechar o modal quando clicado em uma área fora      
+      >
+        <TouchableWithoutFeedback onPress={() => closeModal()}>
+          <ModalView>
+            <ModalContent>
+              <ModalTitle style={{color: primaryColor}}>Adicionar aluno</ModalTitle>
+              <ModalResume>No campo abaixo, adicione os dados do aluno para que deseja cadastrado e clique em adicionar.</ModalResume>
+              <InputForm label='Nome do aluno' value={name} setValue={setName} color={primaryColor}/>
+              <InputForm label='CPF do aluno' value={identification_number} setValue={setIdentification_number} color={primaryColor}/>            
+              <View style={{marginTop: 20}}>
+                <ButtonLg disabled={disabledSubmit} title='Adicionar' loading={loading} color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleSubmit}/>
+              </View>
+            </ModalContent>
+          </ModalView>
+        </TouchableWithoutFeedback>
+      </Modal>      
       <StatusBar 
         translucent
         backgroundColor="transparent"
@@ -63,7 +156,13 @@ const Call = ({ route }) => {
             <InfoName>{currentDate}</InfoName>
           </InfoText>          
         </InfoArea>
-        <SearchArea color={'#939393'}/>   
+        <SearchArea color={'#939393'}/>
+        <ToolsArea>
+          <ButtonAction onPress={() => setShowModal(true)}>
+            <Ionicons name="add-circle-outline" size={28} color={primaryColor}/>
+            <ButtonActionTitle style={{color: primaryColor}}>Adicionar aluno</ButtonActionTitle>
+          </ButtonAction>         
+        </ToolsArea>          
       </Body>
     </Container>
   )
