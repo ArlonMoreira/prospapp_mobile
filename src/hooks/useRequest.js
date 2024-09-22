@@ -135,7 +135,18 @@ const useRequest = () => {
                     body: JSON.stringify(data)
                 }                
             }); 
-        }
+        },
+        studentList: ({classId, token}) => {
+            return request({
+                endpoint: `call/student/list/${classId}/`,
+                params: {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }                
+            });             
+        },        
     };
 
 };

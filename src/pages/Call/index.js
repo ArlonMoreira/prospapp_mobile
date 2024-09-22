@@ -10,7 +10,7 @@ import InputForm from '../../components/InputForm';
 import ButtonLg from '../../components/ButtonLg';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { register } from '../../slices/studentSlice';
+import { register, list } from '../../slices/studentSlice';
 //Styles
 import { StatusBar } from 'expo-status-bar';
 import {
@@ -28,9 +28,16 @@ import {
   ModalView,
   ModalContent,
   ModalTitle,
-  ModalResume
+  ModalResume,
+  InstructionArea,
+  Instruction,
+  ContainerStudent,
+  StudentCard,
+  StudentName,
+  StudentNameArea,
+  StudentToolsArea
 } from './styles'
-import { SimpleLineIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';
+import { SimpleLineIcons, MaterialIcons, Ionicons, FontAwesome } from '@expo/vector-icons';
 
 const Call = ({ route }) => {
 
@@ -99,6 +106,7 @@ const Call = ({ route }) => {
     if(success){
       setName('');
       setIdentification_number(0);
+      closeModal();
     }
   }, [success]);
 
@@ -109,7 +117,16 @@ const Call = ({ route }) => {
       setDisabledSubmit(true);
     }
 
-  }, [name, identification_number]);  
+  }, [name, identification_number]);
+  
+
+  //Lista studants
+  useEffect(()=>{
+    if(classId){
+      dispatch(list(classId));
+    }
+
+  }, [dispatch, classId]);
 
   return (
     <Container>
@@ -147,9 +164,9 @@ const Call = ({ route }) => {
           <InfoText>
             <SimpleLineIcons name='graduation' size={22} color={'#606060'}/>
             <InfoName>{className}</InfoName>
-            <Edit>
+            {/* <Edit>
               <MaterialIcons name='edit' size={24} color={primaryColor}/>
-            </Edit>
+            </Edit> */}
           </InfoText>
           <InfoText>
             <SimpleLineIcons name='calendar' size={18} color={'#606060'}/>
@@ -162,7 +179,24 @@ const Call = ({ route }) => {
             <Ionicons name="add-circle-outline" size={28} color={primaryColor}/>
             <ButtonActionTitle style={{color: primaryColor}}>Adicionar aluno</ButtonActionTitle>
           </ButtonAction>         
-        </ToolsArea>          
+        </ToolsArea>
+        <InstructionArea>
+          <Instruction>Clique para marca a presença/ausência do aluno:</Instruction>
+        </InstructionArea>
+        <ContainerStudent>
+          {
+            (data && data.length > 0) && data.map((student)=>(
+              <StudentCard key={student.id}>
+                <StudentNameArea>
+                  <StudentName style={{color: primaryColor}}>{student.name}</StudentName>
+                </StudentNameArea>
+                <StudentToolsArea>
+                  <FontAwesome name='question' size={22} color={'#ccc'}></FontAwesome>
+                </StudentToolsArea>
+              </StudentCard>
+            ))
+          }
+        </ContainerStudent>
       </Body>
     </Container>
   )
