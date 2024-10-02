@@ -35,9 +35,14 @@ import {
   StudentCard,
   StudentName,
   StudentNameArea,
-  StudentToolsArea
+  StudentToolsArea,
+  CallOptions,
+  Radio,
+  RadioIcon,
+  RadioLabel,
+  RadioText
 } from './styles'
-import { SimpleLineIcons, MaterialIcons, Ionicons, FontAwesome } from '@expo/vector-icons';
+import { SimpleLineIcons, Ionicons, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 
 const Call = ({ route }) => {
 
@@ -119,6 +124,9 @@ const Call = ({ route }) => {
 
   }, [name, identification_number]);
   
+  useEffect(()=>{
+    console.log(data);
+  }, [data]);
 
   //Lista studants
   useEffect(()=>{
@@ -128,9 +136,21 @@ const Call = ({ route }) => {
 
   }, [dispatch, classId]);
 
+  //Call students
+  const [ showModalCall, setShowModalCall ] = useState(false);
+
+  const [ studentName, setStudentName ] = useState('');
+  const [ studentPresent, setStudentPresent ] = useState('#ccc');
+
+  const handleCall = (student) => {
+    setShowModalCall(true);
+    setStudentName(student.name);
+    setStudentPresent(student.present);
+  };
+
   return (
     <Container>
-      {showModal && <Fade/>}
+      {(showModal || showModalCall) && <Fade/>}
       <Modal
         transparent={true}
         animationType='slide'
@@ -150,7 +170,40 @@ const Call = ({ route }) => {
             </ModalContent>
           </ModalView>
         </TouchableWithoutFeedback>
-      </Modal>      
+      </Modal>
+      <Modal
+        transparent={true}
+        animationType='slide'
+        visible={showModalCall}
+        onRequestClose={() => setShowModalCall(false)} //Permite fechar o modal quando clicado em uma área fora      
+      >
+        <TouchableWithoutFeedback onPress={() => setShowModalCall(false)}>
+          <ModalView>
+            <ModalContent>
+              <ModalTitle style={{color: primaryColor}}>{studentName}</ModalTitle>
+              <ModalResume>Defina a presença do aluno em {currentDate}.</ModalResume>
+              <CallOptions>
+                <Radio>
+                  <RadioIcon style={{borderColor: studentPresent == true ? '#59DE7E': '#CCC'}}>
+                    <FontAwesome name='check' size={22} color={studentPresent == true ? '#59DE7E': '#CCC'}></FontAwesome>
+                  </RadioIcon>
+                  <RadioLabel>
+                    <RadioText style={{color: studentPresent == true ? '#59DE7E': '#CCC'}}>Presente</RadioText>
+                  </RadioLabel>
+                </Radio>
+                <Radio>
+                  <RadioIcon style={{borderColor: studentPresent == false ? '#FF6666': '#CCC'}}>
+                    <FontAwesome name='remove' size={22} color={studentPresent == false ? '#FF6666': '#CCC'}></FontAwesome>
+                  </RadioIcon>
+                  <RadioLabel>
+                    <RadioText style={{color: studentPresent == false ? '#FF6666': '#CCC'}}>Falta</RadioText>
+                  </RadioLabel>
+                </Radio>                
+              </CallOptions>
+            </ModalContent>
+          </ModalView>
+        </TouchableWithoutFeedback>
+      </Modal>          
       <StatusBar 
         translucent
         backgroundColor="transparent"
@@ -190,8 +243,16 @@ const Call = ({ route }) => {
                 <StudentNameArea>
                   <StudentName style={{color: primaryColor}}>{student.name}</StudentName>
                 </StudentNameArea>
-                <StudentToolsArea>
-                  <FontAwesome name='question' size={22} color={'#ccc'}></FontAwesome>
+                <StudentToolsArea onPress={() => handleCall(student)} style={{borderColor:student.present == true ? '#59DE7E': student.present == false ? '#FF6666': '#ccc'}}>
+                  {
+                    student.present == true && <FontAwesome name='check' size={22} color={'#59DE7E'}></FontAwesome>
+                  }
+                  {
+                    student.present == false && <FontAwesome name='remove' size={22} color={'#FF6666'}></FontAwesome>
+                  }
+                  {
+                    student.present == null && <FontAwesome5 name='question' size={22} color={'#CCC'}></FontAwesome5>
+                  }                                        
                 </StudentToolsArea>
               </StudentCard>
             ))

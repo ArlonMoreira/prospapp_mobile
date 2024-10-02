@@ -160,3 +160,34 @@ export const StudentToolsArea = styled.TouchableOpacity`
     border-radius: 50px;
     margin: 5px;
 `;
+
+export const CallOptions = styled.View`
+    margin-top: 20px;
+    min-height: 90px;
+`;
+
+export const Radio = styled.TouchableOpacity`
+    flex: 1;
+    flex-direction: row;  
+`;
+
+export const RadioIcon = styled.View`
+    align-items: center;
+    justify-content: center;
+    min-width: 35px;
+    border-width: 2px;
+    border-color: #ccc;
+    border-radius: 50px;
+    margin: 5px;    
+`;
+
+export const RadioLabel = styled.View`
+    align-items: center;
+    justify-content: center;
+`;
+
+export const RadioText = styled.Text`
+    color: #ccc;
+    font-size: 18px;
+    font-family: 'montserrat-semibold';  
+`;
