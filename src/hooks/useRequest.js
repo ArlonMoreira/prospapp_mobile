@@ -146,7 +146,20 @@ const useRequest = () => {
                     }
                 }                
             });             
-        },        
+        },
+        callRegister: ({data, token}) => {
+            return request({
+                endpoint: 'call/call/register/',
+                params: {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }                
+            });             
+        }       
     };
 
 };

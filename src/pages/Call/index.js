@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Modal, TouchableWithoutFeedback, View } from 'react-native';
 //Hooks
 import useCurrentDate from '../../hooks/useCurrentDate';
@@ -8,9 +8,12 @@ import SearchArea from '../../components/SearchArea';
 import Fade from '../../components/Fade';
 import InputForm from '../../components/InputForm';
 import ButtonLg from '../../components/ButtonLg';
+import LoadingPage from '../../components/LoadingPage';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { register, list } from '../../slices/studentSlice';
+import { register, list, call } from '../../slices/studentSlice';
+// Context
+import { LoadingContext } from '../../contexts/LoadingContext';
 //Styles
 import { StatusBar } from 'expo-status-bar';
 import {
@@ -46,6 +49,8 @@ import { SimpleLineIcons, Ionicons, FontAwesome, FontAwesome5 } from '@expo/vect
 
 const Call = ({ route }) => {
 
+  const { setLoading } = useContext(LoadingContext);  
+
   const currentDate = useCurrentDate();
 
   const { classId, className } = route.params;
@@ -64,7 +69,7 @@ const Call = ({ route }) => {
   }, [userData]);
 
   //Register student  
-  const { success, loading, error, data } = useSelector((state) => state.student);
+  const { success, loadingList, error, data, loadingCall, successCall } = useSelector((state) => state.student);
   
   const dispatch = useDispatch();
 
@@ -88,7 +93,7 @@ const Call = ({ route }) => {
   
   useEffect(()=>{
     if(!error){
-      if(!loading){ //Fechar o modal quando finalizar o cadastro
+      if(!loadingList){ //Fechar o modal quando finalizar o cadastro
         setShowModal(false);
       } else { //Desabilitar o botão quando estiver carregando.
         setDisabledSubmit(true);
@@ -99,10 +104,10 @@ const Call = ({ route }) => {
 
     }
 
-  }, [loading, error]);  
+  }, [loadingList, error]);  
   
   const closeModal = () => { //Fechar modal
-    if(!loading){
+    if(!loadingList){
       setShowModal(false);
     }
   };
@@ -123,10 +128,6 @@ const Call = ({ route }) => {
     }
 
   }, [name, identification_number]);
-  
-  useEffect(()=>{
-    console.log(data);
-  }, [data]);
 
   //Lista studants
   useEffect(()=>{
@@ -139,127 +140,165 @@ const Call = ({ route }) => {
   //Call students
   const [ showModalCall, setShowModalCall ] = useState(false);
 
+  const [ studentId, setStudentId ] = useState(null);
   const [ studentName, setStudentName ] = useState('');
   const [ studentPresent, setStudentPresent ] = useState('#ccc');
 
   const handleCall = (student) => {
     setShowModalCall(true);
+    setStudentId(student.id)
     setStudentName(student.name);
     setStudentPresent(student.present);
   };
 
+  const handleCallPresent = (present) => {
+    const data = {
+      student: studentId,
+      present
+    };
+
+    dispatch(call(data));
+
+  };
+
+  useEffect(()=>{
+    const currentStudent = data.filter((student) => student.id === studentId)[0];
+    if(currentStudent){
+      setStudentPresent(currentStudent.present);
+    }
+
+  }, [data]);
+
+  useEffect(()=>{
+    if(successCall){
+      closeModalCall();
+    }
+  }, [successCall]);
+
+  const closeModalCall = () => { //Fechar modal
+    if(!loadingCall){
+      setShowModalCall(false);
+    }
+  };
+
   return (
-    <Container>
-      {(showModal || showModalCall) && <Fade/>}
-      <Modal
-        transparent={true}
-        animationType='slide'
-        visible={showModal}
-        onRequestClose={() => closeModal()} //Permite fechar o modal quando clicado em uma área fora      
-      >
-        <TouchableWithoutFeedback onPress={() => closeModal()}>
-          <ModalView>
-            <ModalContent>
-              <ModalTitle style={{color: primaryColor}}>Adicionar aluno</ModalTitle>
-              <ModalResume>No campo abaixo, adicione os dados do aluno para que deseja cadastrado e clique em adicionar.</ModalResume>
-              <InputForm label='Nome do aluno' value={name} setValue={setName} color={primaryColor}/>
-              <InputForm label='CPF do aluno' value={identification_number} setValue={setIdentification_number} color={primaryColor}/>            
-              <View style={{marginTop: 20}}>
-                <ButtonLg disabled={disabledSubmit} title='Adicionar' loading={loading} color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleSubmit}/>
-              </View>
-            </ModalContent>
-          </ModalView>
-        </TouchableWithoutFeedback>
-      </Modal>
-      <Modal
-        transparent={true}
-        animationType='slide'
-        visible={showModalCall}
-        onRequestClose={() => setShowModalCall(false)} //Permite fechar o modal quando clicado em uma área fora      
-      >
-        <TouchableWithoutFeedback onPress={() => setShowModalCall(false)}>
-          <ModalView>
-            <ModalContent>
-              <ModalTitle style={{color: primaryColor}}>{studentName}</ModalTitle>
-              <ModalResume>Defina a presença do aluno em {currentDate}.</ModalResume>
-              <CallOptions>
-                <Radio>
-                  <RadioIcon style={{borderColor: studentPresent == true ? '#59DE7E': '#CCC'}}>
-                    <FontAwesome name='check' size={22} color={studentPresent == true ? '#59DE7E': '#CCC'}></FontAwesome>
-                  </RadioIcon>
-                  <RadioLabel>
-                    <RadioText style={{color: studentPresent == true ? '#59DE7E': '#CCC'}}>Presente</RadioText>
-                  </RadioLabel>
-                </Radio>
-                <Radio>
-                  <RadioIcon style={{borderColor: studentPresent == false ? '#FF6666': '#CCC'}}>
-                    <FontAwesome name='remove' size={22} color={studentPresent == false ? '#FF6666': '#CCC'}></FontAwesome>
-                  </RadioIcon>
-                  <RadioLabel>
-                    <RadioText style={{color: studentPresent == false ? '#FF6666': '#CCC'}}>Falta</RadioText>
-                  </RadioLabel>
-                </Radio>                
-              </CallOptions>
-            </ModalContent>
-          </ModalView>
-        </TouchableWithoutFeedback>
-      </Modal>          
-      <StatusBar 
-        translucent
-        backgroundColor="transparent"
-      />      
-      <Header themeColor={primaryColor}/>
-      <Body>
-        <TitleAreaPage>
-          <TitlePage style={{color: primaryColor}}>Chamada</TitlePage>
-        </TitleAreaPage>   
-        <InfoArea>
-          <InfoText>
-            <SimpleLineIcons name='graduation' size={22} color={'#606060'}/>
-            <InfoName>{className}</InfoName>
-            {/* <Edit>
-              <MaterialIcons name='edit' size={24} color={primaryColor}/>
-            </Edit> */}
-          </InfoText>
-          <InfoText>
-            <SimpleLineIcons name='calendar' size={18} color={'#606060'}/>
-            <InfoName>{currentDate}</InfoName>
-          </InfoText>          
-        </InfoArea>
-        <SearchArea color={'#939393'}/>
-        <ToolsArea>
-          <ButtonAction onPress={() => setShowModal(true)}>
-            <Ionicons name="add-circle-outline" size={28} color={primaryColor}/>
-            <ButtonActionTitle style={{color: primaryColor}}>Adicionar aluno</ButtonActionTitle>
-          </ButtonAction>         
-        </ToolsArea>
-        <InstructionArea>
-          <Instruction>Clique para marca a presença/ausência do aluno:</Instruction>
-        </InstructionArea>
-        <ContainerStudent>
-          {
-            (data && data.length > 0) && data.map((student)=>(
-              <StudentCard key={student.id}>
-                <StudentNameArea>
-                  <StudentName style={{color: primaryColor}}>{student.name}</StudentName>
-                </StudentNameArea>
-                <StudentToolsArea onPress={() => handleCall(student)} style={{borderColor:student.present == true ? '#59DE7E': student.present == false ? '#FF6666': '#ccc'}}>
-                  {
-                    student.present == true && <FontAwesome name='check' size={22} color={'#59DE7E'}></FontAwesome>
-                  }
-                  {
-                    student.present == false && <FontAwesome name='remove' size={22} color={'#FF6666'}></FontAwesome>
-                  }
-                  {
-                    student.present == null && <FontAwesome5 name='question' size={22} color={'#CCC'}></FontAwesome5>
-                  }                                        
-                </StudentToolsArea>
-              </StudentCard>
-            ))
-          }
-        </ContainerStudent>
-      </Body>
-    </Container>
+    <>
+      {
+        loadingCall ? <LoadingPage/> : (
+          <Container>
+            {(showModal || showModalCall) && <Fade/>}
+            <Modal
+              transparent={true}
+              animationType='slide'
+              visible={showModal}
+              onRequestClose={() => closeModal()} //Permite fechar o modal quando clicado em uma área fora      
+            >
+              <TouchableWithoutFeedback onPress={() => closeModal()}>
+                <ModalView>
+                  <ModalContent>
+                    <ModalTitle style={{color: primaryColor}}>Adicionar aluno</ModalTitle>
+                    <ModalResume>No campo abaixo, adicione os dados do aluno para que deseja cadastrado e clique em adicionar.</ModalResume>
+                    <InputForm label='Nome do aluno' value={name} setValue={setName} color={primaryColor}/>
+                    <InputForm label='CPF do aluno' value={identification_number} setValue={setIdentification_number} color={primaryColor}/>            
+                    <View style={{marginTop: 20}}>
+                      <ButtonLg disabled={disabledSubmit} title='Adicionar' loading={loadingList} color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleSubmit}/>
+                    </View>
+                  </ModalContent>
+                </ModalView>
+              </TouchableWithoutFeedback>
+            </Modal>
+            <Modal
+              transparent={true}
+              animationType='slide'
+              visible={showModalCall}
+              onRequestClose={() => setShowModalCall(false)} //Permite fechar o modal quando clicado em uma área fora      
+            >
+              <TouchableWithoutFeedback onPress={() => setShowModalCall(false)}>
+                <ModalView>
+                  <ModalContent>
+                    <ModalTitle style={{color: primaryColor}}>{studentName}</ModalTitle>
+                    <ModalResume>Defina a presença do aluno em {currentDate}.</ModalResume>
+                    <CallOptions>
+                      <Radio onPress={() => handleCallPresent(true)}>
+                        <RadioIcon style={{borderColor: studentPresent == true ? '#59DE7E': '#CCC'}}>
+                          <FontAwesome name='check' size={22} color={studentPresent == true ? '#59DE7E': '#CCC'}></FontAwesome>
+                        </RadioIcon>
+                        <RadioLabel>
+                          <RadioText style={{color: studentPresent == true ? '#59DE7E': '#CCC'}}>Presente</RadioText>
+                        </RadioLabel>
+                      </Radio>
+                      <Radio onPress={() => handleCallPresent(false)}>
+                        <RadioIcon style={{borderColor: studentPresent == false ? '#FF6666': '#CCC'}}>
+                          <FontAwesome name='remove' size={22} color={studentPresent == false ? '#FF6666': '#CCC'}></FontAwesome>
+                        </RadioIcon>
+                        <RadioLabel>
+                          <RadioText style={{color: studentPresent == false ? '#FF6666': '#CCC'}}>Falta</RadioText>
+                        </RadioLabel>
+                      </Radio>                
+                    </CallOptions>
+                  </ModalContent>
+                </ModalView>
+              </TouchableWithoutFeedback>
+            </Modal>          
+            <StatusBar 
+              translucent
+              backgroundColor="transparent"
+            />      
+            <Header themeColor={primaryColor}/>
+            <Body>
+              <TitleAreaPage>
+                <TitlePage style={{color: primaryColor}}>Chamada</TitlePage>
+              </TitleAreaPage>   
+              <InfoArea>
+                <InfoText>
+                  <SimpleLineIcons name='graduation' size={22} color={'#606060'}/>
+                  <InfoName>{className}</InfoName>
+                  {/* <Edit>
+                    <MaterialIcons name='edit' size={24} color={primaryColor}/>
+                  </Edit> */}
+                </InfoText>
+                <InfoText>
+                  <SimpleLineIcons name='calendar' size={18} color={'#606060'}/>
+                  <InfoName>{currentDate}</InfoName>
+                </InfoText>          
+              </InfoArea>
+              <SearchArea color={'#939393'}/>
+              <ToolsArea>
+                <ButtonAction onPress={() => setShowModal(true)}>
+                  <Ionicons name="add-circle-outline" size={28} color={primaryColor}/>
+                  <ButtonActionTitle style={{color: primaryColor}}>Adicionar aluno</ButtonActionTitle>
+                </ButtonAction>         
+              </ToolsArea>
+              <InstructionArea>
+                <Instruction>Clique para marca a presença/ausência do aluno:</Instruction>
+              </InstructionArea>
+              <ContainerStudent>
+                {
+                  (data && data.length > 0) && data.map((student)=>(
+                    <StudentCard key={student.id}>
+                      <StudentNameArea>
+                        <StudentName style={{color: primaryColor}}>{student.name}</StudentName>
+                      </StudentNameArea>
+                      <StudentToolsArea onPress={() => handleCall(student)} style={{borderColor:student.present == true ? '#59DE7E': student.present == false ? '#FF6666': '#ccc'}}>
+                        {
+                          student.present == true && <FontAwesome name='check' size={22} color={'#59DE7E'}></FontAwesome>
+                        }
+                        {
+                          student.present == false && <FontAwesome name='remove' size={22} color={'#FF6666'}></FontAwesome>
+                        }
+                        {
+                          student.present == null && <FontAwesome5 name='question' size={22} color={'#CCC'}></FontAwesome5>
+                        }                                        
+                      </StudentToolsArea>
+                    </StudentCard>
+                  ))
+                }
+              </ContainerStudent>
+            </Body>
+          </Container>
+        )
+      }
+    </>
   )
 };
 

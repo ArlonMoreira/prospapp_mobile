@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState, useContext } from 'react';
+//Components
+import LoadingPage from '../components/LoadingPage';
 //Redux
 import { useDispatch, useSelector } from 'react-redux';
 import { me } from '../slices/meSlice';
@@ -10,8 +11,12 @@ import AuthRoutes from './auth.routes';
 import AppRoutes from './app.routes';
 //Hooks
 import userAuth from '../hooks/useAuth';
+import { LoadingContext } from '../contexts/LoadingContext';
 
 const Routes = () => {
+
+  //Contexto
+  const { loading } = useContext(LoadingContext);
 
   //Verificar se está atenticado
   const { auth } = userAuth();
@@ -27,13 +32,14 @@ const Routes = () => {
   }, [auth]);
 
   //Obter dados do usuário.
-  const { loading, userData } = useSelector((state) => state.me);
+  const { loading: loadingMe, userData } = useSelector((state) => state.me);
   const [ accessHome, setAccessHome ] = useState(false);
   const [ accessCompany, setAccessCompany ] = useState(false);
 
   //Direcionar pra página Home automaticamente caso estiver associado a uma empresa;
   useEffect(()=>{
-    if(!loading && userData){
+
+    if(!loadingMe && userData){
       if(userData.companys_joined.length){
         setAccessHome(true);
         setAccessCompany(false);
@@ -47,28 +53,19 @@ const Routes = () => {
 
     }
     
-  }, [userData, loading]);  
-
-  if (loading) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#F0F4FF',
-        }}
-      >
-        <ActivityIndicator size="large" color="#131313" />
-      </View>
-    );
-  }
+  }, [userData, loadingMe]);
 
   return (
     <>
-      {auth && accessHome && <AppRoutes />}
-      {auth && accessCompany && <Company />}
-      {!auth && <AuthRoutes />}
+      {
+        loadingMe ? <LoadingPage/> : (
+          <>
+            {auth && accessHome && <AppRoutes />}
+            {auth && accessCompany && <Company />}
+            {!auth && <AuthRoutes />}   
+          </>       
+        )
+      }
     </>
   )
 };

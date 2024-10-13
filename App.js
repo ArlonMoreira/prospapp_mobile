@@ -8,6 +8,8 @@ import Routes from './src/routes';
 //Redux
 import { Provider } from 'react-redux';
 import { store } from './store';
+//Context
+import { LoadingProvider } from './src/contexts/LoadingContext';
 
 export default function App() {
 
@@ -40,15 +42,17 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <StatusBar 
-          translucent
-          backgroundColor="transparent"
-          style="light"
-          barStyle="light-content"
-        />
-        <Routes/>
-      </NavigationContainer>
+      <LoadingProvider>
+        <NavigationContainer>
+          <StatusBar 
+            translucent
+            backgroundColor="transparent"
+            style="light"
+            barStyle="light-content"
+          />
+          <Routes/>
+        </NavigationContainer>
+      </LoadingProvider>
     </Provider>
   );
 }
