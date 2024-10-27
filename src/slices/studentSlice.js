@@ -5,6 +5,7 @@ import useRequest from "../hooks/useRequest";
 
 const initialState = {
     data: [],
+    loadingRegister: false,
     loadingList: false,
     success: false,
     error: false,
@@ -18,7 +19,7 @@ export const list = createAsyncThunk(
         const userAuth = await getState().auth.userAuth; //userAuth.token
         const response = await useRequest().studentList({
             classId,
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI5MjA2MzAzLCJpYXQiOjE3Mjg3NzQzMDMsImp0aSI6IjFiMDcxNDdkN2UxYjQzYzY5ZjIzMjdmMGY5YzAxYzViIiwidXNlcl9pZCI6MX0.rOkNR0SxO4cbx70JaHKm1PZqmhVEyOJaYyu9MUNmbrs'
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMzc2NDg1LCJpYXQiOjE3Mjk5NDQ0ODUsImp0aSI6ImVjYmRkN2E0ZmFlZTRmMzFhMjI0MjRmOTI1NWU2YWY3IiwidXNlcl9pZCI6MX0.75d6AWwXQiChKmnGqsVPcyYrwwwLTLRhwD8SJkjCoaU'
         });
 
         if(response.success){
@@ -35,7 +36,7 @@ export const register = createAsyncThunk(
         const userAuth = await getState().auth.userAuth; //userAuth.token
         const response = await useRequest().studentRegister({
             data,
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI5MjA2MzAzLCJpYXQiOjE3Mjg3NzQzMDMsImp0aSI6IjFiMDcxNDdkN2UxYjQzYzY5ZjIzMjdmMGY5YzAxYzViIiwidXNlcl9pZCI6MX0.rOkNR0SxO4cbx70JaHKm1PZqmhVEyOJaYyu9MUNmbrs'
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMzc2NDg1LCJpYXQiOjE3Mjk5NDQ0ODUsImp0aSI6ImVjYmRkN2E0ZmFlZTRmMzFhMjI0MjRmOTI1NWU2YWY3IiwidXNlcl9pZCI6MX0.75d6AWwXQiChKmnGqsVPcyYrwwwLTLRhwD8SJkjCoaU'
         });
 
         if(response.success){
@@ -53,7 +54,7 @@ export const call = createAsyncThunk(
         const userAuth = await getState().auth.userAuth; //userAuth.token
         const response = await useRequest().callRegister({
             data,
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI5MjA2MzAzLCJpYXQiOjE3Mjg3NzQzMDMsImp0aSI6IjFiMDcxNDdkN2UxYjQzYzY5ZjIzMjdmMGY5YzAxYzViIiwidXNlcl9pZCI6MX0.rOkNR0SxO4cbx70JaHKm1PZqmhVEyOJaYyu9MUNmbrs'
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMzc2NDg1LCJpYXQiOjE3Mjk5NDQ0ODUsImp0aSI6ImVjYmRkN2E0ZmFlZTRmMzFhMjI0MjRmOTI1NWU2YWY3IiwidXNlcl9pZCI6MX0.75d6AWwXQiChKmnGqsVPcyYrwwwLTLRhwD8SJkjCoaU'
         });
 
         if(response.success){
@@ -71,26 +72,35 @@ export const studentSlice = createSlice({
         builder
             //Aguardando cadastro
             .addCase(register.pending, (state) => {
-                state.loadingList = true;
+                state.loadingRegister = true;
                 state.success = false;
                 state.error = false;     
             })
             //Sucesso cadastro
             .addCase(register.fulfilled, (state, action) => {
-                state.loadingList = false;
+                state.loadingRegister = false;
                 state.success = true;
                 state.error = false;
                 state.data.push(action.payload.data);
             })
             //Falha do cadastro
             .addCase(register.rejected, (state) => {
-                state.loadingList = false;
+                state.loadingRegister = false;
                 state.success = false;
                 state.error = true;
+            })
+            //Aguardando lista
+            .addCase(list.pending, (state, action) => {
+                state.loadingList = true;
             })
             //Sucesso lista
             .addCase(list.fulfilled, (state, action) => {
                 state.data = action.payload.data;
+                state.loadingList = false;
+            })
+            //Falha de listagem
+            .addCase(list.rejected, (state) => {
+                state.loadingList = false;
             })
             //Aguardando finalizar chamada
             .addCase(call.pending, (state) => {

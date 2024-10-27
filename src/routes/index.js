@@ -11,6 +11,7 @@ import AuthRoutes from './auth.routes';
 import AppRoutes from './app.routes';
 //Hooks
 import userAuth from '../hooks/useAuth';
+//Context
 import { LoadingContext } from '../contexts/LoadingContext';
 
 const Routes = () => {
@@ -57,15 +58,9 @@ const Routes = () => {
 
   return (
     <>
-      {
-        loadingMe ? <LoadingPage/> : (
-          <>
-            {auth && accessHome && <AppRoutes />}
-            {auth && accessCompany && <Company />}
-            {!auth && <AuthRoutes />}   
-          </>       
-        )
-      }
+      { auth && accessHome && <AppRoutes /> }
+      { auth && accessCompany && <Company /> }
+      { !auth && <AuthRoutes /> } 
     </>
   )
 };

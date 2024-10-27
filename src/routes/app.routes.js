@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 //Redux
 import { useSelector } from 'react-redux';
 //Styles
@@ -8,10 +8,14 @@ import Perfil from '../pages/Perfil';
 //Navigation
 import HomeRoutes from './home.routes';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+//Context
+import { LoadingContext } from '../contexts/LoadingContext';
 
 const Tab = createBottomTabNavigator();
 
 const AppRoutes = () => {
+
+  const { loading } = useContext(LoadingContext);
 
   const { userData } = useSelector((state) => state.me);
   const [ primaryColor, setPrimaryColor ] = useState('#000');
@@ -32,6 +36,7 @@ const AppRoutes = () => {
         tabBarShowLabel: false,
         tabBarActiveTintColor: primaryColor,
         tabBarStyle:{
+          display: loading ? 'none': 'block',
           backgroundColor: '#fff',
           borderTopWidth: 0
         }

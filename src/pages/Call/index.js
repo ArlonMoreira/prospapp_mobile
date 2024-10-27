@@ -49,7 +49,7 @@ import { SimpleLineIcons, Ionicons, FontAwesome, FontAwesome5 } from '@expo/vect
 
 const Call = ({ route }) => {
 
-  const { setLoading } = useContext(LoadingContext);  
+  const { loading, setLoading } = useContext(LoadingContext);  
 
   const currentDate = useCurrentDate();
 
@@ -69,7 +69,7 @@ const Call = ({ route }) => {
   }, [userData]);
 
   //Register student  
-  const { success, loadingList, error, data, loadingCall, successCall } = useSelector((state) => state.student);
+  const { success, loadingList, loadingRegister, error, data, loadingCall, successCall } = useSelector((state) => state.student);
   
   const dispatch = useDispatch();
 
@@ -91,9 +91,9 @@ const Call = ({ route }) => {
     
   };
   
-  useEffect(()=>{
+  useEffect(()=>{        
     if(!error){
-      if(!loadingList){ //Fechar o modal quando finalizar o cadastro
+      if(!loadingRegister){ //Fechar o modal quando finalizar o cadastro
         setShowModal(false);
       } else { //Desabilitar o botão quando estiver carregando.
         setDisabledSubmit(true);
@@ -104,10 +104,10 @@ const Call = ({ route }) => {
 
     }
 
-  }, [loadingList, error]);  
+  }, [loadingRegister, error]);  
   
   const closeModal = () => { //Fechar modal
-    if(!loadingList){
+    if(!loadingRegister){
       setShowModal(false);
     }
   };
@@ -181,10 +181,18 @@ const Call = ({ route }) => {
     }
   };
 
+  useEffect(()=>{ //Atualiza para o contexto que a página está sendo carregada.
+    setLoading(loadingCall);
+  }, [loadingCall]);
+
+  useEffect(()=>{
+    setLoading(loadingList);
+  }, [loadingList]);
+
   return (
     <>
       {
-        loadingCall ? <LoadingPage/> : (
+        loading ? <LoadingPage/> : (
           <Container>
             {(showModal || showModalCall) && <Fade/>}
             <Modal
@@ -201,7 +209,7 @@ const Call = ({ route }) => {
                     <InputForm label='Nome do aluno' value={name} setValue={setName} color={primaryColor}/>
                     <InputForm label='CPF do aluno' value={identification_number} setValue={setIdentification_number} color={primaryColor}/>            
                     <View style={{marginTop: 20}}>
-                      <ButtonLg disabled={disabledSubmit} title='Adicionar' loading={loadingList} color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleSubmit}/>
+                      <ButtonLg disabled={disabledSubmit} title='Adicionar' loading={loadingRegister} color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleSubmit}/>
                     </View>
                   </ModalContent>
                 </ModalView>

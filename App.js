@@ -1,6 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
+//Components
+import LoadingPage from './src/components/LoadingPage';
 //Hooks
 import { useFonts } from 'expo-font';
 //Routes
@@ -27,16 +29,7 @@ export default function App() {
 
   if(!fontsLoaded){
     return (
-      <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#F0F4FF'
-          }}
-        >
-        <ActivityIndicator size="large" color="#131313"/>
-      </View>
+      <LoadingPage/>
     )
   }  
 
