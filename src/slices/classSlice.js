@@ -5,7 +5,8 @@ import useRequest from "../hooks/useRequest";
 
 const initialState = {
     data: [],
-    loading: false,
+    loadingRegister: false,
+    loadingList: false,
     success: false,
     error: false
 };
@@ -58,26 +59,35 @@ export const classSlice = createSlice({
         builder
             //Aguardando cadastro
             .addCase(register.pending, (state) => {
-                state.loading = true;
+                state.loadingRegister = true;
                 state.success = false;
                 state.error = false;     
             })
             //Sucesso cadastro
             .addCase(register.fulfilled, (state, action) => {
-                state.loading = false;
+                state.loadingRegister = false;
                 state.success = true;
                 state.error = false;
                 state.data.push(action.payload.data);
             })
             //Falha do cadastro
             .addCase(register.rejected, (state) => {
-                state.loading = false;
+                state.loadingRegister = false;
                 state.success = false;
                 state.error = true;
+            })
+            //Aguardando grupos
+            .addCase(list.pending, (state, action) => {
+                state.loadingList = true;
             })
             //Listar grupos
             .addCase(list.fulfilled, (state, action) => {
                 state.data = action.payload.data;
+                state.loadingList = false;
+            })
+            //Falha ao lista grupos
+            .addCase(list.rejected, (state, action) => {
+                state.loadingList = false;
             })
     }
 });

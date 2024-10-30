@@ -43,9 +43,12 @@ import {
   Radio,
   RadioIcon,
   RadioLabel,
-  RadioText
+  RadioText,
+  ExportTouch
 } from './styles'
 import { SimpleLineIcons, Ionicons, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
+//PDF
+import RNHTMLtoPDF from 'react-native-html-to-pdf';
 
 const Call = ({ route }) => {
 
@@ -189,6 +192,10 @@ const Call = ({ route }) => {
     setLoading(loadingList);
   }, [loadingList]);
 
+  const ActionComponent = () => {
+    console.log('TESTE')
+  };
+
   return (
     <>
       {
@@ -252,7 +259,7 @@ const Call = ({ route }) => {
               translucent
               backgroundColor="transparent"
             />      
-            <Header themeColor={primaryColor}/>
+            <Header themeColor={primaryColor} exportAction={ActionComponent}></Header>
             <Body>
               <TitleAreaPage>
                 <TitlePage style={{color: primaryColor}}>Chamada</TitlePage>

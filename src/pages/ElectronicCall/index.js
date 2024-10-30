@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Modal, TouchableWithoutFeedback, View } from 'react-native';
 //Components
 import Header from '../../components/Header';
@@ -7,8 +7,11 @@ import InputForm from '../../components/InputForm';
 import ButtonLg from '../../components/ButtonLg';
 import Alert from '../../components/Alert';
 import SearchArea from '../../components/SearchArea';
+import LoadingPage from '../../components/LoadingPage';
 //Hooks
 import { useNavigation } from '@react-navigation/native';
+//Context
+import { LoadingContext } from '../../contexts/LoadingContext';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
 import { register, list } from '../../slices/classSlice';
@@ -37,6 +40,8 @@ import { Ionicons } from '@expo/vector-icons';
 
 const ElectronicCall = () => {
 
+  const { loading, setLoading } = useContext(LoadingContext);
+
   const navigation = useNavigation();  
 
   const { userData } = useSelector((state) => state.me);
@@ -56,7 +61,7 @@ const ElectronicCall = () => {
   }, [userData]);  
 
   //Register class
-  const { success, loading, error, data } = useSelector((state) => state.class);
+  const { success, loadingRegister, error, data, loadingList } = useSelector((state) => state.class);
   
   const dispatch = useDispatch();
 
@@ -78,7 +83,7 @@ const ElectronicCall = () => {
 
   useEffect(()=>{
     if(!error){
-      if(!loading){ //Fechar o modal quando finalizar o cadastro
+      if(!loadingRegister){ //Fechar o modal quando finalizar o cadastro
         setShowModal(false);
       } else { //Desabilitar o botão quando estiver carregando.
         setDisabledSubmit(true);
@@ -89,10 +94,10 @@ const ElectronicCall = () => {
 
     }
 
-  }, [loading, error]);
+  }, [loadingRegister, error]);
 
   const closeModal = () => { //Fechar modal
-    if(!loading){
+    if(!loadingRegister){
       setShowModal(false);
     }
   };
@@ -150,63 +155,74 @@ const ElectronicCall = () => {
 
   }, [dispatch, company]);
 
+  //Carregar
+  useEffect(() => {
+    setLoading(loadingList);
+  }, [loadingList]);
+  
   return (
-    <Container>
-      {showAlertError && <Alert message='Falha ao cadastrar turma' setShow={setShowAlertError}/>}
-      {showModal && <Fade/>}
-      <Modal
-        transparent={true}
-        animationType='slide'
-        visible={showModal}
-        onRequestClose={() => closeModal()} //Permite fechar o modal quando clicado em uma área fora      
-      >
-        <TouchableWithoutFeedback onPress={() => closeModal()}>
-          <ModalView>
-            <ModalContent>
-              <ModalTitle style={{color: primaryColor}}>Adicionar turma</ModalTitle>
-              <ModalResume>No campo abaixo, adicione o nome da turma que deseja cadastrar e clique em adicionar. Cada empresa, pode ter várias turmas, e para cada turma podem ser cadastrados diversos alunos.</ModalResume>
-              <InputForm label='Nome da turma' value={name} setValue={setName} color={primaryColor}/>
-              <View style={{marginTop: 20}}>
-                <ButtonLg disabled={disabledSubmit} title='Adicionar' loading={loading} color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleSubmit}/>
-              </View>
-            </ModalContent>
-          </ModalView>
-        </TouchableWithoutFeedback>
-      </Modal>
-      <StatusBar 
-        translucent
-        backgroundColor="transparent"
-      />       
-      <Header themeColor={primaryColor}/>
-      <Body>
-        <TitleAreaPage>
-          <TitlePage>Turmas</TitlePage>
-        </TitleAreaPage>
-        <SearchArea color={'#939393'}/>
-        <ToolsArea>
-          <ButtonAction onPress={() => setShowModal(true)}>
-            <Ionicons name="add-circle-outline" size={28} color={primaryColor}/>
-            <ButtonActionTitle style={{color: primaryColor}}>Adicionar Turma</ButtonActionTitle>
-          </ButtonAction>         
-        </ToolsArea>
-        <ContainerClass>
-          {
-            data && data.length > 0 && data.map((item, i) => (
-              <ClassCard key={item.id} onPress={() => navigation.navigate('Call', {classId: item.id, className: item.name})}>
-                <Stick/>
-                <TextArea>
-                  <NameClass style={{color: primaryColor}}>{item.name}</NameClass>
-                </TextArea>
-                <IconArea>
-                  <Ionicons name='enter-outline' size={28} color={primaryColor}/>
-                </IconArea>
-              </ClassCard>              
-            ))
-          }
-        </ContainerClass>
-      </Body>
-    </Container>
+    <>
+      {
+        loading ? <LoadingPage/> : (
+          <Container>
+            {showAlertError && <Alert message='Falha ao cadastrar turma' setShow={setShowAlertError}/>}
+            {showModal && <Fade/>}
+            <Modal
+              transparent={true}
+              animationType='slide'
+              visible={showModal}
+              onRequestClose={() => closeModal()} //Permite fechar o modal quando clicado em uma área fora      
+            >
+              <TouchableWithoutFeedback onPress={() => closeModal()}>
+                <ModalView>
+                  <ModalContent>
+                    <ModalTitle style={{color: primaryColor}}>Adicionar turma</ModalTitle>
+                    <ModalResume>No campo abaixo, adicione o nome da turma que deseja cadastrar e clique em adicionar. Cada empresa, pode ter várias turmas, e para cada turma podem ser cadastrados diversos alunos.</ModalResume>
+                    <InputForm label='Nome da turma' value={name} setValue={setName} color={primaryColor}/>
+                    <View style={{marginTop: 20}}>
+                      <ButtonLg disabled={disabledSubmit} title='Adicionar' loading={loadingRegister} color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleSubmit}/>
+                    </View>
+                  </ModalContent>
+                </ModalView>
+              </TouchableWithoutFeedback>
+            </Modal>
+            <StatusBar 
+              translucent
+              backgroundColor="transparent"
+            />       
+            <Header themeColor={primaryColor}/>
+            <Body>
+              <TitleAreaPage>
+                <TitlePage>Turmas</TitlePage>
+              </TitleAreaPage>
+              <SearchArea color={'#939393'}/>
+              <ToolsArea>
+                <ButtonAction onPress={() => setShowModal(true)}>
+                  <Ionicons name="add-circle-outline" size={28} color={primaryColor}/>
+                  <ButtonActionTitle style={{color: primaryColor}}>Adicionar Turma</ButtonActionTitle>
+                </ButtonAction>         
+              </ToolsArea>
+              <ContainerClass>
+                {
+                  data && data.length > 0 && data.map((item, i) => (
+                    <ClassCard key={item.id} onPress={() => navigation.navigate('Call', {classId: item.id, className: item.name})}>
+                      <Stick/>
+                      <TextArea>
+                        <NameClass style={{color: primaryColor}}>{item.name}</NameClass>
+                      </TextArea>
+                      <IconArea>
+                        <Ionicons name='enter-outline' size={28} color={primaryColor}/>
+                      </IconArea>
+                    </ClassCard>              
+                  ))
+                }
+              </ContainerClass>
+            </Body>
+          </Container>
+        )
+      }
+    </>
   )
-};
+};  
 
 export default ElectronicCall;

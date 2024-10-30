@@ -5,11 +5,12 @@ import { useNavigation } from '@react-navigation/native';
 import { 
   Container,
   Button,
-  Text
+  Text,
+  ExportTouch
 } from './styles';
 import { FontAwesome } from '@expo/vector-icons';
 
-const Header = ({themeColor='#fff'}) => {
+const Header = ({themeColor='#fff', exportAction}) => {
 
   const navigation = useNavigation();
   
@@ -19,6 +20,9 @@ const Header = ({themeColor='#fff'}) => {
         <FontAwesome name="angle-left" size={42} color={themeColor} />
         <Text style={{color: themeColor}}>Voltar</Text>
       </Button>
+      {
+        exportAction && <ExportTouch onPress={() => exportAction()}/>
+      }
     </Container>
   )
 }
