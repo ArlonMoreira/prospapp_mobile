@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Modal, TouchableWithoutFeedback, View } from 'react-native';
+import { Modal, TouchableWithoutFeedback, View, Platform } from 'react-native';
 //Hooks
 import useCurrentDate from '../../hooks/useCurrentDate';
 //Components
@@ -48,7 +48,7 @@ import {
 } from './styles'
 import { SimpleLineIcons, Ionicons, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 //PDF
-import RNHTMLtoPDF from 'react-native-html-to-pdf';
+import * as Print from 'expo-print';
 
 const Call = ({ route }) => {
 
@@ -192,8 +192,29 @@ const Call = ({ route }) => {
     setLoading(loadingList);
   }, [loadingList]);
 
-  const ActionComponent = () => {
-    console.log('TESTE')
+  const html = `
+  <html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    </head>
+    <body style="text-align: center;">
+      <h1 style="font-size: 50px; font-family: Helvetica Neue; font-weight: normal;">
+        Hello Expo!
+      </h1>
+      <img
+        src="https://d30j33t1r58ioz.cloudfront.net/static/guides/sdk.png"
+        style="width: 90vw;" />
+    </body>
+  </html>
+  `;  
+
+  const [ selectedPrinter, setSelectedPrinter ] = useState();
+
+  const print = async () => {
+    await Print.printAsync({
+      html,
+      printerUrl: selectedPrinter?.url,
+    })
   };
 
   return (
@@ -259,7 +280,7 @@ const Call = ({ route }) => {
               translucent
               backgroundColor="transparent"
             />      
-            <Header themeColor={primaryColor} exportAction={ActionComponent}></Header>
+            <Header themeColor={primaryColor} exportAction={print}></Header>
             <Body>
               <TitleAreaPage>
                 <TitlePage style={{color: primaryColor}}>Chamada</TitlePage>

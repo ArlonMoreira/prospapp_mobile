@@ -159,7 +159,18 @@ const useRequest = () => {
                     body: JSON.stringify(data)
                 }                
             });             
-        }       
+        },
+        reportCall: ({classId, year, month}) => {
+            return request({
+                endpoint: `call/call/report/${classId}/${year}/${month}`,
+                params: {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }                
+            });             
+        }   
     };
 
 };
