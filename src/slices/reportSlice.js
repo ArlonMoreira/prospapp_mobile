@@ -2,17 +2,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 //Hooks
 import useRequest from "../hooks/useRequest";
-import classSlice from "./classSlice";
 
 const initialState = {
-    data: {},
+    data: null,
     loading: false,
     success: false,
     error: false
 };
 
-export const call = createAsyncThunk(
-    'report/call',
+export const generated = createAsyncThunk(
+    'report/generated',
     async(data, {getState, rejectWithValue}) => {
         const userAuth = await getState().auth.userAuth; //userAuth.token
         const response = await useRequest().reportCall({
@@ -31,30 +30,34 @@ export const call = createAsyncThunk(
     }
 );
 
-export const callSlice = createSlice({
+export const generatedSlice = createSlice({
     name: 'report',
     initialState,
     reducers: {
-        reset: (state) => {
-            state.data = {}
+        resetReportState: (state) => {
+            state.data = null
+            state.success = false;
+            state.loading = false;
+            state.error = false;
         }
     },
     extraReducers: (builder) => {
         builder
             //Aguardando gerar o relatório
-            .addCase(call.pending, (state) => {
+            .addCase(generated.pending, (state) => {
                 state.loading = true;
                 state.success = false;
                 state.error = false;
             })
             //Sucesso carregar dados relatorio
-            .addCase(call.fulfilled, (state, action) => {
-                state.data = action.payload;
+            .addCase(generated.fulfilled, (state, action) => {
+                state.data = action.payload.data;
                 state.success = true;
                 state.loading = false;
+                state.error = false;
             })
             //Erro ao gerar o relatorio
-            .addCase(call.rejected, (state) => {
+            .addCase(generated.rejected, (state) => {
                 state.data = {};
                 state.success = false;
                 state.loading = false;
@@ -63,5 +66,5 @@ export const callSlice = createSlice({
     }
 });
 
-export const { reset } = callSlice.actions;
-export default callSlice.reducer;
+export const { resetReportState } = generatedSlice.actions;
+export default generatedSlice.reducer;

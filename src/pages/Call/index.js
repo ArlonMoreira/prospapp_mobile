@@ -9,9 +9,11 @@ import Fade from '../../components/Fade';
 import InputForm from '../../components/InputForm';
 import ButtonLg from '../../components/ButtonLg';
 import LoadingPage from '../../components/LoadingPage';
+import { Picker } from '@react-native-picker/picker';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
 import { register, list, call } from '../../slices/studentSlice';
+import { generated, resetReportState } from '../../slices/reportSlice';
 // Context
 import { LoadingContext } from '../../contexts/LoadingContext';
 //Styles
@@ -44,7 +46,8 @@ import {
   RadioIcon,
   RadioLabel,
   RadioText,
-  ExportTouch
+  ExportTouch,
+  Select
 } from './styles'
 import { SimpleLineIcons, Ionicons, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 //PDF
@@ -192,37 +195,137 @@ const Call = ({ route }) => {
     setLoading(loadingList);
   }, [loadingList]);
 
-  const html = `
-  <html>
-    <head>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
-    </head>
-    <body style="text-align: center;">
-      <h1 style="font-size: 50px; font-family: Helvetica Neue; font-weight: normal;">
-        Hello Expo!
-      </h1>
-      <img
-        src="https://d30j33t1r58ioz.cloudfront.net/static/guides/sdk.png"
-        style="width: 90vw;" />
-    </body>
-  </html>
-  `;  
+  // const html = `
+  // <html>
+  //   <head>
+  //     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  //   </head>
+  //   <body style="text-align: center;">
+  //     <h1 style="font-size: 50px; font-family: Helvetica Neue; font-weight: normal;">
+  //       Hello Expo!
+  //     </h1>
+  //     <img
+  //       src="https://d30j33t1r58ioz.cloudfront.net/static/guides/sdk.png"
+  //       style="width: 90vw;" />
+  //   </body>
+  // </html>
+  // `;  
 
-  const [ selectedPrinter, setSelectedPrinter ] = useState();
+  // const [ selectedPrinter, setSelectedPrinter ] = useState();
 
-  const print = async () => {
-    await Print.printAsync({
-      html,
-      printerUrl: selectedPrinter?.url,
-    })
+  // const print = async () => {
+  //   await Print.printAsync({
+  //     html,
+  //     printerUrl: selectedPrinter?.url,
+  //   })
+  // };
+
+  const { data:dataReport, loading:loadingReport, success: successReport } = useSelector((state) => state.report);
+  const [ showModalReport, setShowModalReport ] = useState(false);
+  //Anos a serem filtrados
+  const [ yearsOptions, setYearOptions ] = useState([]);
+  const [ yearSelected, setYearSelected ] = useState(null);
+  //Meses a serem filtrados
+  const [ monthsOptiopns ] = useState(['12', '11', '10', '09', '08', '07', '06', '05', '04', '03', '02', '01']);
+  const [ monthSelected, setMonthSelected ] = useState(null);
+
+  const closeModalReport = () => {
+    if(!loadingReport){
+      setShowModalReport(false);
+    }
   };
+
+  useEffect(()=>{
+    //Obter data atual
+    const currentTime = new Date();
+
+    //Criar uma lista com todos os anos incluindo o ano atual
+    const year = currentTime.getFullYear();
+    setYearOptions(Array.from({ length: 3 }, (_, i) => year - i));
+    setYearSelected(year);
+
+    //Selecionar o mês atual
+    const month = (currentTime.getMonth() + 1).toString().padStart(2, '0');
+    setMonthSelected(month);
+    
+  }, []);
+
+  //Gerar gelatório
+  const handleReportGenerated = () => {
+
+    const data = {
+      classId,
+      year: yearSelected,
+      month: monthSelected
+    };
+
+    dispatch(generated(data));
+
+  };
+
+  //Caso for gerado com sucesso, irá fechar o modal e reiniciar os estados;
+  useEffect(()=>{
+    if(successReport){
+      closeModalReport();
+      resetReportState();
+    }
+
+  }, [dataReport]);
 
   return (
     <>
       {
         loading ? <LoadingPage/> : (
           <Container>
-            {(showModal || showModalCall) && <Fade/>}
+            {(showModal || showModalCall || showModalReport) && <Fade/>}
+            <Modal
+              transparent={true}
+              animationType='slide'
+              visible={showModalReport}
+              onRequestClose={() => closeModalReport()} //Permite fechar o modal quando clicado em uma área fora      
+            >
+              <TouchableWithoutFeedback onPress={() => closeModalReport()}>
+                <ModalView>
+                  <ModalContent>
+                    <ModalTitle style={{color: primaryColor}}>Gerar relatório</ModalTitle>
+                    <ModalResume>Selecione o período que desejar para gerar o relatório de presença.</ModalResume>
+                    <Select>
+                      <Picker
+                        selectedValue={yearSelected}
+                        style={{
+                          backgroundColor: 'transparent', // deixa o Picker sem cor
+                          width: '100%',
+                          height: '100%'
+                        }}
+                        onValueChange={(itemValue) => setYearSelected(itemValue)}
+                      >
+                        {
+                          yearsOptions.map((option) => <Picker.Item key={option} value={option} label={option}/>)
+                        }
+                      </Picker>                      
+                    </Select>
+                    <Select>
+                      <Picker
+                        selectedValue={monthSelected}
+                        style={{
+                          backgroundColor: 'transparent', // deixa o Picker sem cor
+                          width: '100%',
+                          height: '100%'
+                        }}
+                        onValueChange={(itemValue) => setMonthSelected(itemValue)}
+                      >
+                        {
+                          monthsOptiopns.map((option) => <Picker.Item key={option} value={option} label={option}/>)
+                        }
+                      </Picker>                      
+                    </Select>
+                    <View style={{marginTop: 20}}>
+                      <ButtonLg title='Salvar e compartilhar' loading={loadingReport} color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleReportGenerated}/>
+                    </View>                                                           
+                  </ModalContent>
+                </ModalView>
+              </TouchableWithoutFeedback>
+            </Modal>
             <Modal
               transparent={true}
               animationType='slide'
@@ -280,7 +383,7 @@ const Call = ({ route }) => {
               translucent
               backgroundColor="transparent"
             />      
-            <Header themeColor={primaryColor} exportAction={print}></Header>
+            <Header themeColor={primaryColor} exportAction={() => setShowModalReport(true)}></Header>
             <Body>
               <TitleAreaPage>
                 <TitlePage style={{color: primaryColor}}>Chamada</TitlePage>

@@ -160,7 +160,7 @@ const useRequest = () => {
                 }                
             });             
         },
-        reportCall: ({classId, year, month}) => {
+        reportCall: ({classId, year, month, token}) => {
             return request({
                 endpoint: `call/call/report/${classId}/${year}/${month}`,
                 params: {

@@ -191,3 +191,10 @@ export const RadioText = styled.Text`
     font-size: 18px;
     font-family: 'montserrat-semibold';  
 `;
+
+export const Select = styled.View`
+    background-color: #0000000d;
+    border-radius: 20px;
+    height: 55px;
+    margin-top: 10px;
+`;
