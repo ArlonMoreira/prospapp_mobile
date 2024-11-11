@@ -145,41 +145,67 @@ const Call = ({ route }) => {
 
   //Call students
   const [ showModalCall, setShowModalCall ] = useState(false);
+  const [ studentSelected, setStudentSelected ] = useState(null);
+  const [ students, setStudents ] = useState([]);
+  const [ disabledSumitCall, setDisabledSubmitCall ] = useState(true);
 
-  const [ studentId, setStudentId ] = useState(null);
-  const [ studentName, setStudentName ] = useState('');
-  const [ studentPresent, setStudentPresent ] = useState('#ccc');
-
-  const handleCall = (student) => {
-    setShowModalCall(true);
-    setStudentId(student.id)
-    setStudentName(student.name);
-    setStudentPresent(student.present);
-  };
-
-  const handleCallPresent = (present) => {
-    const data = {
-      student: studentId,
-      present
-    };
-
-    dispatch(call(data));
-
-  };
-
+  //Selecionar o objeto de estudantes
   useEffect(()=>{
-    const currentStudent = data.filter((student) => student.id === studentId)[0];
-    if(currentStudent){
-      setStudentPresent(currentStudent.present);
-    }
+    setStudents(data);
 
   }, [data]);
 
+  //Quando cadastrar um usuário novo deve incluir esse novo usuário na lisa de estudante
   useEffect(()=>{
-    if(successCall){
-      closeModalCall();
+    const updateStudents = [...students];
+    
+    data.forEach(item => {
+      const exists = students.some(student => student.id === item.id);
+      if(!exists){
+        updateStudents.push(item);
+      }
+    });
+    
+    setStudents(updateStudents);
+
+  }, [success]);
+
+  //Bloquear botão de chamada caso todos os estudantes não tiverem marcado presença
+  useEffect(()=>{
+    const count = students.filter((student) => student.present == null).length;
+    if(!count){
+      setDisabledSubmitCall(false);
+    } else {
+      setDisabledSubmitCall(true);
     }
-  }, [successCall]);
+
+  }, [students]);  
+
+  //Seleciona o estudante e abre o modal para selecionar a presença
+  const handleCall = (student) => {
+    setStudentSelected(student);    
+    setShowModalCall(true);
+
+  };
+
+  //Seleciona a presenã do estudante selecionado
+  const handleCallPresent = ({student, present}) => {
+    setStudents(students => 
+      students.map((item) => item.id === student.id ? {...item, present}: item)
+    )
+    closeModalCall();
+
+  };
+
+  //Registrar chamada
+  const handleCallRegister = () => {
+    const data = [
+      ...students.map((student) => ({student: student.id, present: student.present}))
+    ]
+    
+    dispatch(call(data));
+
+  };
 
   const closeModalCall = () => { //Fechar modal
     if(!loadingCall){
@@ -194,31 +220,6 @@ const Call = ({ route }) => {
   useEffect(()=>{
     setLoading(loadingList);
   }, [loadingList]);
-
-  // const html = `
-  // <html>
-  //   <head>
-  //     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
-  //   </head>
-  //   <body style="text-align: center;">
-  //     <h1 style="font-size: 50px; font-family: Helvetica Neue; font-weight: normal;">
-  //       Hello Expo!
-  //     </h1>
-  //     <img
-  //       src="https://d30j33t1r58ioz.cloudfront.net/static/guides/sdk.png"
-  //       style="width: 90vw;" />
-  //   </body>
-  // </html>
-  // `;  
-
-  // const [ selectedPrinter, setSelectedPrinter ] = useState();
-
-  // const print = async () => {
-  //   await Print.printAsync({
-  //     html,
-  //     printerUrl: selectedPrinter?.url,
-  //   })
-  // };
 
   const { data:dataReport, loading:loadingReport, success: successReport } = useSelector((state) => state.report);
   const [ showModalReport, setShowModalReport ] = useState(false);
@@ -354,28 +355,32 @@ const Call = ({ route }) => {
             >
               <TouchableWithoutFeedback onPress={() => setShowModalCall(false)}>
                 <ModalView>
-                  <ModalContent>
-                    <ModalTitle style={{color: primaryColor}}>{studentName}</ModalTitle>
-                    <ModalResume>Defina a presença do aluno em {currentDate}.</ModalResume>
-                    <CallOptions>
-                      <Radio onPress={() => handleCallPresent(true)}>
-                        <RadioIcon style={{borderColor: studentPresent == true ? '#59DE7E': '#CCC'}}>
-                          <FontAwesome name='check' size={22} color={studentPresent == true ? '#59DE7E': '#CCC'}></FontAwesome>
-                        </RadioIcon>
-                        <RadioLabel>
-                          <RadioText style={{color: studentPresent == true ? '#59DE7E': '#CCC'}}>Presente</RadioText>
-                        </RadioLabel>
-                      </Radio>
-                      <Radio onPress={() => handleCallPresent(false)}>
-                        <RadioIcon style={{borderColor: studentPresent == false ? '#FF6666': '#CCC'}}>
-                          <FontAwesome name='remove' size={22} color={studentPresent == false ? '#FF6666': '#CCC'}></FontAwesome>
-                        </RadioIcon>
-                        <RadioLabel>
-                          <RadioText style={{color: studentPresent == false ? '#FF6666': '#CCC'}}>Falta</RadioText>
-                        </RadioLabel>
-                      </Radio>                
-                    </CallOptions>
-                  </ModalContent>
+                  {
+                    studentSelected && (
+                      <ModalContent>
+                        <ModalTitle style={{color: primaryColor}}>{studentSelected.name}</ModalTitle>
+                        <ModalResume>Defina a presença do aluno em {currentDate}.</ModalResume>
+                        <CallOptions>
+                          <Radio onPress={() => handleCallPresent({student: studentSelected, present: true})}>
+                            <RadioIcon style={{borderColor: studentSelected.present == true ? '#59DE7E': '#CCC'}}>
+                              <FontAwesome name='check' size={22} color={studentSelected.present == true ? '#59DE7E': '#CCC'}></FontAwesome>
+                            </RadioIcon>
+                            <RadioLabel>
+                              <RadioText style={{color: studentSelected.present == true ? '#59DE7E': '#CCC'}}>Presente</RadioText>
+                            </RadioLabel>
+                          </Radio>
+                          <Radio onPress={() => handleCallPresent({student: studentSelected, present: false})}>
+                            <RadioIcon style={{borderColor: studentSelected.present == false ? '#FF6666': '#CCC'}}>
+                              <FontAwesome name='remove' size={22} color={studentSelected.present == false ? '#FF6666': '#CCC'}></FontAwesome>
+                            </RadioIcon>
+                            <RadioLabel>
+                              <RadioText style={{color: studentSelected.present == false ? '#FF6666': '#CCC'}}>Falta</RadioText>
+                            </RadioLabel>
+                          </Radio>                
+                        </CallOptions>                        
+                      </ModalContent>
+                    )
+                  }
                 </ModalView>
               </TouchableWithoutFeedback>
             </Modal>          
@@ -401,7 +406,6 @@ const Call = ({ route }) => {
                   <InfoName>{currentDate}</InfoName>
                 </InfoText>          
               </InfoArea>
-              <SearchArea color={'#939393'}/>
               <ToolsArea>
                 <ButtonAction onPress={() => setShowModal(true)}>
                   <Ionicons name="add-circle-outline" size={28} color={primaryColor}/>
@@ -413,7 +417,7 @@ const Call = ({ route }) => {
               </InstructionArea>
               <ContainerStudent>
                 {
-                  (data && data.length > 0) && data.map((student)=>(
+                  (students && students.length > 0) && students.map((student)=>(
                     <StudentCard key={student.id}>
                       <StudentNameArea>
                         <StudentName style={{color: primaryColor}}>{student.name}</StudentName>
@@ -432,6 +436,9 @@ const Call = ({ route }) => {
                     </StudentCard>
                   ))
                 }
+                <View style={{marginTop: 20}}>
+                  <ButtonLg disabled={disabledSumitCall} title='Registrar' color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleCallRegister} />
+                </View>                
               </ContainerStudent>
             </Body>
           </Container>

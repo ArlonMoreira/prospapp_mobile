@@ -19,7 +19,7 @@ export const list = createAsyncThunk(
         const userAuth = await getState().auth.userAuth; //userAuth.token
         const response = await useRequest().studentList({
             classId,
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwOTkxOTg0LCJpYXQiOjE3MzA1NTk5ODQsImp0aSI6ImQ4NTM0OWRhMTYxODRmOTU4MDY0YWVmMGZiYzRjNjViIiwidXNlcl9pZCI6MX0.3DtQvq9dJKrl2LBp8KPQGXadcvniBm5nPSTAhYP_yso'
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNjgzNDUxLCJpYXQiOjE3MzEyNTE0NTEsImp0aSI6IjQzMTdlMGY0NWFmNTQxYTk4NjI1MDk0YTU2MGIyMWYyIiwidXNlcl9pZCI6MX0.6OMFc17K-hrb3s5lN0It8KKHs_QlVqHCQk5tdNAyzrk'
         });
 
         if(response.success){
@@ -36,7 +36,7 @@ export const register = createAsyncThunk(
         const userAuth = await getState().auth.userAuth; //userAuth.token
         const response = await useRequest().studentRegister({
             data,
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwOTkxOTg0LCJpYXQiOjE3MzA1NTk5ODQsImp0aSI6ImQ4NTM0OWRhMTYxODRmOTU4MDY0YWVmMGZiYzRjNjViIiwidXNlcl9pZCI6MX0.3DtQvq9dJKrl2LBp8KPQGXadcvniBm5nPSTAhYP_yso'
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNjgzNDUxLCJpYXQiOjE3MzEyNTE0NTEsImp0aSI6IjQzMTdlMGY0NWFmNTQxYTk4NjI1MDk0YTU2MGIyMWYyIiwidXNlcl9pZCI6MX0.6OMFc17K-hrb3s5lN0It8KKHs_QlVqHCQk5tdNAyzrk'
         });
 
         if(response.success){
@@ -54,7 +54,7 @@ export const call = createAsyncThunk(
         const userAuth = await getState().auth.userAuth; //userAuth.token
         const response = await useRequest().callRegister({
             data,
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwOTkxOTg0LCJpYXQiOjE3MzA1NTk5ODQsImp0aSI6ImQ4NTM0OWRhMTYxODRmOTU4MDY0YWVmMGZiYzRjNjViIiwidXNlcl9pZCI6MX0.3DtQvq9dJKrl2LBp8KPQGXadcvniBm5nPSTAhYP_yso'
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNjgzNDUxLCJpYXQiOjE3MzEyNTE0NTEsImp0aSI6IjQzMTdlMGY0NWFmNTQxYTk4NjI1MDk0YTU2MGIyMWYyIiwidXNlcl9pZCI6MX0.6OMFc17K-hrb3s5lN0It8KKHs_QlVqHCQk5tdNAyzrk'
         });
 
         if(response.success){
@@ -109,11 +109,7 @@ export const studentSlice = createSlice({
             })
             //Sucesso chamada
             .addCase(call.fulfilled, (state, action) => {
-                state.loadingCall = false;  
-                const student = state.data.find((student) => student.id === action.payload.data.student);
-                if(student){
-                    student.present = action.payload.data.present;
-                }
+                state.loadingCall = false;
                 state.successCall = true;
 
             })
