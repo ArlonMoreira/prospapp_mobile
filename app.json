@@ -3,6 +3,7 @@
     "name": "prospapp_mobile",
     "slug": "prospapp_mobile",
     "assetBundlePatterns": ["**/*"],
+    "newArchEnabled": true,
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

@@ -52,6 +52,7 @@ import {
 import { SimpleLineIcons, Ionicons, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 //PDF
 import * as Print from 'expo-print';
+import { shareAsync } from 'expo-sharing';
 
 const Call = ({ route }) => {
 
@@ -236,6 +237,172 @@ const Call = ({ route }) => {
     }
   };
 
+  //Gerar gelatório
+  const handleReportGenerated = () => {
+    const data = {
+      classId,
+      year: yearSelected,
+      month: monthSelected
+    };
+
+    dispatch(generated(data));
+
+  };
+
+  const printToFile = async (data) => {
+    
+    const breakObjectInParts = (obj, daysPerPart) => {
+      const keys = Object.keys(obj);
+      let result = [];
+      for (let i = 0; i < keys.length; i += daysPerPart) {
+        const part = keys.slice(i, i + daysPerPart).reduce((acc, key) => {
+          acc[key] = obj[key];
+          return acc;
+        }, {});
+        result.push(part);
+      }
+      return result;
+    };
+    
+    const obj = {};
+    
+    Object.keys(data).forEach((al) => {
+      obj[al] = breakObjectInParts(data[al], 6);
+    }); 
+
+    const tables = []
+
+    Object.keys(obj).forEach((key) => {
+      obj[key].forEach((x, i) => {
+        if (!tables[i]) {
+          tables[i] = {};  // Cria o objeto vazio para a posição i
+        }
+        tables[i][key] = x;  // Atribui o valor para a posição i e chave correspondente
+      });
+    });    
+
+    const html = `
+    <html lang="en">
+
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Tabela PDF</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              font-size: 10px;
+              margin: 20px;
+            }
+
+            h1 {
+                text-align: center;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                table-layout: fixed;
+            }
+
+            th:first-child,
+            td:first-child {
+                width: 200px;
+            }        
+
+            th,
+            td {
+                border: 1px solid #000;
+                padding: 4px;
+                text-align: center;
+                font-size: 14px;
+                word-wrap: break-word;
+                width: 75;
+            }
+
+            th {
+                background-color: #f4f4f4;
+            }
+          </style>
+      </head>
+      
+      <body>
+
+          ${
+            tables.map((table) => {
+
+              const rows = Object.keys(table);
+              const columns = Object.keys(table[rows[0]]);
+
+              return `
+                <table>
+                  <thead>
+                      <tr>
+                        <th>Aluno</th>
+                        ${
+                          
+                          columns.map((col) => {
+                            const date = new Date(col);
+                            return `<th>${date.toLocaleDateString('pt-BR')}</th>`
+                          }).join('')
+                        }
+                      </tr>
+                  </thead>
+                  <tbody>
+                      ${
+                        rows.map((row) => `
+                          <tr>
+                            <td>${row}</td>
+                            ${
+                              columns.map((col) => {
+                                if(data[row][col] == null){
+                                  return `<td>-</td>`
+                                }
+
+                                return `<td>${data[row][col] ? 'Presente': 'Falta'}</td>`
+
+                              }).join('')
+                            }
+                          </tr>                    
+                        `).join('')
+                      }      
+                  </tbody>
+              </table>`              
+            })
+          }
+
+      </body>
+    
+    </html>
+    `;    
+    
+    try {
+
+      const { uri } = await Print.printToFileAsync({ html });
+
+      await shareAsync(uri, { 
+        UTI: '.pdf',
+        mimeType: 'application/pdf'
+      });      
+
+    } catch (error) {
+      console.error("Erro ao compartilhar:", error);
+      
+    }
+
+  }; 
+
+  //Caso for gerado com sucesso, irá fechar o modal e reiniciar os estados;
+  useEffect(()=>{
+    if(successReport){
+      printToFile(dataReport);
+      dispatch(resetReportState()); //Reiniciar o estado do relatório quando o mesmo for gerado com sucesso
+      closeModalReport();
+
+    }
+
+  }, [dataReport]);
+
   useEffect(()=>{
     //Obter data atual
     const currentTime = new Date();
@@ -249,29 +416,7 @@ const Call = ({ route }) => {
     const month = (currentTime.getMonth() + 1).toString().padStart(2, '0');
     setMonthSelected(month);
     
-  }, []);
-
-  //Gerar gelatório
-  const handleReportGenerated = () => {
-
-    const data = {
-      classId,
-      year: yearSelected,
-      month: monthSelected
-    };
-
-    dispatch(generated(data));
-
-  };
-
-  //Caso for gerado com sucesso, irá fechar o modal e reiniciar os estados;
-  useEffect(()=>{
-    if(successReport){
-      closeModalReport();
-      resetReportState();
-    }
-
-  }, [dataReport]);
+  }, [dispatch]);  
 
   return (
     <>
