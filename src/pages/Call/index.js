@@ -387,7 +387,7 @@ const Call = ({ route }) => {
 
     } catch (error) {
       console.error("Erro ao compartilhar:", error);
-      
+
     }
 
   }; 
@@ -533,7 +533,7 @@ const Call = ({ route }) => {
               translucent
               backgroundColor="transparent"
             />      
-            <Header themeColor={primaryColor} exportAction={() => setShowModalReport(true)}></Header>
+            <Header themeColor={primaryColor}></Header>
             <Body>
               <TitleAreaPage>
                 <TitlePage style={{color: primaryColor}}>Chamada</TitlePage>
@@ -542,9 +542,6 @@ const Call = ({ route }) => {
                 <InfoText>
                   <SimpleLineIcons name='graduation' size={22} color={'#606060'}/>
                   <InfoName>{className}</InfoName>
-                  {/* <Edit>
-                    <MaterialIcons name='edit' size={24} color={primaryColor}/>
-                  </Edit> */}
                 </InfoText>
                 <InfoText>
                   <SimpleLineIcons name='calendar' size={18} color={'#606060'}/>
@@ -552,10 +549,22 @@ const Call = ({ route }) => {
                 </InfoText>          
               </InfoArea>
               <ToolsArea>
-                <ButtonAction onPress={() => setShowModal(true)}>
-                  <Ionicons name="add-circle-outline" size={28} color={primaryColor}/>
+                <ButtonAction borderColor={primaryColor} onPress={() => setShowModal(true)}>
+                  <Ionicons name="person-add" size={24} color={primaryColor}/>
                   <ButtonActionTitle style={{color: primaryColor}}>Adicionar aluno</ButtonActionTitle>
-                </ButtonAction>         
+                </ButtonAction>
+                <ButtonAction borderColor={primaryColor} onPress={() => setShowModalReport(true)}>
+                  <Ionicons name="download" size={24} color={primaryColor}/>
+                  <ButtonActionTitle style={{color: primaryColor}}>Baixa relatório</ButtonActionTitle>
+                </ButtonAction>
+                <ButtonAction borderColor={primaryColor}>
+                  <Ionicons name="pencil-sharp" size={24} color={primaryColor}/>
+                  <ButtonActionTitle style={{color: primaryColor}}>Editar aluno</ButtonActionTitle>
+                </ButtonAction>
+                <ButtonAction borderColor={primaryColor}>
+                  <Ionicons name="person-remove" size={24} color={primaryColor}/>
+                  <ButtonActionTitle style={{color: primaryColor}}>Remover aluno</ButtonActionTitle>
+                </ButtonAction>                                             
               </ToolsArea>
               <InstructionArea>
                 <Instruction>Clique para marca a presença/ausência do aluno:</Instruction>

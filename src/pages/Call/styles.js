@@ -1,5 +1,5 @@
 import styled from 'styled-components/native';
-import { View } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 
 export const Container = styled.View`
     flex: 1;
@@ -51,26 +51,48 @@ export const Edit = styled.TouchableOpacity`
     margin-left: 15px;      
 `;
 
-export const ToolsArea = styled.View`
-    height: 50px;
-    flex-direction: row;
-    padding: 2px;
-    margin-top: 10px;
-    gap: 10px;
+export const ToolsArea = styled.ScrollView.attrs({
+    horizontal: true, // Torna o ScrollView horizontal
+    contentContainerStyle: {
+      flexDirection: "row",
+      gap: 10, // Controla o espaço entre os elementos
+    },
+  })`
+    max-height: 80px; 
+    flex: 1;
+    overflow: visible;
 `;
-
-export const ButtonAction = styled.TouchableOpacity`
-    border-radius: 50px;
-    flex-direction: row;
+  
+export const ButtonAction = styled(TouchableOpacity).attrs(() => ({
+    activeOpacity: 0.7, // Define uma opacidade para o efeito de toque
+    gap: 10
+  }))`
+    width: 78px;
+    height: 78px;
+    justify-content: center;
     align-items: center;
-    justify-content: center;    
-    gap: 5px;
+    background-color: #f2f2f2;
+    border-width: 1px;
+    border-color: ${({ borderColor }) => borderColor || "#000"};
+    border-radius: 8px;
+  
+    /* Sombras no iOS */
+    shadow-color: #000;
+    shadow-offset: 0px 4px; /* Mude a altura para ajustar */
+    shadow-opacity: 0.3; /* Ajuste a intensidade */
+    shadow-radius: 4px; /* Controle do espalhamento */
+  
+    /* Sombras no Android */
+    elevation: 6; /* Ajuste o valor para intensidade */
 `;
 
 export const ButtonActionTitle = styled.Text`
-    font-size: 16px;
-    font-family: 'montserrat-semibold';
-    text-align: center;    
+    font-size: 10px;
+    font-family: 'montserrat-medium';
+    text-align: center;
+    line-height: 10px;
+    margin-top: 5px;
+    max-width: 50px;
 `;
 
 export const ModalView = styled.View`
@@ -112,7 +134,7 @@ export const ModalResume = styled.Text`
 `;
 
 export const InstructionArea = styled.View`
-    height: 72px;
+    height: 62px;
     align-items: start;
     justify-content: flex-end;
 `;
