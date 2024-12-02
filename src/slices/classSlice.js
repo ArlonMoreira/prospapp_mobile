@@ -17,7 +17,7 @@ export const register = createAsyncThunk(
         const userAuth = await getState().auth.userAuth; //userAuth.token
         const response = await useRequest().classRegister({
             data,
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMTA2NDQwLCJpYXQiOjE3MzE2NzQ0NDAsImp0aSI6ImVmYjUxZmQwNWU3MjQxOTY5MTljMDQ0NmMxMDM2YzJiIiwidXNlcl9pZCI6MX0.xS15aEzkl0zV4x8fitdHuBMVHmntp6YU42lEpU3IInI'
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNTI2NzQxLCJpYXQiOjE3MzMwOTQ3NDEsImp0aSI6ImViZjFmYmI0MjIwYzQ2YjA5ZjU5ZDcwYzU1ZDdlYTdiIiwidXNlcl9pZCI6MX0.f18vgzvdwWf7IzyvVCgCs7hxYdP68OreLYRsXdxajNU'
         });
 
         if(response.success){
@@ -35,7 +35,7 @@ export const list = createAsyncThunk(
         const userAuth = await getState().auth.userAuth; //userAuth.token
         const response = await useRequest().classList({
             company,
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMTA2NDQwLCJpYXQiOjE3MzE2NzQ0NDAsImp0aSI6ImVmYjUxZmQwNWU3MjQxOTY5MTljMDQ0NmMxMDM2YzJiIiwidXNlcl9pZCI6MX0.xS15aEzkl0zV4x8fitdHuBMVHmntp6YU42lEpU3IInI'
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNTI2NzQxLCJpYXQiOjE3MzMwOTQ3NDEsImp0aSI6ImViZjFmYmI0MjIwYzQ2YjA5ZjU5ZDcwYzU1ZDdlYTdiIiwidXNlcl9pZCI6MX0.f18vgzvdwWf7IzyvVCgCs7hxYdP68OreLYRsXdxajNU'
         });
 
         if(response.success){

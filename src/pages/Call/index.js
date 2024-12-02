@@ -250,7 +250,43 @@ const Call = ({ route }) => {
   };
 
   const printToFile = async (data) => {
-    
+
+    /**Start: Remover todas as datas que não possui nenhum registro de chamada */
+    const dates = Object.keys(data[Object.keys(data)[0]]).reduce((acc, key) => {
+      acc[key] = []; // Define cada chave com um array vazio
+      return acc;
+    }, {});
+
+    Object.values(data).forEach((obj)=>{
+      Object.keys(dates).map((date) => dates[date].push(obj[date]));
+    });
+
+    const dataNotNull = [];
+    Object.keys(dates).forEach((date)=>{
+      if(dates[date].every(element => element === null)){
+        dataNotNull.push(date);
+      }
+    });
+
+    for (const person in data) {
+      dataNotNull.forEach(date => {
+        delete data[person][date];
+      });
+    }
+
+    const filteredData = {};
+    for (const person in data) {
+      filteredData[person] = {}; // Inicializar o objeto para cada pessoa
+  
+      Object.keys(data[person]).forEach((date) => {
+        if (!dataNotNull.includes(date)) {
+          filteredData[person][date] = data[person][date];
+        }
+      });
+    }
+
+    /**End: Remover todas as datas que não possui nenhum registro de chamada */    
+
     const breakObjectInParts = (obj, daysPerPart) => {
       const keys = Object.keys(obj);
       let result = [];
@@ -266,10 +302,10 @@ const Call = ({ route }) => {
     
     const obj = {};
     
-    Object.keys(data).forEach((al) => {
-      obj[al] = breakObjectInParts(data[al], 6);
+    Object.keys(filteredData).forEach((al) => {
+      obj[al] = breakObjectInParts(filteredData[al], 6);
     }); 
-
+    
     const tables = []
 
     Object.keys(obj).forEach((key) => {
@@ -291,37 +327,44 @@ const Call = ({ route }) => {
           <style>
             body {
               font-family: Arial, sans-serif;
-              font-size: 10px;
+              font-size: 12px;
               margin: 20px;
             }
 
-            h1 {
-                text-align: center;
-            }
-
             table {
-                width: 100%;
-                border-collapse: collapse;
-                table-layout: fixed;
+              width: 100%;
+              border-collapse: collapse;
+              font-size: 0.9em;
+              font-family: sans-serif;
+              margin-top: 20px;
             }
 
-            th:first-child,
-            td:first-child {
-                width: 200px;
-            }        
-
-            th,
-            td {
-                border: 1px solid #000;
-                padding: 4px;
-                text-align: center;
-                font-size: 14px;
-                word-wrap: break-word;
-                width: 75;
+            table thead tr {
+              background-color: ${primaryColor};
+              color: #ffffff;
+              text-align: left;
             }
 
-            th {
-                background-color: #f4f4f4;
+            table th,
+            table td {
+              padding: 12px 15px;
+            }
+
+            table tbody tr {
+              border-bottom: 1px solid #dddddd;
+            }
+
+            table tbody tr:nth-of-type(even) {
+              background-color: #f3f3f3;
+            }
+
+            table tbody tr:last-of-type {
+              border-bottom: 2px solid ${primaryColor};
+            }
+
+            table tbody tr.active-row {
+              font-weight: bold;
+              color: ${primaryColor};
             }
           </style>
       </head>
@@ -339,11 +382,10 @@ const Call = ({ route }) => {
                   <thead>
                       <tr>
                         <th>Aluno</th>
-                        ${
-                          
+                        ${                      
                           columns.map((col) => {
-                            const date = new Date(col);
-                            return `<th>${date.toLocaleDateString('pt-BR')}</th>`
+                            const [year, month, day] = col.split('-');
+                            return `<th>${day}/${month}/${year}</th>`
                           }).join('')
                         }
                       </tr>
@@ -359,7 +401,7 @@ const Call = ({ route }) => {
                                   return `<td>-</td>`
                                 }
 
-                                return `<td>${data[row][col] ? 'Presente': 'Falta'}</td>`
+                                return `<td>${data[row][col] ? '<span style="color:0dbf2d">Presente</span>': '<span style="color:bf0d0d">Falta</span>'}</td>`
 
                               }).join('')
                             }
@@ -368,13 +410,13 @@ const Call = ({ route }) => {
                       }      
                   </tbody>
               </table>`              
-            })
+            }).join('')
           }
 
       </body>
     
     </html>
-    `;    
+    `;
     
     try {
 
