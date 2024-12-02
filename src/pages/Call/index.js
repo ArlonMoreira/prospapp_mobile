@@ -277,12 +277,26 @@ const Call = ({ route }) => {
     const filteredData = {};
     for (const person in data) {
       filteredData[person] = {}; // Inicializar o objeto para cada pessoa
-  
+      let totalPresences = 0; // Contador de presenças
+      let validDates = 0; // Contador de datas válidas
+    
       Object.keys(data[person]).forEach((date) => {
         if (!dataNotNull.includes(date)) {
-          filteredData[person][date] = data[person][date];
+          const value = data[person][date];
+          filteredData[person][date] = value;
+    
+          // Contar somente os valores não nulos
+          if (value !== null) {
+            totalPresences += value;
+            validDates++;
+          }
         }
       });
+    
+      // Calcular a média de presença e adicionar ao objeto
+      filteredData[person]['(%) presença'] = validDates > 0 
+        ? ((totalPresences / validDates) * 100).toFixed(2) + '%' 
+        : '0%';
     }
 
     /**End: Remover todas as datas que não possui nenhum registro de chamada */    
@@ -384,8 +398,13 @@ const Call = ({ route }) => {
                         <th>Aluno</th>
                         ${                      
                           columns.map((col) => {
-                            const [year, month, day] = col.split('-');
-                            return `<th>${day}/${month}/${year}</th>`
+                            if(col !== '(%) presença'){
+                              const [year, month, day] = col.split('-');
+                              return `<th>${day}/${month}/${year}</th>`
+                            }
+
+                            return `<th>${col}</th>`
+
                           }).join('')
                         }
                       </tr>
@@ -397,11 +416,16 @@ const Call = ({ route }) => {
                             <td>${row}</td>
                             ${
                               columns.map((col) => {
-                                if(data[row][col] == null){
+                                
+                                if(col == '(%) presença'){
+                                  return `<td>${filteredData[row][col]}</td>`
+                                }
+
+                                if(filteredData[row][col] == null){
                                   return `<td>-</td>`
                                 }
 
-                                return `<td>${data[row][col] ? '<span style="color:0dbf2d">Presente</span>': '<span style="color:bf0d0d">Falta</span>'}</td>`
+                                return `<td>${filteredData[row][col] ? '<span style="color:0dbf2d">Presente</span>': '<span style="color:bf0d0d">Falta</span>'}</td>`
 
                               }).join('')
                             }
