@@ -54,21 +54,28 @@ import { SimpleLineIcons, Ionicons, FontAwesome, FontAwesome5 } from '@expo/vect
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
 
+const URL = process.env.EXPO_PUBLIC_API_URL;
+
 const Call = ({ route }) => {
 
   const { loading, setLoading } = useContext(LoadingContext);  
 
-  const currentDate = useCurrentDate();
+  const { currentDate, currentHour } = useCurrentDate();
 
   const { classId, className } = route.params;
 
   const { userData } = useSelector((state) => state.me);
   const [ primaryColor, setPrimaryColor ] = useState('#fff');
+  const [ nameUser, setNameUser ] = useState('');
+  const [ logo, setLogo ] = useState(null);
   
   useEffect(()=>{
     if(userData){
+      console.log(userData)
       if(userData.companys_joined.length){
         setPrimaryColor(userData.companys_joined[0].primary_color);
+        setLogo(`${URL}/files/${userData.companys_joined[0].logo}`);
+        setNameUser(userData.full_name);
       }
 
     }
@@ -295,7 +302,7 @@ const Call = ({ route }) => {
     
       // Calcular a média de presença e adicionar ao objeto
       filteredData[person]['(%) presença'] = validDates > 0 
-        ? ((totalPresences / validDates) * 100).toFixed(2) + '%' 
+        ? ((totalPresences / validDates) * 100).toFixed(2) + ' %' 
         : '0%';
     }
 
@@ -380,11 +387,54 @@ const Call = ({ route }) => {
               font-weight: bold;
               color: ${primaryColor};
             }
+
+            .report-head {
+              min-height: 45px;
+              margin-bottom: 20px;
+            }
+
+            .report-title {
+              display: flex;
+              flex-direction: column-reverse;
+              color: ${primaryColor};
+            }
+
+            .report-logo {
+              width: 75px;
+              height: 45px;
+            }
+
+            .report-logo img {
+              width: 100%;
+              height: 100%;
+            }
+
+            .report-body ul {
+              margin: 0;
+              padding: 0;
+              list-style-type: none;
+            }            
           </style>
       </head>
       
       <body>
-
+        <div class="report-head">
+            <div class="report-title">
+                <h3>Relatório de presença</h3>
+                <div class="report-logo">
+                  <img src="${logo}" alt="logo">
+                </div>
+            </div>
+            <div class="report-body">
+                <ul>
+                    <li>Turma: ${className}</li>
+                    <li>Data de emissão: ${currentDate} ${currentHour}</li>
+                    <li>Usuário que gerou o relatório: ${nameUser}</li>
+                    <li>Quantidade de datas:</li>
+                    <li>Média de comparecimento por data:</li>
+                </ul>
+            </div>
+        </div>
           ${
             tables.map((table) => {
 
@@ -418,7 +468,7 @@ const Call = ({ route }) => {
                               columns.map((col) => {
                                 
                                 if(col == '(%) presença'){
-                                  return `<td>${filteredData[row][col]}</td>`
+                                  return `<td style="font-size: .9em;font-weight: 600;color: #767676;">${filteredData[row][col]}</td>`
                                 }
 
                                 if(filteredData[row][col] == null){
@@ -441,6 +491,8 @@ const Call = ({ route }) => {
     
     </html>
     `;
+
+    console.log(html)
     
     try {
 

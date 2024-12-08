@@ -18,7 +18,7 @@ export const generated = createAsyncThunk(
             classId: data.classId,
             year: data.year,
             month: data.month,
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNTI2NzQxLCJpYXQiOjE3MzMwOTQ3NDEsImp0aSI6ImViZjFmYmI0MjIwYzQ2YjA5ZjU5ZDcwYzU1ZDdlYTdiIiwidXNlcl9pZCI6MX0.f18vgzvdwWf7IzyvVCgCs7hxYdP68OreLYRsXdxajNU'
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0MTE2ODk3LCJpYXQiOjE3MzM2ODQ4OTcsImp0aSI6IjAyOTVhZTQ2ZjYyODQxNDlhNWVlNDVkMTg1YjVkYmJlIiwidXNlcl9pZCI6MX0.5XNyzq42a6haiG09L_mBKnw828hks9HPcQXcq2k6bb4'
         });
 
         if(response.success){

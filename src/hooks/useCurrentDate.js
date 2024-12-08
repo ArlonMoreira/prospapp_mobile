@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 const useCurrentDate = () => {
   const [currentDate, setCurrentDate] = useState('');
+  const [currentHour, setCurrentHour] = useState('');
 
   useEffect(() => {
     const getFormattedDate = () => {
@@ -12,10 +13,21 @@ const useCurrentDate = () => {
       return `${day}/${month}/${year}`;
     };
 
+    const getFormattedHour = () => {
+      const date = new Date();
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      const seconds = String(date.getSeconds()).padStart(2, '0');
+      return `${hours}:${minutes}:${seconds}`;
+    };
+
+    setCurrentHour(getFormattedHour());
     setCurrentDate(getFormattedDate());
+
   }, []);
 
-  return currentDate;
+  return { currentDate, currentHour };
+
 };
 
 export default useCurrentDate;

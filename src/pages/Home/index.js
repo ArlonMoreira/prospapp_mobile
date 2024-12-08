@@ -58,6 +58,10 @@ const Home = () => {
 
     }, [userData]);
 
+    useEffect(()=>{
+        console.log(logo)
+    }, [logo])
+
     return (
         <Container style={{backgroundColor: primaryColor}}>
             <StatusBar 
