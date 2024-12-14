@@ -4,12 +4,12 @@ import { Modal, TouchableWithoutFeedback, View, Platform } from 'react-native';
 import useCurrentDate from '../../hooks/useCurrentDate';
 //Components
 import Header from '../../components/Header';
-import SearchArea from '../../components/SearchArea';
 import Fade from '../../components/Fade';
 import InputForm from '../../components/InputForm';
 import ButtonLg from '../../components/ButtonLg';
 import LoadingPage from '../../components/LoadingPage';
 import { Picker } from '@react-native-picker/picker';
+import BoxAction from '../../components/BoxAction';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
 import { register, list, call } from '../../slices/studentSlice';
@@ -66,14 +66,16 @@ const Call = ({ route }) => {
 
   const { userData } = useSelector((state) => state.me);
   const [ primaryColor, setPrimaryColor ] = useState('#fff');
+  const [ secundaryColor, setSecundaryColor ] = useState('#fff');
   const [ nameUser, setNameUser ] = useState('');
   const [ logo, setLogo ] = useState(null);
   
   useEffect(()=>{
     if(userData){
-
+      console.log(userData.companys_joined[0])
       if(userData.companys_joined.length){
         setPrimaryColor(userData.companys_joined[0].primary_color);
+        setSecundaryColor(userData.companys_joined[0].secundary_color);
         setLogo(`${URL}/files/${userData.companys_joined[0].logo}`);
         setNameUser(userData.full_name);
       }
@@ -160,7 +162,6 @@ const Call = ({ route }) => {
   //Selecionar o objeto de estudantes
   useEffect(()=>{
     setStudents(data);
-
   }, [data]);
 
   //Quando cadastrar um usuário novo deve incluir esse novo usuário na lisa de estudante
@@ -180,11 +181,12 @@ const Call = ({ route }) => {
 
   //Bloquear botão de chamada caso todos os estudantes não tiverem marcado presença
   useEffect(()=>{
-    const count = students.filter((student) => student.present == null).length;
-    if(!count){
+    const filled = students.filter((student) => student.present == null).length;
+
+    setDisabledSubmitCall(true);
+
+    if(filled == 0 && students.length !== 0){
       setDisabledSubmitCall(false);
-    } else {
-      setDisabledSubmitCall(true);
     }
 
   }, [students]);  
@@ -442,7 +444,7 @@ const Call = ({ route }) => {
                     <li>Data de emissão: ${currentDate} ${currentHour}</li>
                     <li>Usuário que gerou o relatório: ${nameUser}</li>
                     <li>Quantidade de datas: ${dates_lengths}</li>
-                    <li>Média de comparecimento por data: ${mean}</li>
+                    <li>Média geral de participação: ${mean}</li>
                 </ul>
             </div>
         </div>
@@ -531,6 +533,12 @@ const Call = ({ route }) => {
   }, [dataReport]);
 
   useEffect(()=>{
+    //Limpar estudante assim que abre a página
+    setStudents([]);
+
+    //Desabilitar o botão assim que entra na ágina
+    setDisabledSubmitCall(true);
+
     //Obter data atual
     const currentTime = new Date();
 
@@ -543,7 +551,7 @@ const Call = ({ route }) => {
     const month = (currentTime.getMonth() + 1).toString().padStart(2, '0');
     setMonthSelected(month);
     
-  }, [dispatch]);  
+  }, [dispatch]);
 
   return (
     <>
@@ -667,31 +675,19 @@ const Call = ({ route }) => {
               </TitleAreaPage>   
               <InfoArea>
                 <InfoText>
-                  <SimpleLineIcons name='graduation' size={22} color={'#606060'}/>
-                  <InfoName>{className}</InfoName>
+                  <InfoName style={{color:primaryColor}}>{className}</InfoName>
                 </InfoText>
                 <InfoText>
-                  <SimpleLineIcons name='calendar' size={18} color={'#606060'}/>
-                  <InfoName>{currentDate}</InfoName>
+                  <SimpleLineIcons name='calendar' size={18} color={primaryColor}/>
+                  <InfoName style={{color:primaryColor}}>{currentDate}</InfoName>
                 </InfoText>          
               </InfoArea>
               <ToolsArea>
-                <ButtonAction borderColor={primaryColor} onPress={() => setShowModal(true)}>
-                  <Ionicons name="person-add" size={24} color={primaryColor}/>
-                  <ButtonActionTitle style={{color: primaryColor}}>Adicionar aluno</ButtonActionTitle>
-                </ButtonAction>
-                <ButtonAction borderColor={primaryColor} onPress={() => setShowModalReport(true)}>
-                  <Ionicons name="download" size={24} color={primaryColor}/>
-                  <ButtonActionTitle style={{color: primaryColor}}>Baixa relatório</ButtonActionTitle>
-                </ButtonAction>
-                <ButtonAction borderColor={primaryColor}>
-                  <Ionicons name="pencil-sharp" size={24} color={primaryColor}/>
-                  <ButtonActionTitle style={{color: primaryColor}}>Editar aluno</ButtonActionTitle>
-                </ButtonAction>
-                <ButtonAction borderColor={primaryColor}>
-                  <Ionicons name="person-remove" size={24} color={primaryColor}/>
-                  <ButtonActionTitle style={{color: primaryColor}}>Remover aluno</ButtonActionTitle>
-                </ButtonAction>                                             
+                <BoxAction action={() => setShowModal(true)} color={primaryColor} iconName={'person-add'} title={'Adicionar aluno'}></BoxAction>
+                <BoxAction action={() => setShowModalReport(true)} color={primaryColor} iconName={'download'} title={'Baixa relatório'}></BoxAction>
+                <BoxAction color={'#f0f2f5'} backgroundColor={primaryColor} iconName={'notifications'} title={'Registrar chamada'}></BoxAction>
+                <BoxAction color={primaryColor} iconName={'pencil-sharp'} title={'Editar aluno'}></BoxAction>
+                <BoxAction color={primaryColor} iconName={'person-remove'} title={'Remover aluno'}></BoxAction>                                           
               </ToolsArea>
               <InstructionArea>
                 <Instruction>Clique para marca a presença/ausência do aluno:</Instruction>
@@ -699,11 +695,11 @@ const Call = ({ route }) => {
               <ContainerStudent>
                 {
                   (students && students.length > 0) && students.map((student)=>(
-                    <StudentCard key={student.id}>
+                    <StudentCard onPress={() => handleCall(student)} key={student.id}>
                       <StudentNameArea>
                         <StudentName style={{color: primaryColor}}>{student.name}</StudentName>
                       </StudentNameArea>
-                      <StudentToolsArea onPress={() => handleCall(student)} style={{borderColor:student.present == true ? '#59DE7E': student.present == false ? '#FF6666': '#ccc'}}>
+                      <StudentToolsArea style={{borderColor:student.present == true ? '#59DE7E': student.present == false ? '#FF6666': '#ccc'}}>
                         {
                           student.present == true && <FontAwesome name='check' size={22} color={'#59DE7E'}></FontAwesome>
                         }

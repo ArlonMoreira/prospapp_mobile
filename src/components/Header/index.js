@@ -8,7 +8,7 @@ import {
   Text,
   ExportTouch
 } from './styles';
-import { FontAwesome } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
 const Header = ({themeColor='#fff', exportAction}) => {
 
@@ -17,8 +17,8 @@ const Header = ({themeColor='#fff', exportAction}) => {
   return (
     <Container>
       <Button onPress={() => navigation.goBack()}>
-        <FontAwesome name="angle-left" size={42} color={themeColor} />
-        <Text style={{color: themeColor}}>Voltar</Text>
+        <Ionicons name="chevron-back" size={22} color={'#65747d'} />
+        <Text style={{color: '#65747d'}}>Voltar</Text>
       </Button>
       {
         exportAction && <ExportTouch onPress={() => exportAction()}/>

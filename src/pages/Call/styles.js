@@ -4,6 +4,7 @@ import { View, TouchableOpacity } from 'react-native';
 export const Container = styled.View`
     flex: 1;
     padding-top: 20px;
+    background: #fff;
 `;
 
 export const Body = styled.View`
@@ -40,9 +41,9 @@ export const InfoText = styled.View`
 `;
 
 export const InfoName = styled.Text`
-    color: #606060;
+    color: #c4c4c4;
     font-size: 18px;
-    font-family: 'montserrat-regular';
+    font-family: 'montserrat-semibold';
 `;
 
 export const Edit = styled.TouchableOpacity`
@@ -151,7 +152,7 @@ export const ContainerStudent = styled.ScrollView`
     margin-top: 10px;
 `;
 
-export const StudentCard = styled.View`
+export const StudentCard = styled.TouchableOpacity`
     width: 100%;
     height: 45px;
     margin-bottom: 0;
@@ -173,7 +174,7 @@ export const StudentName = styled.Text`
     font-family: 'montserrat-regular';     
 `;
 
-export const StudentToolsArea = styled.TouchableOpacity`
+export const StudentToolsArea = styled.View`
     align-items: center;
     justify-content: center;
     min-width: 35px;

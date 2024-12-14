@@ -11,23 +11,25 @@ export const Container = styled.View`
 export const Button = styled.TouchableOpacity`
     flex: 1;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
     margin: 10px;
     padding: 5px;
     max-width: 115px;
+    min-height: 45px;
+    background: #f0f2f5;
+    border-radius: 50px;
+    gap: 0px;
 `;
 
 export const Text = styled.Text`
-    color: #fff;
-    font-size: 20px;
-    font-family: 'montserrat-bold';
-    margin-top: 2px;
+    color: #65747d;
+    font-size: 16px;
+    font-family: 'montserrat-semibold';
 `;
 
 export const ExportTouch = styled.TouchableOpacity`
     width: 45px;
     height: 45px;
     background: #000;
-    margin-right: 10px;
 `;

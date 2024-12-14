@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 //Styles
 import { 
@@ -8,8 +8,19 @@ import {
 } from './styles';
 
 const ButtonLg = ({title, action, loading=false, disabled=false, color='#fff', fontColor='#16443E', largeWidth=292}) => {
+  
+  const [styles, setStyles] = useState({ backgroundColor: color, width: largeWidth, opacity: 0 });
+
+  useEffect(() => {
+    if (disabled) {
+      setStyles({ ...styles, backgroundColor: '#cecece', opacity: 1 });
+    } else {
+      setStyles({ ...styles, backgroundColor: color, opacity: 1 });
+    }
+  }, [disabled]);
+
   return (
-    <Container onPress={() => action()} disabled={disabled} style={{backgroundColor: color, width: largeWidth}}>
+    <Container onPress={() => action()} disabled={disabled} style={styles}>
       <Content>
         {
           loading ? (
