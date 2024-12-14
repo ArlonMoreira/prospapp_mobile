@@ -71,7 +71,7 @@ const Call = ({ route }) => {
   
   useEffect(()=>{
     if(userData){
-      console.log(userData)
+
       if(userData.companys_joined.length){
         setPrimaryColor(userData.companys_joined[0].primary_color);
         setLogo(`${URL}/files/${userData.companys_joined[0].logo}`);
@@ -281,6 +281,9 @@ const Call = ({ route }) => {
       });
     }
 
+    let globalTotalPresences = 0;
+    let globalValidDates = 0;
+  
     const filteredData = {};
     for (const person in data) {
       filteredData[person] = {}; // Inicializar o objeto para cada pessoa
@@ -295,7 +298,10 @@ const Call = ({ route }) => {
           // Contar somente os valores não nulos
           if (value !== null) {
             totalPresences += value;
+            globalTotalPresences += value;
             validDates++;
+            globalValidDates++;
+
           }
         }
       });
@@ -305,6 +311,11 @@ const Call = ({ route }) => {
         ? ((totalPresences / validDates) * 100).toFixed(2) + ' %' 
         : '0%';
     }
+
+    let mean = globalValidDates > 0 ? ((globalTotalPresences / globalValidDates) * 100).toFixed(2) + ' %' : '0%';
+
+    //Quantidade de datas
+    const dates_lengths = Object.keys(filteredData[Object.keys(filteredData)[0]]).length - 1;   
 
     /**End: Remover todas as datas que não possui nenhum registro de chamada */    
 
@@ -326,7 +337,7 @@ const Call = ({ route }) => {
     Object.keys(filteredData).forEach((al) => {
       obj[al] = breakObjectInParts(filteredData[al], 6);
     }); 
-    
+  
     const tables = []
 
     Object.keys(obj).forEach((key) => {
@@ -336,7 +347,7 @@ const Call = ({ route }) => {
         }
         tables[i][key] = x;  // Atribui o valor para a posição i e chave correspondente
       });
-    });    
+    });
 
     const html = `
     <html lang="en">
@@ -430,8 +441,8 @@ const Call = ({ route }) => {
                     <li>Turma: ${className}</li>
                     <li>Data de emissão: ${currentDate} ${currentHour}</li>
                     <li>Usuário que gerou o relatório: ${nameUser}</li>
-                    <li>Quantidade de datas:</li>
-                    <li>Média de comparecimento por data:</li>
+                    <li>Quantidade de datas: ${dates_lengths}</li>
+                    <li>Média de comparecimento por data: ${mean}</li>
                 </ul>
             </div>
         </div>
@@ -491,8 +502,6 @@ const Call = ({ route }) => {
     
     </html>
     `;
-
-    console.log(html)
     
     try {
 
