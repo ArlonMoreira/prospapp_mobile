@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 //Styles
 import { Container, Title } from './styles';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons'; 
 
 const BoxAction = ({action, iconName, color, title, backgroundColor}) => {
   return (

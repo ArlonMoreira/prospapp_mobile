@@ -59,7 +59,7 @@ export const ToolsArea = styled.ScrollView.attrs({
       gap: 10, // Controla o espaço entre os elementos
     },
   })`
-    max-height: 80px; 
+    max-height: 90px; 
     flex: 1;
     overflow: visible;
 `;
@@ -132,56 +132,6 @@ export const ModalResume = styled.Text`
     font-family: 'montserrat-regular';
     text-align: justify;
     color: #4e4e4e;  
-`;
-
-export const InstructionArea = styled.View`
-    height: 62px;
-    align-items: start;
-    justify-content: flex-end;
-`;
-
-export const Instruction = styled.Text`
-    color: #606060;
-    font-size: 16px;
-    font-family: 'montserrat-regular';    
-`;
-
-export const ContainerStudent = styled.ScrollView`
-    width: 100%;
-    flex: 1;
-    margin-top: 10px;
-`;
-
-export const StudentCard = styled.TouchableOpacity`
-    width: 100%;
-    height: 45px;
-    margin-bottom: 0;
-    position: relative;
-    flex: 1;
-    flex-direction: row; 
-    justify-content: space-between;
-    border-bottom-width: 1px;
-    border-bottom-color: #ababab;    
-`;
-
-export const StudentNameArea = styled.View`
-    align-items: start;
-    justify-content: center;
-`;
-
-export const StudentName = styled.Text`
-    font-size: 14px;
-    font-family: 'montserrat-regular';     
-`;
-
-export const StudentToolsArea = styled.View`
-    align-items: center;
-    justify-content: center;
-    min-width: 35px;
-    border-width: 2px;
-    border-color: #ccc;
-    border-radius: 50px;
-    margin: 5px;
 `;
 
 export const CallOptions = styled.View`

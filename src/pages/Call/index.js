@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Modal, TouchableWithoutFeedback, View, Platform } from 'react-native';
 //Hooks
 import useCurrentDate from '../../hooks/useCurrentDate';
+import { useNavigation, useNavigationState } from '@react-navigation/native';
 //Components
 import Header from '../../components/Header';
 import Fade from '../../components/Fade';
@@ -10,12 +11,18 @@ import ButtonLg from '../../components/ButtonLg';
 import LoadingPage from '../../components/LoadingPage';
 import { Picker } from '@react-native-picker/picker';
 import BoxAction from '../../components/BoxAction';
+import CallRegister from './CallRegister';
+import EditStudent from './EditStudent';
+import RemoveStudent from './RemoveStudent';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
 import { register, list, call } from '../../slices/studentSlice';
 import { generated, resetReportState } from '../../slices/reportSlice';
-// Context
+//Context
 import { LoadingContext } from '../../contexts/LoadingContext';
+//Navigation
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
 //Styles
 import { StatusBar } from 'expo-status-bar';
 import {
@@ -34,13 +41,6 @@ import {
   ModalContent,
   ModalTitle,
   ModalResume,
-  InstructionArea,
-  Instruction,
-  ContainerStudent,
-  StudentCard,
-  StudentName,
-  StudentNameArea,
-  StudentToolsArea,
   CallOptions,
   Radio,
   RadioIcon,
@@ -54,9 +54,13 @@ import { SimpleLineIcons, Ionicons, FontAwesome, FontAwesome5 } from '@expo/vect
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
 
+const Stack = createNativeStackNavigator();
+
 const URL = process.env.EXPO_PUBLIC_API_URL;
 
 const Call = ({ route }) => {
+
+  const navigation = useNavigation();  
 
   const { loading, setLoading } = useContext(LoadingContext);  
 
@@ -72,7 +76,6 @@ const Call = ({ route }) => {
   
   useEffect(()=>{
     if(userData){
-      console.log(userData.companys_joined[0])
       if(userData.companys_joined.length){
         setPrimaryColor(userData.companys_joined[0].primary_color);
         setSecundaryColor(userData.companys_joined[0].secundary_color);
@@ -202,7 +205,7 @@ const Call = ({ route }) => {
   const handleCallPresent = ({student, present}) => {
     setStudents(students => 
       students.map((item) => item.id === student.id ? {...item, present}: item)
-    )
+    );
     closeModalCall();
 
   };
@@ -553,6 +556,30 @@ const Call = ({ route }) => {
     
   }, [dispatch]);
 
+
+  const currentRouteName = useNavigationState((state) => {
+    const parentRoute = state.routes[state.index];
+
+    if(parentRoute.state){
+      const subRoute = parentRoute.state.routes[parentRoute.state.index];
+      return subRoute.name;
+
+    } 
+
+    return parentRoute.name;
+
+  });
+
+  //Passar dinamicamente a lista de estudantes para a pagina CallRegister
+  useEffect(() => {
+    navigation.navigate('CallRegister', 
+      { 
+        students,
+        disabled: disabledSumitCall
+      }
+    );
+  }, [students, disabledSumitCall]);
+
   return (
     <>
       {
@@ -685,11 +712,60 @@ const Call = ({ route }) => {
               <ToolsArea>
                 <BoxAction action={() => setShowModal(true)} color={primaryColor} iconName={'person-add'} title={'Adicionar aluno'}></BoxAction>
                 <BoxAction action={() => setShowModalReport(true)} color={primaryColor} iconName={'download'} title={'Baixa relatório'}></BoxAction>
-                <BoxAction color={'#f0f2f5'} backgroundColor={primaryColor} iconName={'notifications'} title={'Registrar chamada'}></BoxAction>
-                <BoxAction color={primaryColor} iconName={'pencil-sharp'} title={'Editar aluno'}></BoxAction>
-                <BoxAction color={primaryColor} iconName={'person-remove'} title={'Remover aluno'}></BoxAction>                                           
+                <BoxAction 
+                  color={currentRouteName == 'CallRegister' ? '#f0f2f5': primaryColor}
+                  iconName={'notifications'}
+                  title={'Registrar chamada'}
+                  disabled={disabledSumitCall}
+                  action={() => navigation.navigate('CallRegister')}
+                  backgroundColor={currentRouteName == 'CallRegister' ? primaryColor: '#f0f2f5'}
+                />
+                <BoxAction
+                  color={currentRouteName == 'EditStudent' ? '#f0f2f5': primaryColor}
+                  iconName={'pencil-sharp'}
+                  title={'Editar aluno'}
+                  action={() => navigation.navigate('EditStudent')}
+                  backgroundColor={currentRouteName == 'EditStudent' ? primaryColor: '#f0f2f5'}
+                />
+                <BoxAction
+                  color={currentRouteName == 'RemoveStudent' ? '#f0f2f5': primaryColor}
+                  iconName={'person-remove'}
+                  title={'Remover aluno'}
+                  action={() => navigation.navigate('RemoveStudent')}
+                  backgroundColor={currentRouteName == 'RemoveStudent' ? primaryColor: '#f0f2f5'}
+                />                                           
               </ToolsArea>
-              <InstructionArea>
+              <Stack.Navigator>
+                <Stack.Screen
+                  name="CallRegister"
+                  component={CallRegister}
+                  initialParams={{ 
+                    students: students,
+                    color: primaryColor,
+                    disabled: disabledSumitCall,
+                    actionItem: handleCall, 
+                    action: handleCallRegister }}
+                  options={{
+                    headerShown: false,
+                    
+                  }}                  
+                />
+                <Stack.Screen
+                  name="EditStudent"
+                  component={EditStudent}
+                  options={{
+                    headerShown: false
+                  }}                  
+                />
+                <Stack.Screen
+                  name="RemoveStudent"
+                  component={RemoveStudent}
+                  options={{
+                    headerShown: false
+                  }}                  
+                />                              
+              </Stack.Navigator>
+              {/* <InstructionArea>
                 <Instruction>Clique para marca a presença/ausência do aluno:</Instruction>
               </InstructionArea>
               <ContainerStudent>
@@ -716,7 +792,7 @@ const Call = ({ route }) => {
                 <View style={{marginTop: 20}}>
                   <ButtonLg disabled={disabledSumitCall} title='Registrar' color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleCallRegister} />
                 </View>                
-              </ContainerStudent>
+              </ContainerStudent> */}
             </Body>
           </Container>
         )
