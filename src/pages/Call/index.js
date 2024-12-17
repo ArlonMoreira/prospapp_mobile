@@ -22,7 +22,6 @@ import { generated, resetReportState } from '../../slices/reportSlice';
 import { LoadingContext } from '../../contexts/LoadingContext';
 //Navigation
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
 //Styles
 import { StatusBar } from 'expo-status-bar';
 import {
@@ -747,7 +746,6 @@ const Call = ({ route }) => {
                     action: handleCallRegister }}
                   options={{
                     headerShown: false,
-                    
                   }}                  
                 />
                 <Stack.Screen
@@ -765,34 +763,6 @@ const Call = ({ route }) => {
                   }}                  
                 />                              
               </Stack.Navigator>
-              {/* <InstructionArea>
-                <Instruction>Clique para marca a presença/ausência do aluno:</Instruction>
-              </InstructionArea>
-              <ContainerStudent>
-                {
-                  (students && students.length > 0) && students.map((student)=>(
-                    <StudentCard onPress={() => handleCall(student)} key={student.id}>
-                      <StudentNameArea>
-                        <StudentName style={{color: primaryColor}}>{student.name}</StudentName>
-                      </StudentNameArea>
-                      <StudentToolsArea style={{borderColor:student.present == true ? '#59DE7E': student.present == false ? '#FF6666': '#ccc'}}>
-                        {
-                          student.present == true && <FontAwesome name='check' size={22} color={'#59DE7E'}></FontAwesome>
-                        }
-                        {
-                          student.present == false && <FontAwesome name='remove' size={22} color={'#FF6666'}></FontAwesome>
-                        }
-                        {
-                          student.present == null && <FontAwesome5 name='question' size={22} color={'#CCC'}></FontAwesome5>
-                        }                                        
-                      </StudentToolsArea>
-                    </StudentCard>
-                  ))
-                }
-                <View style={{marginTop: 20}}>
-                  <ButtonLg disabled={disabledSumitCall} title='Registrar' color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleCallRegister} />
-                </View>                
-              </ContainerStudent> */}
             </Body>
           </Container>
         )

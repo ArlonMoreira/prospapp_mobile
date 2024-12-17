@@ -14,25 +14,29 @@ export const Body = styled.View`
 `;
 
 export const TitleAreaPage = styled.View`
-    height: 60px;
+    height: 45px;
     width: 100%;
     align-items: start;
     justify-content: center;    
 `;
 
 export const TitlePage = styled.Text`
-    color: #adadad;
     text-align: start;
-    font-size: 18px;
-    font-family: 'montserrat-semibold';
+    font-size: 22px;
+    font-family: 'montserrat-bold';
 `;
 
-export const ToolsArea = styled.View`
-    height: 50px;
-    flex-direction: row;
-    padding: 2px;
-    margin-top: 10px;
-    gap: 10px;
+export const ToolsArea = styled.ScrollView.attrs({
+    horizontal: true, // Torna o ScrollView horizontal
+    contentContainerStyle: {
+      flexDirection: "row",
+      gap: 10, // Controla o espaço entre os elementos
+    },
+  })`
+    margin-top: 20px;
+    max-height: 90px; 
+    flex: 1;
+    overflow: visible;
 `;
 
 export const ButtonAction = styled.TouchableOpacity`
@@ -85,49 +89,4 @@ export const ModalResume = styled.Text`
     font-family: 'montserrat-regular';
     text-align: justify;
     color: #4e4e4e;  
-`;
-
-export const ContainerClass = styled.ScrollView`
-    margin-top: 20px;
-    width: 100%;
-    flex: 1;
-`;
-
-export const ClassCard = styled.TouchableOpacity`
-    width: 100%;
-    height: 65px;
-    background: #ededed;
-    margin-bottom: 5px;
-    position: relative;
-    flex: 1;
-    flex-direction: row;
-`;
-
-export const Stick = styled.View`
-    width: 4px;
-    height: 100%;
-    left: 0;
-    background: #ccc;
-    position: absolute;
-`;
-
-export const TextArea = styled.View`
-    width: 80%;
-    height: 100%;
-    padding: 10px;
-    align-items: start;
-    justify-content: center;      
-`;
-
-export const IconArea = styled.View`
-    width: 20%;
-    height: 100%;
-    flex: 1;
-    align-items: center;
-    justify-content: center;     
-`;
-
-export const NameClass = styled.Text`
-    font-size: 18px;
-    font-family: 'montserrat-semibold'; 
 `;

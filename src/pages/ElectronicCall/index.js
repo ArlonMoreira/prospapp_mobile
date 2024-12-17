@@ -6,8 +6,12 @@ import Fade from '../../components/Fade';
 import InputForm from '../../components/InputForm';
 import ButtonLg from '../../components/ButtonLg';
 import Alert from '../../components/Alert';
-import SearchArea from '../../components/SearchArea';
+import BoxAction from '../../components/BoxAction';
 import LoadingPage from '../../components/LoadingPage';
+//Pages
+import SelectClass from './SelectClass';
+import EditClass from './EditClass';
+import RemoveClass from './RemoveClass';
 //Hooks
 import { useNavigation } from '@react-navigation/native';
 //Context
@@ -23,20 +27,16 @@ import {
   TitleAreaPage,
   TitlePage,
   ToolsArea,
-  ButtonAction,
-  ButtonActionTitle,
   ModalView,
   ModalContent,
   ModalTitle,
-  ModalResume,
-  ContainerClass,
-  ClassCard,
-  Stick,
-  TextArea,
-  IconArea,
-  NameClass
-} from './styles'
-import { Ionicons } from '@expo/vector-icons';
+  ModalResume
+} from './styles';
+//Navigation
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useNavigationState } from '@react-navigation/native';
+
+const Stack = createNativeStackNavigator();
 
 const ElectronicCall = () => {
 
@@ -159,6 +159,28 @@ const ElectronicCall = () => {
   useEffect(() => {
     setLoading(loadingList);
   }, [loadingList]);
+
+  const currentRouteName = useNavigationState((state) => {
+    const parentRoute = state.routes[state.index];
+
+    if(parentRoute.state){
+      const subRoute = parentRoute.state.routes[parentRoute.state.index];
+      return subRoute.name;
+
+    } 
+
+    return parentRoute.name;
+
+  });  
+
+  //Encaminhar parametros dinamicamnete
+  useEffect(() => {
+    navigation.navigate('SelectClass', 
+      { 
+        classes:data
+      }
+    );
+  }, [data]);
   
   return (
     <>
@@ -189,20 +211,69 @@ const ElectronicCall = () => {
             <StatusBar 
               translucent
               backgroundColor="transparent"
-            />       
+            />
             <Header themeColor={primaryColor}/>
             <Body>
               <TitleAreaPage>
-                <TitlePage>Turmas</TitlePage>
+                <TitlePage style={{color: primaryColor}}>Turmas</TitlePage>
               </TitleAreaPage>
-              <SearchArea color={'#939393'}/>
               <ToolsArea>
-                <ButtonAction onPress={() => setShowModal(true)}>
-                  <Ionicons name="add-circle-outline" size={28} color={primaryColor}/>
-                  <ButtonActionTitle style={{color: primaryColor}}>Adicionar Turma</ButtonActionTitle>
-                </ButtonAction>         
+                <BoxAction 
+                  action={() => setShowModal(true)}
+                  color={primaryColor}
+                  iconName={'add-circle'}
+                  title={'Adicionar Turma'}
+                />
+                <BoxAction
+                  color={currentRouteName == 'SelectClass' ? '#f0f2f5': primaryColor}
+                  backgroundColor={currentRouteName != 'SelectClass' ? '#f0f2f5': primaryColor}
+                  iconName={'people-sharp'}
+                  action={() => navigation.navigate('SelectClass')}
+                  title={'Realizar Chamada'}
+                />                
+                <BoxAction
+                  color={currentRouteName == 'EditClass' ? '#f0f2f5': primaryColor}
+                  backgroundColor={currentRouteName != 'EditClass' ? '#f0f2f5': primaryColor}
+                  iconName={'pencil-sharp'}
+                  action={() => navigation.navigate('EditClass')}
+                  title={'Adicionar Turma'}
+                />
+                <BoxAction
+                  color={currentRouteName == 'RemoveClass' ? '#f0f2f5': primaryColor}
+                  backgroundColor={currentRouteName != 'RemoveClass' ? '#f0f2f5': primaryColor}
+                  iconName={'close-circle'}
+                  action={() => navigation.navigate('RemoveClass')}
+                  title={'Remover Turma'}
+                />
               </ToolsArea>
-              <ContainerClass>
+              <Stack.Navigator>
+                <Stack.Screen
+                  name="SelectClass"
+                  component={SelectClass}
+                  initialParams={{
+                    classes: data,
+                    color: primaryColor
+                  }}
+                  options={{
+                    headerShown: false,
+                  }}                  
+                />
+                <Stack.Screen
+                  name="EditClass"
+                  component={EditClass}
+                  options={{
+                    headerShown: false,
+                  }}                  
+                />
+                <Stack.Screen
+                  name="RemoveClass"
+                  component={RemoveClass}
+                  options={{
+                    headerShown: false,
+                  }}                  
+                />                                
+              </Stack.Navigator>
+              {/* <ContainerClass>
                 {
                   data && data.length > 0 && data.map((item, i) => (
                     <ClassCard key={item.id} onPress={() => navigation.navigate('Call', {classId: item.id, className: item.name})}>
@@ -216,7 +287,7 @@ const ElectronicCall = () => {
                     </ClassCard>              
                   ))
                 }
-              </ContainerClass>
+              </ContainerClass> */}
             </Body>
           </Container>
         )
