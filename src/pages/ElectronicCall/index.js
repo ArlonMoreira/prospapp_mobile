@@ -9,7 +9,7 @@ import Alert from '../../components/Alert';
 import BoxAction from '../../components/BoxAction';
 import LoadingPage from '../../components/LoadingPage';
 //Pages
-import SelectClass from './SelectClass';
+import ListClass from './ListClass';
 import EditClass from './EditClass';
 import RemoveClass from './RemoveClass';
 //Hooks
@@ -175,12 +175,16 @@ const ElectronicCall = () => {
 
   //Encaminhar parametros dinamicamnete
   useEffect(() => {
-    navigation.navigate('SelectClass', 
-      { 
-        classes:data
+    navigation.navigate('ElectronicCall', 
+      {
+        screen: 'ListClass', params: {
+          classes: data,
+          color: primaryColor
+        }
       }
     );
-  }, [data]);
+
+  }, [data, primaryColor]);
   
   return (
     <>
@@ -225,10 +229,10 @@ const ElectronicCall = () => {
                   title={'Adicionar Turma'}
                 />
                 <BoxAction
-                  color={currentRouteName == 'SelectClass' ? '#f0f2f5': primaryColor}
-                  backgroundColor={currentRouteName != 'SelectClass' ? '#f0f2f5': primaryColor}
+                  color={currentRouteName == 'ListClass' ? '#f0f2f5': primaryColor}
+                  backgroundColor={currentRouteName != 'ListClass' ? '#f0f2f5': primaryColor}
                   iconName={'people-sharp'}
-                  action={() => navigation.navigate('SelectClass')}
+                  action={() => navigation.navigate('ListClass')}
                   title={'Realizar Chamada'}
                 />                
                 <BoxAction
@@ -248,8 +252,8 @@ const ElectronicCall = () => {
               </ToolsArea>
               <Stack.Navigator>
                 <Stack.Screen
-                  name="SelectClass"
-                  component={SelectClass}
+                  name="ListClass"
+                  component={ListClass}
                   initialParams={{
                     classes: data,
                     color: primaryColor

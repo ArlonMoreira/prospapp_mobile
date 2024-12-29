@@ -13,7 +13,7 @@ import {
 } from './styles'
 import { Ionicons } from '@expo/vector-icons';
 
-const SelectClass = ({ route }) => {
+const ListClass = ({ route }) => {
     
     const navigation = useNavigation(); 
     
@@ -40,4 +40,4 @@ const SelectClass = ({ route }) => {
     )
 }
 
-export default SelectClass;
+export default ListClass;
