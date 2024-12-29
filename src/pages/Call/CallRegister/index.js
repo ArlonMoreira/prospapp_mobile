@@ -47,7 +47,7 @@ const CallRegister = ({ route }) => {
                 ))
             }
             <View style={{marginTop: 20, marginBottom: 20}}>
-                <ButtonLg disabled={disabled} title='Registrar' color={color} fontColor={'#fff'} largeWidth='300px' action={action}/>
+              <ButtonLg disabled={disabled} title='Registrar' color={color} fontColor={'#fff'} largeWidth='300px' action={action}/>
             </View>            
         </ContainerItem> 
     </Container>

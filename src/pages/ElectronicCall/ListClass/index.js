@@ -6,10 +6,12 @@ import {
     Container,
     ScrollArea,
     ClassCard,
-    Stick,
     TextArea,
     NameClass,
-    IconArea
+    IconArea,
+    IconText,
+    InstructionArea,
+    Instruction
 } from './styles'
 import { Ionicons } from '@expo/vector-icons';
 
@@ -21,15 +23,18 @@ const ListClass = ({ route }) => {
 
     return (
         <Container>
+            <InstructionArea>
+                <Instruction>Escolhar uma turma para acessar a área de chamada:</Instruction>
+            </InstructionArea>            
             <ScrollArea>
                 {
                     classes && classes.length > 0 && classes.map((item, i) => (
                         <ClassCard key={item.id} onPress={() => navigation.navigate('Call', {classId: item.id, className: item.name})}>
-                            <Stick/>
                             <TextArea>
                                 <NameClass style={{color}}>{item.name}</NameClass>
                             </TextArea>
                             <IconArea>
+                                <IconText style={{color}}>Chamada</IconText>
                                 <Ionicons name='enter-outline' size={28} color={color}/>
                             </IconArea>
                         </ClassCard> 

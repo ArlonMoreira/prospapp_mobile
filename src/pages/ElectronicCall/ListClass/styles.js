@@ -5,6 +5,18 @@ export const Container = styled.View`
     flex: 1;
 `;
 
+export const InstructionArea = styled.View`
+    height: 62px;
+    align-items: start;
+    justify-content: flex-end;
+`;
+
+export const Instruction = styled.Text`
+    color: #606060;
+    font-size: 16px;
+    font-family: 'montserrat-regular';    
+`;
+
 export const ScrollArea = styled.ScrollView`
     margin-top: 20px;
     width: 100%;
@@ -14,23 +26,18 @@ export const ScrollArea = styled.ScrollView`
 export const ClassCard = styled.TouchableOpacity`
     width: 100%;
     height: 65px;
-    background: #ededed;
     margin-bottom: 5px;
     position: relative;
     flex: 1;
     flex-direction: row;
-`;
-
-export const Stick = styled.View`
-    width: 4px;
-    height: 100%;
-    left: 0;
-    background: #ccc;
-    position: absolute;
+    align-items: center;
+    justify-content: center;    
+    border-bottom-width: 1px;
+    border-bottom-color: #f0f2f5;
 `;
 
 export const TextArea = styled.View`
-    width: 80%;
+    width: 60%;
     height: 100%;
     padding: 10px;
     align-items: start;
@@ -38,12 +45,20 @@ export const TextArea = styled.View`
 `;
 
 export const IconArea = styled.View`
-    width: 20%;
-    height: 100%;
-    flex: 1;
+    width: 40%;
+    height: 40px;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;     
+    justify-content: center;  
+    gap: 5px;
+    background: #f0f2f5;
+    border-radius: 40px;
 `;
+
+export const IconText = styled.Text`
+    font-size: 14px;
+    font-family: 'montserrat-semibold';    
+`
 
 export const NameClass = styled.Text`
     font-size: 18px;
