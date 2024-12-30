@@ -7,6 +7,7 @@ const initialState = {
     data: [],
     loadingRegister: false,
     loadingList: false,
+    loadingChange: false,
     success: false,
     error: false
 };
@@ -43,6 +44,25 @@ export const list = createAsyncThunk(
         } else {
             return rejectWithValue(response);
         }        
+
+    }
+);
+
+export const change = createAsyncThunk(
+    'class/change',
+    async({classId, data}, {getState, rejectWithValue}) => {
+        const userAuth = await getState().auth.userAuth; //userAuth.token
+        const response = await useRequest().classChange({
+            classId,
+            data,
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1ODU5ODEzLCJpYXQiOjE3MzU0Mjc4MTMsImp0aSI6IjNjNDM0M2UzNzc4MDRjY2FhMDQyYTA4N2Q3OGFjN2JhIiwidXNlcl9pZCI6MX0.g89MzvRncSGjptePQLU-dn47YavkFeg0VejxST-qsAQ'
+        });
+
+        if(response.success){
+            return response;
+        } else {
+            return rejectWithValue(response);
+        }
 
     }
 )
@@ -88,6 +108,22 @@ export const classSlice = createSlice({
             //Falha ao lista grupos
             .addCase(list.rejected, (state, action) => {
                 state.loadingList = false;
+            })
+            //Aguardando alteração
+            .addCase(change.pending, (state) => {
+                state.loadingChange = true;
+            })
+            //Sucesso alteração
+            .addCase(change.fulfilled, (state, action) => {
+                state.loadingChange = false;
+
+                const updatedItem = action.payload.data;
+                const newData = state.data.map((item) => 
+                    item.id === updatedItem.id ? { ...item, name: updatedItem.name } : item
+                );
+
+                state.data = newData;
+
             })
     }
 });

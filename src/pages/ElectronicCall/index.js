@@ -18,7 +18,7 @@ import { useNavigation } from '@react-navigation/native';
 import { LoadingContext } from '../../contexts/LoadingContext';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { register, list } from '../../slices/classSlice';
+import { register, list, change } from '../../slices/classSlice';
 //Styles
 import { StatusBar } from 'expo-status-bar';
 import { 
@@ -61,7 +61,7 @@ const ElectronicCall = () => {
   }, [userData]);  
 
   //Register class
-  const { success, loadingRegister, error, data, loadingList } = useSelector((state) => state.class);
+  const { success, loadingRegister, error, data, loadingList, loadingChange } = useSelector((state) => state.class);
   
   const dispatch = useDispatch();
 
@@ -175,7 +175,7 @@ const ElectronicCall = () => {
 
   //Encaminhar parametros dinamicamnete
   useEffect(() => {
-    navigation.navigate('ElectronicCall', 
+    navigation.navigate(currentRouteName, //Renavegar até a página atual
       {
         screen: 'ListClass', params: {
           classes: data,
@@ -184,7 +184,40 @@ const ElectronicCall = () => {
       }
     );
 
-  }, [data, primaryColor]);
+  }, [data, primaryColor, currentRouteName]);
+
+  //Alterar dados da turma
+  const [ showModalChange, setShowModalChange ] = useState(false);
+  const [ nameForm, setNameForm ] = useState('');
+  const [ idForm, setIdForm ] = useState('');
+
+  const handleChangeClass = (item) => {
+    if(item){
+      setNameForm(item.name);
+      setIdForm(item.id);
+
+      setShowModalChange(true);
+    }
+
+  };
+
+  const submitChangeClass = () => {
+    
+    dispatch(change({
+      classId: idForm,
+      data: {
+        name: nameForm
+      }
+    }));
+
+  };
+
+  useEffect(()=>{
+    if(!loadingChange){ //Fechar o modal quando finalizar o cadastro
+      setShowModalChange(false);
+    }
+
+  }, [loadingChange]);
   
   return (
     <>
@@ -192,7 +225,7 @@ const ElectronicCall = () => {
         loading ? <LoadingPage/> : (
           <Container>
             {showAlertError && <Alert message='Falha ao cadastrar turma' setShow={setShowAlertError}/>}
-            {showModal && <Fade/>}
+            {(showModal || showModalChange) && <Fade/>}
             <Modal
               transparent={true}
               animationType='slide'
@@ -216,6 +249,25 @@ const ElectronicCall = () => {
               translucent
               backgroundColor="transparent"
             />
+            <Modal
+              transparent={true}
+              animationType='slide'
+              visible={showModalChange}
+              onRequestClose={() => setShowModalChange(false)}    
+            >
+              <TouchableWithoutFeedback onPress={() => setShowModalChange(false)}>
+                <ModalView>
+                  <ModalContent>
+                    <ModalTitle style={{color: primaryColor}}>Alterar turma</ModalTitle>
+                    <ModalResume>Alterar dados da turma, e clique no botão "Alterar/Confirmar" para estabelecer a mudança</ModalResume>
+                    <InputForm label='Nome da turma' value={nameForm} setValue={setNameForm} color={primaryColor}/>
+                    <View style={{marginTop: 20}}>
+                      <ButtonLg title='Alterar/Confirmar' loading={loadingChange} color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={submitChangeClass}/>
+                    </View>             
+                  </ModalContent>
+                </ModalView>
+              </TouchableWithoutFeedback>
+            </Modal>
             <Header themeColor={primaryColor}/>
             <Body>
               <TitleAreaPage>
@@ -265,6 +317,11 @@ const ElectronicCall = () => {
                 <Stack.Screen
                   name="EditClass"
                   component={EditClass}
+                  initialParams={{
+                    classes: data,
+                    color: primaryColor,
+                    actionItem: handleChangeClass
+                  }}
                   options={{
                     headerShown: false,
                   }}                  

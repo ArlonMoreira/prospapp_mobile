@@ -743,7 +743,8 @@ const Call = ({ route }) => {
                     color: primaryColor,
                     disabled: disabledSumitCall,
                     actionItem: handleCall, 
-                    action: handleCallRegister }}
+                    action: handleCallRegister
+                  }}
                   options={{
                     headerShown: false,
                   }}                  

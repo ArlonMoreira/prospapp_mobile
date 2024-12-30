@@ -123,6 +123,19 @@ const useRequest = () => {
                 }                
             });             
         },
+        classChange: ({classId, data, token}) => {
+            return request({
+                endpoint: `call/class/change/${classId}/`,
+                params: {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }                
+            });
+        },
         studentRegister: ({data, token}) => {
             return request({
                 endpoint: 'call/student/register/',
@@ -170,7 +183,7 @@ const useRequest = () => {
                     }
                 }                
             });             
-        }   
+        }, 
     };
 
 };
