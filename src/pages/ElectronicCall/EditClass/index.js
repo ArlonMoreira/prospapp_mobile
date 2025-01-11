@@ -33,7 +33,7 @@ const EditClass = ({ route }) => {
                 <NameClass style={{color}}>{item.name}</NameClass>
               </TextArea>   
               <IconArea>
-                <Ionicons name='pencil-sharp' size={28} color={color}/>
+                <Ionicons name='pencil-sharp' size={26} color={'#cecece'}/>
               </IconArea>
             </ClassCard>
           ))

@@ -18,7 +18,7 @@ import { useNavigation } from '@react-navigation/native';
 import { LoadingContext } from '../../contexts/LoadingContext';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { register, list, change } from '../../slices/classSlice';
+import { register, list, change, remove } from '../../slices/classSlice';
 //Styles
 import { StatusBar } from 'expo-status-bar';
 import { 
@@ -61,7 +61,7 @@ const ElectronicCall = () => {
   }, [userData]);  
 
   //Register class
-  const { success, loadingRegister, error, data, loadingList, loadingChange } = useSelector((state) => state.class);
+  const { success, loadingRegister, error, data, loadingList, loadingChange, loadingRemove } = useSelector((state) => state.class);
   
   const dispatch = useDispatch();
 
@@ -173,23 +173,10 @@ const ElectronicCall = () => {
 
   });  
 
-  //Encaminhar parametros dinamicamnete
-  useEffect(() => {
-    navigation.navigate(currentRouteName, //Renavegar até a página atual
-      {
-        screen: 'ListClass', params: {
-          classes: data,
-          color: primaryColor
-        }
-      }
-    );
-
-  }, [data, primaryColor, currentRouteName]);
-
   //Alterar dados da turma
   const [ showModalChange, setShowModalChange ] = useState(false);
   const [ nameForm, setNameForm ] = useState('');
-  const [ idForm, setIdForm ] = useState('');
+  const [ idForm, setIdForm ] = useState(null);
 
   const handleChangeClass = (item) => {
     if(item){
@@ -218,14 +205,54 @@ const ElectronicCall = () => {
     }
 
   }, [loadingChange]);
+
+  //Remover turma
+  const [ showModalRemove, setShowModalRemove ] = useState(false);
+  const [ classNameRemove, setClassNameRemove ] = useState('');
+  const [ classIdRemove, setClassIdRemove ] = useState(null);
+
+  const handleRemoveClass = (item) => {
+    if(item){
+      setClassNameRemove(item.name);
+      setClassIdRemove(item.id);
+
+      setShowModalRemove(true);
+
+    }
+    
+  };
+
+  const submitRemoveClass = () => {
+    dispatch(remove(classIdRemove));
+  };
+
+  useEffect(() => {
+    if(!loadingRemove){
+      setShowModalRemove(false);
+    }
+
+  }, [loadingRemove]);
   
+  //Encaminhar parametros dinamicamnete
+  useEffect(() => {
+    navigation.navigate(currentRouteName, //Renavegar até a página atual
+      {
+        screen: currentRouteName, params: {
+          classes: data,
+          color: primaryColor
+        }
+      }
+    );
+
+  }, [data, primaryColor, currentRouteName]); //Quando atualizar o dado vai renavegar pra página que estiver selecionada
+
   return (
     <>
       {
         loading ? <LoadingPage/> : (
           <Container>
             {showAlertError && <Alert message='Falha ao cadastrar turma' setShow={setShowAlertError}/>}
-            {(showModal || showModalChange) && <Fade/>}
+            {(showModal || showModalChange || showModalRemove) && <Fade/>}
             <Modal
               transparent={true}
               animationType='slide'
@@ -264,6 +291,24 @@ const ElectronicCall = () => {
                     <View style={{marginTop: 20}}>
                       <ButtonLg title='Alterar/Confirmar' loading={loadingChange} color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={submitChangeClass}/>
                     </View>             
+                  </ModalContent>
+                </ModalView>
+              </TouchableWithoutFeedback>
+            </Modal>
+            <Modal
+              transparent={true}
+              animationType='slide'
+              visible={showModalRemove}
+              onRequestClose={() => setShowModalRemove(false)}
+            >
+              <TouchableWithoutFeedback onPress={() => setShowModalRemove(false)}>
+                <ModalView>
+                  <ModalContent>
+                    <ModalTitle style={{color: primaryColor}}>Deseja remover a turma ?</ModalTitle>
+                    <ModalResume>Ao clicar no botão abaixo, você irá excluir a tuma "{classNameRemove}". Cuidado, essa ação pode ser inreversível!</ModalResume>
+                    <View style={{marginTop: 20}}>
+                      <ButtonLg title='Remover' loading={loadingRemove} color={'#e3222c'} fontColor={'#fff'} largeWidth='300px' action={submitRemoveClass}/>
+                    </View>
                   </ModalContent>
                 </ModalView>
               </TouchableWithoutFeedback>
@@ -329,7 +374,13 @@ const ElectronicCall = () => {
                 <Stack.Screen
                   name="RemoveClass"
                   component={RemoveClass}
+                  initialParams={{
+                    classes: data,
+                    color: primaryColor,
+                    actionItem: handleRemoveClass            
+                  }}
                   options={{
+                    classes: data,
                     headerShown: false,
                   }}                  
                 />                                

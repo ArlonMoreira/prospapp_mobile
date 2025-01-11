@@ -136,6 +136,17 @@ const useRequest = () => {
                 }                
             });
         },
+        classRemove: ({classId, token}) => {
+            return request({
+                endpoint: `call/class/disabled/${classId}/`,
+                params: {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },                    
+                }
+            })
+        },
         studentRegister: ({data, token}) => {
             return request({
                 endpoint: 'call/student/register/',

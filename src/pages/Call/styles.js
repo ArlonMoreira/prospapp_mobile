@@ -46,12 +46,6 @@ export const InfoName = styled.Text`
     font-family: 'montserrat-semibold';
 `;
 
-export const Edit = styled.TouchableOpacity`
-    align-items: center;
-    justify-content: center;
-    margin-left: 15px;      
-`;
-
 export const ToolsArea = styled.ScrollView.attrs({
     horizontal: true, // Torna o ScrollView horizontal
     contentContainerStyle: {
@@ -62,38 +56,6 @@ export const ToolsArea = styled.ScrollView.attrs({
     max-height: 90px; 
     flex: 1;
     overflow: visible;
-`;
-  
-export const ButtonAction = styled(TouchableOpacity).attrs(() => ({
-    activeOpacity: 0.7, // Define uma opacidade para o efeito de toque
-    gap: 10
-  }))`
-    width: 78px;
-    height: 78px;
-    justify-content: center;
-    align-items: center;
-    background-color: #f2f2f2;
-    border-width: 1px;
-    border-color: ${({ borderColor }) => borderColor || "#000"};
-    border-radius: 8px;
-  
-    /* Sombras no iOS */
-    shadow-color: #000;
-    shadow-offset: 0px 4px; /* Mude a altura para ajustar */
-    shadow-opacity: 0.3; /* Ajuste a intensidade */
-    shadow-radius: 4px; /* Controle do espalhamento */
-  
-    /* Sombras no Android */
-    elevation: 6; /* Ajuste o valor para intensidade */
-`;
-
-export const ButtonActionTitle = styled.Text`
-    font-size: 10px;
-    font-family: 'montserrat-medium';
-    text-align: center;
-    line-height: 10px;
-    margin-top: 5px;
-    max-width: 50px;
 `;
 
 export const ModalView = styled.View`

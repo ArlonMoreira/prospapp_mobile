@@ -32,10 +32,7 @@ import {
   InfoArea,
   InfoText,
   InfoName,
-  Edit,
   ToolsArea,
-  ButtonAction,
-  ButtonActionTitle,
   ModalView,
   ModalContent,
   ModalTitle,
@@ -45,10 +42,9 @@ import {
   RadioIcon,
   RadioLabel,
   RadioText,
-  ExportTouch,
   Select
 } from './styles'
-import { SimpleLineIcons, Ionicons, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
+import { SimpleLineIcons, FontAwesome } from '@expo/vector-icons';
 //PDF
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
@@ -98,11 +94,14 @@ const Call = ({ route }) => {
 
   const [ disabledSubmit, setDisabledSubmit ] = useState(true);
 
+  const [ classNameSelected, setClassNameSelected ] = useState(null);
+  const [ classIdSelected, setClassIdSelected ] = useState(null);
+
   const handleSubmit = () => {
     const data = {
       name,
       identification_number,
-      classId
+      classId: classIdSelected
     };
 
     dispatch(register(data));
@@ -151,9 +150,11 @@ const Call = ({ route }) => {
   useEffect(()=>{
     if(classId){
       dispatch(list(classId));
+      setClassNameSelected(className);
+      setClassIdSelected(classId);
     }
 
-  }, [dispatch, classId]);
+  }, [dispatch, classId, className]);
 
   //Call students
   const [ showModalCall, setShowModalCall ] = useState(false);
@@ -251,11 +252,11 @@ const Call = ({ route }) => {
   //Gerar gelatório
   const handleReportGenerated = () => {
     const data = {
-      classId,
+      classId: classIdSelected,
       year: yearSelected,
       month: monthSelected
     };
-
+  
     dispatch(generated(data));
 
   };
@@ -442,7 +443,7 @@ const Call = ({ route }) => {
             </div>
             <div class="report-body">
                 <ul>
-                    <li>Turma: ${className}</li>
+                    <li>Turma: ${classNameSelected}</li>
                     <li>Data de emissão: ${currentDate} ${currentHour}</li>
                     <li>Usuário que gerou o relatório: ${nameUser}</li>
                     <li>Quantidade de datas: ${dates_lengths}</li>
@@ -571,13 +572,16 @@ const Call = ({ route }) => {
 
   //Passar dinamicamente a lista de estudantes para a pagina CallRegister
   useEffect(() => {
-    navigation.navigate('CallRegister', 
+    navigation.navigate(currentRouteName, 
       { 
-        students,
-        disabled: disabledSumitCall
+        screen: currentRouteName, params: {
+          students,
+          disabled: disabledSumitCall
+        }
       }
     );
-  }, [students, disabledSumitCall]);
+
+  }, [students, disabledSumitCall, currentRouteName]);
 
   return (
     <>
@@ -701,7 +705,7 @@ const Call = ({ route }) => {
               </TitleAreaPage>   
               <InfoArea>
                 <InfoText>
-                  <InfoName style={{color:primaryColor}}>{className}</InfoName>
+                  <InfoName style={{color:primaryColor}}>{classNameSelected}</InfoName>
                 </InfoText>
                 <InfoText>
                   <SimpleLineIcons name='calendar' size={18} color={primaryColor}/>
