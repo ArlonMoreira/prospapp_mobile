@@ -16,7 +16,7 @@ import EditStudent from './EditStudent';
 import RemoveStudent from './RemoveStudent';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { register, list, call } from '../../slices/studentSlice';
+import { register, list, call, change } from '../../slices/studentSlice';
 import { generated, resetReportState } from '../../slices/reportSlice';
 //Context
 import { LoadingContext } from '../../contexts/LoadingContext';
@@ -83,7 +83,7 @@ const Call = ({ route }) => {
   }, [userData]);
 
   //Register student  
-  const { success, loadingList, loadingRegister, error, data, loadingCall, successCall } = useSelector((state) => state.student);
+  const { success, loadingList, loadingRegister, error, data, loadingCall, loadingChange } = useSelector((state) => state.student);
   
   const dispatch = useDispatch();
 
@@ -583,12 +583,44 @@ const Call = ({ route }) => {
 
   }, [students, disabledSumitCall, currentRouteName]);
 
+  //Alteração dos dados de estudantes
+  const [ showModalEditStudent, setShowModalEditStudent ] = useState(false);
+  const [ idEditStudent, setIdEditStudent ] = useState('');  
+  const [ nameEditStudent, setNameEditStudent ] = useState('');
+  const [ identificationNumber, setIdentificationNumber ] = useState('');
+
+  const handleEditStudent = (student) => {
+    //Definir os dados para serem editados.
+    setNameEditStudent(student.name);
+    setIdEditStudent(student.id);
+    setIdentificationNumber(student.identification_number.toString());
+    //Abrir o modal
+    setShowModalEditStudent(true);
+  };
+
+  const handleSubmitEditStudent = () => {
+    const data = {
+      name: nameEditStudent,
+      identification_number: identificationNumber
+    };
+    
+    dispatch(change({student: idEditStudent, data}));
+
+  };
+
+  useEffect(()=>{
+    if(!loadingChange){
+      setShowModalEditStudent(false);
+    }
+
+  }, [loadingChange]);
+
   return (
     <>
       {
         loading ? <LoadingPage/> : (
           <Container>
-            {(showModal || showModalCall || showModalReport) && <Fade/>}
+            {(showModal || showModalCall || showModalReport || showModalEditStudent) && <Fade/>}
             <Modal
               transparent={true}
               animationType='slide'
@@ -647,7 +679,7 @@ const Call = ({ route }) => {
                 <ModalView>
                   <ModalContent>
                     <ModalTitle style={{color: primaryColor}}>Adicionar aluno</ModalTitle>
-                    <ModalResume>No campo abaixo, adicione os dados do aluno para que deseja cadastrado e clique em adicionar.</ModalResume>
+                    <ModalResume>Nos campos abaixo, adicione os dados do aluno para que deseja cadastrado e clique em 'Adicionar'.</ModalResume>
                     <InputForm label='Nome do aluno' value={name} setValue={setName} color={primaryColor}/>
                     <InputForm label='CPF do aluno' value={identification_number} setValue={setIdentification_number} color={primaryColor}/>            
                     <View style={{marginTop: 20}}>
@@ -693,7 +725,27 @@ const Call = ({ route }) => {
                   }
                 </ModalView>
               </TouchableWithoutFeedback>
-            </Modal>          
+            </Modal>
+            <Modal
+              transparent={true}
+              animationType='slide'
+              visible={showModalEditStudent}
+              onRequestClose={() => setShowModalEditStudent(false)}
+            >
+              <TouchableWithoutFeedback onPress={() => setShowModalEditStudent(false)}>
+                <ModalView>
+                  <ModalContent>
+                    <ModalTitle style={{color: primaryColor}}>Alterar dados do aluno</ModalTitle>
+                    <ModalResume>Nos campos abaixo, altere os dados do aluno e clique em 'Alterar'.</ModalResume>
+                    <InputForm label='Nome do aluno' value={nameEditStudent} setValue={setNameEditStudent} color={primaryColor}></InputForm>
+                    <InputForm label='CPF do aluno' value={identificationNumber} setValue={setIdentificationNumber} color={primaryColor}></InputForm>
+                    <View style={{marginTop: 20}}>
+                      <ButtonLg title='Alterar' loading={loadingChange} color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleSubmitEditStudent}/>
+                    </View>                    
+                  </ModalContent>
+                </ModalView>
+              </TouchableWithoutFeedback>
+            </Modal>       
             <StatusBar 
               translucent
               backgroundColor="transparent"
@@ -743,7 +795,7 @@ const Call = ({ route }) => {
                   name="CallRegister"
                   component={CallRegister}
                   initialParams={{ 
-                    students: students,
+                    students,
                     color: primaryColor,
                     disabled: disabledSumitCall,
                     actionItem: handleCall, 
@@ -756,6 +808,11 @@ const Call = ({ route }) => {
                 <Stack.Screen
                   name="EditStudent"
                   component={EditStudent}
+                  initialParams={{
+                    students,
+                    color: primaryColor,
+                    actionItem: handleEditStudent
+                  }}
                   options={{
                     headerShown: false
                   }}                  

@@ -171,6 +171,19 @@ const useRequest = () => {
                 }                
             });             
         },
+        studentChange: ({student, token, data}) => {
+            return request({
+                endpoint: `call/student/change/${student}/`,
+                params: {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)                   
+                }
+            })
+        },
         callRegister: ({data, token}) => {
             return request({
                 endpoint: 'call/call/register/',

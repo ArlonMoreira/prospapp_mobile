@@ -7,6 +7,7 @@ const initialState = {
     data: [],
     loadingRegister: false,
     loadingList: false,
+    loadingChange: false,
     success: false,
     error: false,
     loadingCall: false,
@@ -63,7 +64,26 @@ export const call = createAsyncThunk(
             return rejectWithValue(response);
         }                
     }
-)
+);
+
+export const change = createAsyncThunk(
+    'student/change',
+    async({student, data}, {getState, rejectWithValue}) => {
+        const userAuth = await getState().auth.userAuth;
+        const response = await useRequest().studentChange({
+            student,
+            data,
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3MDI2NDkzLCJpYXQiOjE3MzY1OTQ0OTMsImp0aSI6ImQ2ZGMxYTU0NmJhODQ5MWU4Y2ZiM2IyYmM4ZGY5MDE4IiwidXNlcl9pZCI6MX0.zyLFdZyL-tMEBwc4t5fwyI2v4FPBrXV2NNSiBsgSNMs'
+        });
+
+        if(response.success){
+            return response;
+        } else {
+            return rejectWithValue(response);
+        }
+
+    }
+);
 
 export const studentSlice = createSlice({
     name: 'student',
@@ -90,7 +110,7 @@ export const studentSlice = createSlice({
                 state.error = true;
             })
             //Aguardando lista
-            .addCase(list.pending, (state, action) => {
+            .addCase(list.pending, (state) => {
                 state.loadingList = true;
             })
             //Sucesso lista
@@ -108,10 +128,33 @@ export const studentSlice = createSlice({
                 state.successCall = false;
             })
             //Sucesso chamada
-            .addCase(call.fulfilled, (state, action) => {
+            .addCase(call.fulfilled, (state) => {
                 state.loadingCall = false;
                 state.successCall = true;
 
+            })
+            //Aguardando alterar
+            .addCase(change.pending, (state) => {
+                state.loadingChange = true;
+            })
+            //Sucesso ao alterar
+            .addCase(change.fulfilled, (state, action) => {
+                state.loadingChange = false;
+                
+                state.data.map(data => {
+                    if(data.id === action.payload.data.id){
+                        data.name = action.payload.data.name;
+                        data.identification_number = action.payload.data.identification_number;
+                    }
+
+                    return data;
+
+                });
+                
+            })
+            //Falha ao alterar
+            .addCase(change.rejected, (state) => {
+                state.loadingChange = false;
             })
 
     }
