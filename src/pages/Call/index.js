@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Modal, TouchableWithoutFeedback, View, Platform } from 'react-native';
+import { Modal, TouchableWithoutFeedback, View, Text } from 'react-native';
 //Hooks
 import useCurrentDate from '../../hooks/useCurrentDate';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
@@ -16,7 +16,7 @@ import EditStudent from './EditStudent';
 import RemoveStudent from './RemoveStudent';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { register, list, call, change } from '../../slices/studentSlice';
+import { register, list, call, change, remove } from '../../slices/studentSlice';
 import { generated, resetReportState } from '../../slices/reportSlice';
 //Context
 import { LoadingContext } from '../../contexts/LoadingContext';
@@ -83,7 +83,7 @@ const Call = ({ route }) => {
   }, [userData]);
 
   //Register student  
-  const { success, loadingList, loadingRegister, error, data, loadingCall, loadingChange } = useSelector((state) => state.student);
+  const { success, loadingList, loadingRegister, error, data, loadingCall, loadingChange, loadingRemove } = useSelector((state) => state.student);
   
   const dispatch = useDispatch();
 
@@ -615,12 +615,44 @@ const Call = ({ route }) => {
 
   }, [loadingChange]);
 
+  //Remover aluno
+  const [ showModalRemoveStudent, setShowModalRemoveStudent ] = useState(false);
+  const [ studentNameRemove, setStudentNameRemove ] = useState('');
+  const [ studentIdRemove, setStudentIdRemove ] = useState(null);
+
+  //Definir o usuário que será removido e será aberto o modal
+  const handleRemoveStudent = (item) => {
+    if(item){
+      setStudentNameRemove(item.name);
+      setStudentIdRemove(item.id);
+
+      setShowModalRemoveStudent(true);
+
+    }
+
+  };
+
+  //Remover o aluno
+  const submitRemoveStudent = () => {
+    if(studentIdRemove){
+      dispatch(remove(studentIdRemove));
+    }
+
+  };
+
+  useEffect(() => {
+    if(!loadingRemove){
+      setShowModalRemoveStudent(false);
+    }
+
+  }, [loadingRemove])
+
   return (
     <>
       {
         loading ? <LoadingPage/> : (
           <Container>
-            {(showModal || showModalCall || showModalReport || showModalEditStudent) && <Fade/>}
+            {(showModal || showModalCall || showModalReport || showModalEditStudent || showModalRemoveStudent) && <Fade/>}
             <Modal
               transparent={true}
               animationType='slide'
@@ -745,7 +777,25 @@ const Call = ({ route }) => {
                   </ModalContent>
                 </ModalView>
               </TouchableWithoutFeedback>
-            </Modal>       
+            </Modal>
+            <Modal
+              transparent={true}
+              animationType='slide'
+              visible={showModalRemoveStudent}
+              onRequestClose={() => setShowModalRemoveStudent(false)}
+            >
+              <TouchableWithoutFeedback onPress={() => setShowModalRemoveStudent(false)}>
+                <ModalView>
+                  <ModalContent>
+                    <ModalTitle style={{color: primaryColor}}>Deseja remover a turma ?</ModalTitle>
+                    <ModalResume>Ao clicar no botão abaixo, você irá excluir o aluno <Text style={{fontWeight: "bold"}}>"{studentNameRemove}"</Text>. Cuidado, essa ação pode ser inreversível!</ModalResume>
+                    <View style={{marginTop: 20}}>
+                      <ButtonLg title='Remover' loading={loadingRemove} color={'#e3222c'} fontColor={'#fff'} largeWidth='300px' action={submitRemoveStudent}/>
+                    </View>                                      
+                  </ModalContent>
+                </ModalView>
+              </TouchableWithoutFeedback>
+            </Modal>      
             <StatusBar 
               translucent
               backgroundColor="transparent"
@@ -820,6 +870,11 @@ const Call = ({ route }) => {
                 <Stack.Screen
                   name="RemoveStudent"
                   component={RemoveStudent}
+                  initialParams={{
+                    students,
+                    color: primaryColor,
+                    actionItem: handleRemoveStudent
+                  }}
                   options={{
                     headerShown: false
                   }}                  

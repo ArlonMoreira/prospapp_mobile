@@ -19,7 +19,7 @@ export const register = createAsyncThunk(
         const userAuth = await getState().auth.userAuth; //userAuth.token
         const response = await useRequest().classRegister({
             data,
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3MDI2NDkzLCJpYXQiOjE3MzY1OTQ0OTMsImp0aSI6ImQ2ZGMxYTU0NmJhODQ5MWU4Y2ZiM2IyYmM4ZGY5MDE4IiwidXNlcl9pZCI6MX0.zyLFdZyL-tMEBwc4t5fwyI2v4FPBrXV2NNSiBsgSNMs'
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3NjI3NzA5LCJpYXQiOjE3MzcxOTU3MDksImp0aSI6ImEyOGVjYmEyZDUxMTQ2NGFiMTYzYTgxZDRjYzkwYmUyIiwidXNlcl9pZCI6MX0.90lQoS54UasIKjYzniEifVtzLndXDt1fYEZR0uZSFnQ'
         });
 
         if(response.success){
@@ -37,7 +37,7 @@ export const list = createAsyncThunk(
         const userAuth = await getState().auth.userAuth; //userAuth.token
         const response = await useRequest().classList({
             company,
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3MDI2NDkzLCJpYXQiOjE3MzY1OTQ0OTMsImp0aSI6ImQ2ZGMxYTU0NmJhODQ5MWU4Y2ZiM2IyYmM4ZGY5MDE4IiwidXNlcl9pZCI6MX0.zyLFdZyL-tMEBwc4t5fwyI2v4FPBrXV2NNSiBsgSNMs'
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3NjI3NzA5LCJpYXQiOjE3MzcxOTU3MDksImp0aSI6ImEyOGVjYmEyZDUxMTQ2NGFiMTYzYTgxZDRjYzkwYmUyIiwidXNlcl9pZCI6MX0.90lQoS54UasIKjYzniEifVtzLndXDt1fYEZR0uZSFnQ'
         });
 
         if(response.success){
@@ -56,7 +56,7 @@ export const change = createAsyncThunk(
         const response = await useRequest().classChange({
             classId,
             data,
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3MDI2NDkzLCJpYXQiOjE3MzY1OTQ0OTMsImp0aSI6ImQ2ZGMxYTU0NmJhODQ5MWU4Y2ZiM2IyYmM4ZGY5MDE4IiwidXNlcl9pZCI6MX0.zyLFdZyL-tMEBwc4t5fwyI2v4FPBrXV2NNSiBsgSNMs'
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3NjI3NzA5LCJpYXQiOjE3MzcxOTU3MDksImp0aSI6ImEyOGVjYmEyZDUxMTQ2NGFiMTYzYTgxZDRjYzkwYmUyIiwidXNlcl9pZCI6MX0.90lQoS54UasIKjYzniEifVtzLndXDt1fYEZR0uZSFnQ'
         });
 
         if(response.success){
@@ -74,7 +74,7 @@ export const remove = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().classRemove({
             classId,
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3MDI2NDkzLCJpYXQiOjE3MzY1OTQ0OTMsImp0aSI6ImQ2ZGMxYTU0NmJhODQ5MWU4Y2ZiM2IyYmM4ZGY5MDE4IiwidXNlcl9pZCI6MX0.zyLFdZyL-tMEBwc4t5fwyI2v4FPBrXV2NNSiBsgSNMs'
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3NjI3NzA5LCJpYXQiOjE3MzcxOTU3MDksImp0aSI6ImEyOGVjYmEyZDUxMTQ2NGFiMTYzYTgxZDRjYzkwYmUyIiwidXNlcl9pZCI6MX0.90lQoS54UasIKjYzniEifVtzLndXDt1fYEZR0uZSFnQ'
         });
 
         if(response.success){

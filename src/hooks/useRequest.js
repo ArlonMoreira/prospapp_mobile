@@ -184,6 +184,17 @@ const useRequest = () => {
                 }
             })
         },
+        studentRemove: ({student, token}) => {
+            return request({
+                endpoint: `call/student/disabled/${student}/`,
+                params: {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },                    
+                }
+            })
+        },        
         callRegister: ({data, token}) => {
             return request({
                 endpoint: 'call/call/register/',

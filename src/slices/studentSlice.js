@@ -2,12 +2,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 //Hooks
 import useRequest from "../hooks/useRequest";
+import { useReducer } from "react";
 
 const initialState = {
     data: [],
     loadingRegister: false,
     loadingList: false,
     loadingChange: false,
+    loadingRemove: false,
     success: false,
     error: false,
     loadingCall: false,
@@ -20,7 +22,7 @@ export const list = createAsyncThunk(
         const userAuth = await getState().auth.userAuth; //userAuth.token
         const response = await useRequest().studentList({
             classId,
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3MDI2NDkzLCJpYXQiOjE3MzY1OTQ0OTMsImp0aSI6ImQ2ZGMxYTU0NmJhODQ5MWU4Y2ZiM2IyYmM4ZGY5MDE4IiwidXNlcl9pZCI6MX0.zyLFdZyL-tMEBwc4t5fwyI2v4FPBrXV2NNSiBsgSNMs'
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3NjI3NzA5LCJpYXQiOjE3MzcxOTU3MDksImp0aSI6ImEyOGVjYmEyZDUxMTQ2NGFiMTYzYTgxZDRjYzkwYmUyIiwidXNlcl9pZCI6MX0.90lQoS54UasIKjYzniEifVtzLndXDt1fYEZR0uZSFnQ'
         });
 
         if(response.success){
@@ -37,7 +39,7 @@ export const register = createAsyncThunk(
         const userAuth = await getState().auth.userAuth; //userAuth.token
         const response = await useRequest().studentRegister({
             data,
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3MDI2NDkzLCJpYXQiOjE3MzY1OTQ0OTMsImp0aSI6ImQ2ZGMxYTU0NmJhODQ5MWU4Y2ZiM2IyYmM4ZGY5MDE4IiwidXNlcl9pZCI6MX0.zyLFdZyL-tMEBwc4t5fwyI2v4FPBrXV2NNSiBsgSNMs'
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3NjI3NzA5LCJpYXQiOjE3MzcxOTU3MDksImp0aSI6ImEyOGVjYmEyZDUxMTQ2NGFiMTYzYTgxZDRjYzkwYmUyIiwidXNlcl9pZCI6MX0.90lQoS54UasIKjYzniEifVtzLndXDt1fYEZR0uZSFnQ'
         });
 
         if(response.success){
@@ -55,7 +57,7 @@ export const call = createAsyncThunk(
         const userAuth = await getState().auth.userAuth; //userAuth.token
         const response = await useRequest().callRegister({
             data,
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3MDI2NDkzLCJpYXQiOjE3MzY1OTQ0OTMsImp0aSI6ImQ2ZGMxYTU0NmJhODQ5MWU4Y2ZiM2IyYmM4ZGY5MDE4IiwidXNlcl9pZCI6MX0.zyLFdZyL-tMEBwc4t5fwyI2v4FPBrXV2NNSiBsgSNMs'
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3NjI3NzA5LCJpYXQiOjE3MzcxOTU3MDksImp0aSI6ImEyOGVjYmEyZDUxMTQ2NGFiMTYzYTgxZDRjYzkwYmUyIiwidXNlcl9pZCI6MX0.90lQoS54UasIKjYzniEifVtzLndXDt1fYEZR0uZSFnQ'
         });
 
         if(response.success){
@@ -73,7 +75,7 @@ export const change = createAsyncThunk(
         const response = await useRequest().studentChange({
             student,
             data,
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3MDI2NDkzLCJpYXQiOjE3MzY1OTQ0OTMsImp0aSI6ImQ2ZGMxYTU0NmJhODQ5MWU4Y2ZiM2IyYmM4ZGY5MDE4IiwidXNlcl9pZCI6MX0.zyLFdZyL-tMEBwc4t5fwyI2v4FPBrXV2NNSiBsgSNMs'
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3NjI3NzA5LCJpYXQiOjE3MzcxOTU3MDksImp0aSI6ImEyOGVjYmEyZDUxMTQ2NGFiMTYzYTgxZDRjYzkwYmUyIiwidXNlcl9pZCI6MX0.90lQoS54UasIKjYzniEifVtzLndXDt1fYEZR0uZSFnQ'
         });
 
         if(response.success){
@@ -85,11 +87,43 @@ export const change = createAsyncThunk(
     }
 );
 
+export const remove = createAsyncThunk(
+    'student/remove',
+    async(student, {getState, rejectWithValue}) => {
+        const userAuth = await getState().auth.userAuth;
+        const response = await useRequest().studentRemove({
+            student,
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3NjI3NzA5LCJpYXQiOjE3MzcxOTU3MDksImp0aSI6ImEyOGVjYmEyZDUxMTQ2NGFiMTYzYTgxZDRjYzkwYmUyIiwidXNlcl9pZCI6MX0.90lQoS54UasIKjYzniEifVtzLndXDt1fYEZR0uZSFnQ'
+        });
+
+        if(response.success){
+            return response;
+        } else {
+            return rejectWithValue(response);
+        }
+
+    }
+)
+
 export const studentSlice = createSlice({
     name: 'student',
     initialState,
     extraReducers: (builder) => {
         builder
+            //Aguardando remoção de aluno
+            .addCase(remove.pending, (state) => {
+                state.loadingRemove = true;
+            })
+            //Sucesso ao remover um aluno
+            .addCase(remove.fulfilled, (state, action) => {
+                state.loadingRemove = false;
+                
+                if (!action.payload.data.is_active){
+                    const newData = state.data.filter(data => data.id !== action.payload.data.id);
+                    state.data = newData;
+                }
+
+            })
             //Aguardando cadastro
             .addCase(register.pending, (state) => {
                 state.loadingRegister = true;
@@ -156,6 +190,7 @@ export const studentSlice = createSlice({
             .addCase(change.rejected, (state) => {
                 state.loadingChange = false;
             })
+            //
 
     }
 });
