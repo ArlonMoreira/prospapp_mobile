@@ -162,7 +162,26 @@ export const studentSlice = createSlice({
                 state.successCall = false;
             })
             //Sucesso chamada
-            .addCase(call.fulfilled, (state) => {
+            .addCase(call.fulfilled, (state, action) => {
+
+                const studentDataMap = new Map(
+                    action.payload.data.map(student => [student.student, student])
+                );
+
+                state.data = state.data.map(data => {
+                    const student = studentDataMap.get(data.id);
+                    if(student){
+                        return {
+                            ...data,
+                            date: student.date,
+                            present: student.present
+                        }
+                    }
+
+                    return data;
+
+                });
+
                 state.loadingCall = false;
                 state.successCall = true;
 
@@ -173,9 +192,8 @@ export const studentSlice = createSlice({
             })
             //Sucesso ao alterar
             .addCase(change.fulfilled, (state, action) => {
-                state.loadingChange = false;
-                
-                state.data.map(data => {
+
+                state.data = state.data.map(data => {
                     if(data.id === action.payload.data.id){
                         data.name = action.payload.data.name;
                         data.identification_number = action.payload.data.identification_number;
@@ -184,6 +202,8 @@ export const studentSlice = createSlice({
                     return data;
 
                 });
+
+                state.loadingChange = false;
                 
             })
             //Falha ao alterar
