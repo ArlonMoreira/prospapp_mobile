@@ -122,7 +122,7 @@ const SignIn = () => {
   
   return (
     <LinearGradient colors={['#008C81', '#0C6661']} style={styles.background}>
-      <Header/>
+      <Header themeColor='#0C6661'/>
       {
         showAlertError && <Alert message={errorMessage} setShow={setShowAlertError}/>
       }

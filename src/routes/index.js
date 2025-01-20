@@ -17,7 +17,7 @@ import { LoadingContext } from '../contexts/LoadingContext';
 const Routes = () => {
 
   //Contexto
-  const { loading } = useContext(LoadingContext);
+  //const { loading } = useContext(LoadingContext);
 
   //Verificar se está atenticado
   const { auth } = userAuth();

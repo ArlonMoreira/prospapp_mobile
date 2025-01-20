@@ -22,6 +22,19 @@ export const Button = styled.TouchableOpacity`
     gap: 0px;
 `;
 
+export const ButtonExit = styled.TouchableOpacity`
+    flex: 1;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    padding: 5px;
+    max-width: 100px;
+    min-height: 45px;
+    border-radius: 50px;
+    gap: 5px;
+`;
+
 export const Text = styled.Text`
     color: #65747d;
     font-size: 16px;
