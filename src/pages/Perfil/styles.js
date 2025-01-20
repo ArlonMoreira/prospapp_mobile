@@ -79,3 +79,25 @@ export const ProfileNameSubtitle = styled.Text`
   font-size: 14px;
   font-family: 'montserrat-medium';
 `;
+
+export const ToolsArea = styled.View`
+  flex-direction: row;
+  margin: 20px;
+  gap: 20px;
+`;
+
+export const TabButton = styled.TouchableOpacity`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  border-radius: 50px;
+  border: 1px solid;
+  border-color: #fff;
+`;
+
+export const TabButtonLabel = styled.Text`
+  font-size: 14px;
+  font-family: 'montserrat-medium';
+  color: #fff;
+`;
