@@ -8,7 +8,7 @@ export const Container = styled.KeyboardAvoidingView`
 `;
 
 export const PerfilArea = styled.View`
-  height: 360px;
+  min-height: 246px;
   width: 100%;
 `;
 
@@ -25,8 +25,9 @@ export const Body = styled.View`
 `;
 
 export const PerfilContent = styled.View`
-  height: 245px;
+  height: 100%;
   align-items: center;
+  padding-bottom: 20px;
 `;
 
 export const PerfilPhotoContainer = styled.View`
@@ -37,8 +38,8 @@ export const PerfilPhotoContainer = styled.View`
 `;
 
 export const PerfilPhoto = styled.View`
-  width: 200px;
-  height: 200px;
+  width: 182px;
+  height: 182px;
   border-radius: 50%;
   background: #cecece;
   position: relative;
@@ -60,7 +61,7 @@ export const UploadFileButton = styled.TouchableOpacity`
   overflow: hidden;
   position: absolute;
   right: -20px;
-  bottom: 20px;
+  bottom: 0px;
   elevation: 5;
   flex: 1;
   align-items: center;
@@ -71,7 +72,7 @@ export const ProfileName = styled.Text`
   text-align: start;
   font-size: 16px;
   font-family: 'montserrat-semibold';
-  margin-top: 10px;
+  margin-top: 25px;
 `;
 
 export const ProfileNameSubtitle = styled.Text`

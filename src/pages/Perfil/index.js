@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View } from 'react-native';
+import { View, Keyboard, KeyboardAvoidingView, Platform } from 'react-native';
 //Hooks
 import { useContext } from 'react';
 import { useNavigationState } from '@react-navigation/native';
@@ -48,6 +48,8 @@ const Perfil = () => {
 
   const dispatch = useDispatch();
 
+  const [ showKeyboard, setShowKeyboard ] = useState(false);
+
   const { loadingLogout } = useSelector((state) => state.auth);
   const { loading, setLoading } = useContext(LoadingContext);
 
@@ -91,6 +93,26 @@ const Perfil = () => {
     return parentRoute.name;
 
   });
+
+  //Assim que abrir a página navegar por padrão na página editar perfil
+  useEffect(()=>{
+    navigation.navigate('EditProfile',
+      {
+        screen: 'EditProfile', params: {
+          color: primaryColor
+        }
+      }
+    );
+
+    Keyboard.addListener('keyboardDidShow', () => {
+      setShowKeyboard(true);
+    });
+
+    Keyboard.addListener('keyboardDidHide', () => {
+      setShowKeyboard(false);
+    });    
+    
+  }, []);
   
   //Encaminhar parametros dinamicamnete
   useEffect(() => {
@@ -102,88 +124,107 @@ const Perfil = () => {
       }
     );  
 
-  }, [primaryColor, currentRouteName]); //Quando atualizar o dado vai renavegar pra página que estiver selecionada  
+  }, [primaryColor, currentRouteName]); //Quando atualizar o dado vai renavegar pra página que estiver selecionada
 
   return (
     <>
       {
         loading ? <LoadingPage/> : (
-          <Container style={{backgroundColor: primaryColor}}>
+          <View
+            style={{
+              flex: 1,
+              paddingTop: 20,
+              backgroundColor: '#fff'             
+            }}
+            >
             <StatusBar 
               translucent
               backgroundColor="transparent"
-            />
-            <PerfilArea>
-              <View style={{paddingTop: 20, backgroundColor: '#fff'}}></View>
-              <Profile>
-                <Header themeColor={primaryColor} handleLogout={handleLogout}/>
-                <PerfilContent>
-                  <PerfilPhotoContainer>
-                    <PerfilPhoto>
-                      {
-                        photoPerfil && <Photo source={{ uri: photoPerfil }}></Photo>
-                      }
-                    </PerfilPhoto>
-                    <UploadFileButton style={{backgroundColor:primaryColor}}>
-                      <Ionicons name='camera' size={32} color={'#fff'}/>
-                    </UploadFileButton>
-                  </PerfilPhotoContainer>
-                  <ProfileName style={{ color:primaryColor }}>{ namePerfil }</ProfileName>
-                  <ProfileNameSubtitle>Colaborador</ProfileNameSubtitle>
-                </PerfilContent>
-              </Profile>
-            </PerfilArea>
-            <Body>
-              <ToolsArea>
-                <TabButton
-                  style={{
-                    backgroundColor: currentRouteName === 'EditProfile' ? '#fff': 'transparent',
-                  }}
-                  onPress={() => navigation.navigate('EditProfile')}
-                >
-                  <TabButtonLabel
-                    style={{
-                      color: currentRouteName === 'EditProfile' ? primaryColor: '#fff'
+            />          
+            <Header themeColor={primaryColor} handleLogout={handleLogout}/>
+            <KeyboardAvoidingView
+              behavior={Platform.OS === 'os' ? 'padding': 'height'}
+              style={{flex: 1, backgroundColor: primaryColor}} 
+              keyboardVerticalOffset={0}
+            >
+              {
+                !showKeyboard && (
+                  <PerfilArea>
+                    <Profile>
+                      <PerfilContent>
+                        <PerfilPhotoContainer>
+                          <PerfilPhoto>
+                            {
+                              photoPerfil && <Photo source={{ uri: photoPerfil }}></Photo>
+                            }
+                          </PerfilPhoto>
+                          <UploadFileButton style={{backgroundColor:primaryColor}}>
+                            <Ionicons name='camera' size={32} color={'#fff'}/>
+                          </UploadFileButton>                                          
+                        </PerfilPhotoContainer>
+                        <ProfileName style={{ color:primaryColor }}>{ namePerfil }</ProfileName>
+                        <ProfileNameSubtitle>Colaborador</ProfileNameSubtitle>
+                      </PerfilContent>
+                    </Profile>
+                  </PerfilArea>
+                )
+              }
+              <Body>
+                {
+                  !showKeyboard && (
+                    <ToolsArea>
+                      <TabButton
+                        style={{
+                          backgroundColor: currentRouteName === 'EditProfile' ? '#fff': 'transparent',
+                        }}
+                        onPress={() => navigation.navigate('EditProfile')}
+                      >
+                        <TabButtonLabel
+                          style={{
+                            color: currentRouteName === 'EditProfile' ? primaryColor: '#fff'
+                          }}                  
+                        >Editar Perfil</TabButtonLabel>
+                      </TabButton>
+                      <TabButton
+                        style={{
+                          backgroundColor: currentRouteName === 'ChangePassword' ? '#fff': 'transparent',
+                        }}                
+                        onPress={() => navigation.navigate('ChangePassword')}
+                      >
+                        <TabButtonLabel
+                          style={{
+                            color: currentRouteName === 'ChangePassword' ? primaryColor: '#fff'
+                          }}                  
+                        >Alterar Senha</TabButtonLabel>
+                      </TabButton>
+                    </ToolsArea>                    
+                  )
+                }                
+                <Stack.Navigator>
+                  <Stack.Screen
+                    name='EditProfile'
+                    component={EditProfile}
+                    initialParams={{
+                      color: primaryColor
+                    }}
+                    options={{
+                      headerShown: false
+                    }}
+                  />                
+                  <Stack.Screen
+                    name='ChangePassword'
+                    component={ChangePassword}
+                    initialParams={{
+                      color: primaryColor
                     }}                  
-                  >Editar Perfil</TabButtonLabel>
-                </TabButton>
-                <TabButton
-                  style={{
-                    backgroundColor: currentRouteName === 'ChangePassword' ? '#fff': 'transparent',
-                  }}                
-                  onPress={() => navigation.navigate('ChangePassword')}
-                >
-                  <TabButtonLabel
-                    style={{
-                      color: currentRouteName === 'ChangePassword' ? primaryColor: '#fff'
+                    options={{
+                      headerShown: false
                     }}                  
-                  >Alterar Senha</TabButtonLabel>
-                </TabButton>
-              </ToolsArea>
-              <Stack.Navigator>
-                <Stack.Screen
-                  name='EditProfile'
-                  component={EditProfile}
-                  initialParams={{
-                    color: primaryColor
-                  }}
-                  options={{
-                    headerShown: false
-                  }}
-                />                
-                <Stack.Screen
-                  name='ChangePassword'
-                  component={ChangePassword}
-                  initialParams={{
-                    color: primaryColor
-                  }}                  
-                  options={{
-                    headerShown: false
-                  }}                  
-                />
-              </Stack.Navigator>
-            </Body>
-          </Container>
+                  />
+                </Stack.Navigator>                
+              </Body>
+            </KeyboardAvoidingView>          
+          </View>
         )
       }
     </>
