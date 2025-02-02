@@ -1,28 +1,49 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ScrollView } from 'react-native';
 //Hooks
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 //Components
 import InputForm from '../../../components/InputForm';
 import ButtonLg from '../../../components/ButtonLg';
 //Styles
-import { 
-    FormArea,
+import {
     ItemFormArea,
-    SubmitButton
+    SubmitButton,
 } from '../../Register/styles';
+
+import { 
+    TitleArea,
+    Title,
+    FormArea
+} from './styles';
 
 const EditProfile = ({ route }) => {
 
-    const { color, handleSubmit, loading } = route.params;
+    const { userData, loading } = useSelector((state) => state.me);
+
+    const { color, handleSubmit } = route.params;
 
     //Formulário
     const [ full_name, setFullName] = useState('');
     const [ doc_number, setDocNumber ] = useState('');
-    const [ email, setEmail] = useState('');    
+    const [ email, setEmail] = useState('');
+
+    useEffect(() => {
+        if(userData){
+            setFullName(userData.full_name);
+            setDocNumber(userData.doc_number);
+            setEmail(userData.email);
+
+        }
+
+    }, [userData]);
 
     return (
-        <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: color }}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: color, padding: 10 }}>
+            <TitleArea>
+                <Title>Altere abaixo suas informações:</Title>
+            </TitleArea>
             <FormArea>
                 <ItemFormArea>
                     <InputForm label='Nome completo' setValue={setFullName} value={full_name} secureTextEntry={false}/>
@@ -34,7 +55,12 @@ const EditProfile = ({ route }) => {
                     <InputForm label='E-mail' setValue={setEmail} value={email} secureTextEntry={false}/>
                 </ItemFormArea>
                 <SubmitButton>
-                    <ButtonLg title="Editar" action={handleSubmit} loading={loading} disabled={loading}></ButtonLg>
+                    <ButtonLg
+                        title="Editar"
+                        action={() => handleSubmit({full_name, doc_number, email})}
+                        loading={loading}
+                        disabled={loading}
+                    ></ButtonLg>
                 </SubmitButton>                                                      
             </FormArea>
         </ScrollView>

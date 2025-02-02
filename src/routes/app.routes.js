@@ -38,10 +38,9 @@ const AppRoutes = () => {
         tabBarStyle:{
           display: loading ? 'none': 'block',
           backgroundColor: '#fff',
-          borderTopWidth: 0
+          borderTopWidth: 0,
         }
-
-      }}    
+      }} 
     >
     <Tab.Screen
       name="HomeRoutes"

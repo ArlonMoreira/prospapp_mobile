@@ -1,14 +1,7 @@
 import styled from 'styled-components/native';
 import { Image } from 'react-native';
 
-export const Container = styled.KeyboardAvoidingView`
-  flex:1;
-  align-items: center;
-  justify-content: center;
-`;
-
 export const PerfilArea = styled.View`
-  min-height: 246px;
   width: 100%;
 `;
 
@@ -38,8 +31,8 @@ export const PerfilPhotoContainer = styled.View`
 `;
 
 export const PerfilPhoto = styled.View`
-  width: 182px;
-  height: 182px;
+  width: 175px;
+  height: 175px;
   border-radius: 50%;
   background: #cecece;
   position: relative;

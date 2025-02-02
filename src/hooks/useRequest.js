@@ -75,6 +75,19 @@ const useRequest = () => {
                 }                
             }); 
         },
+        change: ({token, data}) => {
+            return request({
+                endpoint: 'user/change/',
+                params: {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(data)
+                }
+            });
+        },
         companyList: (token) => {
             return request({
                 endpoint: 'companys/pending/',

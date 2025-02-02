@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Keyboard, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Keyboard, KeyboardAvoidingView } from 'react-native';
 //Hooks
 import { useContext } from 'react';
 import { useNavigationState } from '@react-navigation/native';
@@ -15,12 +15,12 @@ import EditProfile from './EditProfile';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../slices/authSlice';
+import { change } from '../../slices/meSlice';
 //Navigation
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 //Styles
 import { StatusBar } from 'expo-status-bar';
 import {  
-  Container,
   PerfilArea,
   Profile,
   Body,
@@ -126,6 +126,12 @@ const Perfil = () => {
 
   }, [primaryColor, currentRouteName]); //Quando atualizar o dado vai renavegar pra página que estiver selecionada
 
+
+
+  const handleSubmitEdit = (data) => {
+    dispatch(change(data));
+  };
+
   return (
     <>
       {
@@ -143,14 +149,13 @@ const Perfil = () => {
             />          
             <Header themeColor={primaryColor} handleLogout={handleLogout}/>
             <KeyboardAvoidingView
-              behavior={Platform.OS === 'os' ? 'padding': 'height'}
               style={{flex: 1, backgroundColor: primaryColor}} 
               keyboardVerticalOffset={0}
             >
-              {
-                !showKeyboard && (
-                  <PerfilArea>
-                    <Profile>
+              <PerfilArea style={{minHeight: !showKeyboard ? 246: 20}}>
+                <Profile>               
+                  {
+                    !showKeyboard && (
                       <PerfilContent>
                         <PerfilPhotoContainer>
                           <PerfilPhoto>
@@ -165,11 +170,11 @@ const Perfil = () => {
                         <ProfileName style={{ color:primaryColor }}>{ namePerfil }</ProfileName>
                         <ProfileNameSubtitle>Colaborador</ProfileNameSubtitle>
                       </PerfilContent>
-                    </Profile>
-                  </PerfilArea>
-                )
-              }
-              <Body>
+                    )
+                  }    
+                </Profile>
+              </PerfilArea>              
+              <Body style={{marginTop: !showKeyboard ? 0: 20}}>
                 {
                   !showKeyboard && (
                     <ToolsArea>
@@ -205,7 +210,8 @@ const Perfil = () => {
                     name='EditProfile'
                     component={EditProfile}
                     initialParams={{
-                      color: primaryColor
+                      color: primaryColor,
+                      handleSubmit: handleSubmitEdit
                     }}
                     options={{
                       headerShown: false
