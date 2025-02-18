@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Keyboard, KeyboardAvoidingView } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Platform } from 'react-native';
 //Hooks
 import { useContext } from 'react';
 import { useNavigationState } from '@react-navigation/native';
@@ -14,13 +14,14 @@ import ChangePassword from './ChangePassword';
 import EditProfile from './EditProfile';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../../slices/authSlice';
+import { logout, reset } from '../../slices/authSlice';
 import { change } from '../../slices/meSlice';
 //Navigation
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 //Styles
 import { StatusBar } from 'expo-status-bar';
 import {  
+  Container,
   PerfilArea,
   Profile,
   Body,
@@ -126,55 +127,54 @@ const Perfil = () => {
 
   }, [primaryColor, currentRouteName]); //Quando atualizar o dado vai renavegar pra página que estiver selecionada
 
-
+  const { loadingResetpassword } = useSelector((state) => state.auth);
 
   const handleSubmitEdit = (data) => {
     dispatch(change(data));
   };
 
+  const handleChangePassword = (data) => {
+    dispatch(reset(data));
+  };
+
+  useEffect(() => {
+    setLoading(loadingResetpassword);
+  }, [loadingResetpassword]);
+
   return (
     <>
       {
         loading ? <LoadingPage/> : (
-          <View
-            style={{
-              flex: 1,
-              paddingTop: 20,
-              backgroundColor: '#fff'             
-            }}
-            >
+          <Container>
             <StatusBar 
               translucent
               backgroundColor="transparent"
             />          
             <Header themeColor={primaryColor} handleLogout={handleLogout}/>
+            <PerfilArea style={{pointerEvents: 'box-none', backgroundColor:primaryColor }}>
+              <Profile>
+                <PerfilContent>
+                  <PerfilPhotoContainer>
+                    <PerfilPhoto>
+                      {
+                        photoPerfil && <Photo source={{ uri: photoPerfil }}></Photo>
+                      }
+                    </PerfilPhoto>
+                    <UploadFileButton style={{backgroundColor:primaryColor}}>
+                      <Ionicons name='camera' size={32} color={'#fff'}/>
+                    </UploadFileButton>                                          
+                  </PerfilPhotoContainer>
+                  <ProfileName style={{ color:primaryColor }}>{ namePerfil }</ProfileName>
+                  <ProfileNameSubtitle>Colaborador</ProfileNameSubtitle>                         
+                </PerfilContent>           
+              </Profile>                    
+            </PerfilArea>
             <KeyboardAvoidingView
-              style={{flex: 1, backgroundColor: primaryColor}} 
-              keyboardVerticalOffset={0}
-            >
-              <PerfilArea style={{minHeight: !showKeyboard ? 246: 20}}>
-                <Profile>               
-                  {
-                    !showKeyboard && (
-                      <PerfilContent>
-                        <PerfilPhotoContainer>
-                          <PerfilPhoto>
-                            {
-                              photoPerfil && <Photo source={{ uri: photoPerfil }}></Photo>
-                            }
-                          </PerfilPhoto>
-                          <UploadFileButton style={{backgroundColor:primaryColor}}>
-                            <Ionicons name='camera' size={32} color={'#fff'}/>
-                          </UploadFileButton>                                          
-                        </PerfilPhotoContainer>
-                        <ProfileName style={{ color:primaryColor }}>{ namePerfil }</ProfileName>
-                        <ProfileNameSubtitle>Colaborador</ProfileNameSubtitle>
-                      </PerfilContent>
-                    )
-                  }    
-                </Profile>
-              </PerfilArea>              
-              <Body style={{marginTop: !showKeyboard ? 0: 20}}>
+              style={{flex: 1, alignItems: 'flex-start' }} 
+              behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+              keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+            >                                       
+              <Body style={{backgroundColor: primaryColor}}>
                 {
                   !showKeyboard && (
                     <ToolsArea>
@@ -221,7 +221,8 @@ const Perfil = () => {
                     name='ChangePassword'
                     component={ChangePassword}
                     initialParams={{
-                      color: primaryColor
+                      color: primaryColor,
+                      handleChangePassword: handleChangePassword
                     }}                  
                     options={{
                       headerShown: false
@@ -230,7 +231,7 @@ const Perfil = () => {
                 </Stack.Navigator>                
               </Body>
             </KeyboardAvoidingView>          
-          </View>
+          </Container>
         )
       }
     </>

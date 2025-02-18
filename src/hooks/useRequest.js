@@ -63,7 +63,20 @@ const useRequest = () => {
                     body: JSON.stringify(data)
                 }                
             });
-        },        
+        },
+        resetpassword: ({data, token}) => {
+            return request({
+                endpoint: 'user/resetpassword/',
+                params: {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(data)
+                }                
+            });
+        },            
         me: (token) => {
             return request({
                 endpoint: 'user/me/',

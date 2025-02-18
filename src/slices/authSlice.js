@@ -9,7 +9,8 @@ const initialState = {
     loadingLogout: false,
     loading: false,
     errorMessage: null,
-    errors: []
+    errors: [],
+    loadingResetpassword: false
 };
 
 export const signin = createAsyncThunk(
@@ -46,6 +47,24 @@ export const logout = createAsyncThunk(
     }
 );
 
+export const reset = createAsyncThunk(
+    'auth/resetpassword',
+    async(data, { getState, rejectWithValue }) => {
+        const userAuth = await getState().auth.userAuth;
+        const response = await useRequest().resetpassword({
+            data,
+            token: userAuth.token
+        });
+
+        if(response.success){
+            return response;
+        } else {
+            return rejectWithValue(response);
+        }
+
+    }
+);
+
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
@@ -56,6 +75,20 @@ export const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            //Carregamento reiniciar senha
+            .addCase(reset.pending, (state) => {
+                state.loadingResetpassword = true;
+            })
+            //Sucesso ao cadastrar senha
+            .addCase(reset.fulfilled, (state) => {
+                state.loadingResetpassword = false;
+                state.userAuth = null;
+            })
+            //Falha ao alterar a senha
+            .addCase(reset.rejected, (state) => {
+                state.loadingResetpassword = false;
+            })
+            //carregamento logout
             .addCase(logout.pending, (state) => {
                 state.loadingLogout = true;
             })

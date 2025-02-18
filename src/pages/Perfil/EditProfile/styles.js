@@ -1,7 +1,6 @@
 import styled from 'styled-components/native';
 
 export const TitleArea = styled.View`
-    flex: 1;
     align-items: start;
     justify-content: center;
 `;

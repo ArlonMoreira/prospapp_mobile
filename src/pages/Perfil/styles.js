@@ -1,7 +1,14 @@
 import styled from 'styled-components/native';
 import { Image } from 'react-native';
 
+export const Container = styled.View`
+    flex: 1;
+    padding-top: 20px;
+    background: #fff;
+`;
+
 export const PerfilArea = styled.View`
+  height: 180px;
   width: 100%;
 `;
 
@@ -10,6 +17,21 @@ export const Profile = styled.View`
   background: #fff;
   border-bottom-right-radius: 40px;
   border-bottom-left-radius: 40px;
+`;
+
+export const PerfilPhotoContainer = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const PerfilPhoto = styled.View`
+  width: 125px;
+  height: 125px;
+  border-radius: 50%;
+  background: #cecece;
+  position: relative;
+  overflow: hidden;
 `;
 
 export const Body = styled.View`
@@ -23,22 +45,6 @@ export const PerfilContent = styled.View`
   padding-bottom: 20px;
 `;
 
-export const PerfilPhotoContainer = styled.View`
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  background: #fff;
-`;
-
-export const PerfilPhoto = styled.View`
-  width: 175px;
-  height: 175px;
-  border-radius: 50%;
-  background: #cecece;
-  position: relative;
-  overflow: hidden;
-`;
-
 export const Photo = styled(Image).attrs({
   resizeMode: 'cover'    
 })`
@@ -47,8 +53,8 @@ export const Photo = styled(Image).attrs({
 `;
 
 export const UploadFileButton = styled.TouchableOpacity`
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   background: #fff;
   overflow: hidden;

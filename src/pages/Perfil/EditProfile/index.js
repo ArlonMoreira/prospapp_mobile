@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ScrollView } from 'react-native';
 //Hooks
-import { useState } from 'react';
 import { useSelector } from 'react-redux';
 //Components
 import InputForm from '../../../components/InputForm';
@@ -27,37 +26,31 @@ const EditProfile = ({ route }) => {
     //Formulário
     const [ full_name, setFullName] = useState('');
     const [ doc_number, setDocNumber ] = useState('');
-    const [ email, setEmail] = useState('');
 
     useEffect(() => {
         if(userData){
             setFullName(userData.full_name);
             setDocNumber(userData.doc_number);
-            setEmail(userData.email);
-
         }
 
     }, [userData]);
 
     return (
-        <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: color, padding: 10 }}>
-            <TitleArea>
+        <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: color, padding: 10, alignItems: 'flex-start' }}>
+            <TitleArea style={{ alignSelf: 'stretch' }}>
                 <Title>Altere abaixo suas informações:</Title>
             </TitleArea>
-            <FormArea>
+            <FormArea style={{ alignSelf: 'stretch' }}>
                 <ItemFormArea>
                     <InputForm label='Nome completo' setValue={setFullName} value={full_name} secureTextEntry={false}/>
                 </ItemFormArea>
                 <ItemFormArea>
                     <InputForm label='CPF' setValue={setDocNumber} value={doc_number} secureTextEntry={false}/>
                 </ItemFormArea>
-                <ItemFormArea>
-                    <InputForm label='E-mail' setValue={setEmail} value={email} secureTextEntry={false}/>
-                </ItemFormArea>
                 <SubmitButton>
                     <ButtonLg
                         title="Editar"
-                        action={() => handleSubmit({full_name, doc_number, email})}
+                        action={() => handleSubmit({full_name, doc_number})}
                         loading={loading}
                         disabled={loading}
                     ></ButtonLg>

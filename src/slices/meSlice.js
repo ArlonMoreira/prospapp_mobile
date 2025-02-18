@@ -63,7 +63,6 @@ export const meSlice = createSlice({
                 const newData = action.payload.data;
                 state.userData.doc_number = newData.doc_number;
                 state.userData.full_name = newData.full_name;
-                state.userData.email = newData.email;
             })
     }
 });
