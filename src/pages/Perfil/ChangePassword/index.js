@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { ScrollView } from 'react-native';
 //Redux
 import { logout } from '../../../slices/authSlice';
-import { resetErrorMessage } from '../../../slices/resetPasswordSlice';
+import { resetErrorMessage as resetErrorMessageResetPassword } from '../../../slices/resetPasswordSlice';
+import { resetErrorMessage as resetErrorMessageEditProfile } from '../../../slices/meSlice';
 //Hooks
 import { useSelector, useDispatch } from 'react-redux';
 //Components
@@ -20,7 +21,8 @@ const ChangePassword = ({ route }) => {
 
   //Assim que entrar na edição apagar as mensagens de erro.
   useEffect(() => {
-    dispatch(resetErrorMessage());
+    dispatch(resetErrorMessageResetPassword());
+    dispatch(resetErrorMessageEditProfile());
   }, []);
   
   const { success, loading, errors, errorMessage } = useSelector((state) => state.resetPassword);
@@ -37,7 +39,7 @@ const ChangePassword = ({ route }) => {
   //Apresentar o alerta caso houver mensagem de erro
   useEffect(() => {
     errorMessage ? setShowAlertError(true): setShowAlertError(false);
-  }, [errorMessage, setShowAlertError])
+  }, [errorMessage, setShowAlertError]);
 
   //Deslogar quando alterado a senha.
   useEffect(() => {

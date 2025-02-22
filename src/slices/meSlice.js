@@ -7,6 +7,8 @@ const initialState = {
     userData: null,
     success: false,
     loading: false,
+    errorMessage: null,
+    errors: []
 };
 
 export const me = createAsyncThunk(
@@ -32,7 +34,7 @@ export const change = createAsyncThunk(
             data,
             token: userAuth.token
         });
-        
+
         if(response.success){
             return response;
         } else {
@@ -45,6 +47,11 @@ export const change = createAsyncThunk(
 export const meSlice = createSlice({
     name: 'me',
     initialState,
+    reducers: {
+        resetErrorMessage: (state) => {
+            state.errorMessage = null;
+        },
+    },    
     extraReducers: (builder) => {
         builder
             .addCase(me.pending, (state) => {
@@ -63,8 +70,18 @@ export const meSlice = createSlice({
                 const newData = action.payload.data;
                 state.userData.doc_number = newData.doc_number;
                 state.userData.full_name = newData.full_name;
+                state.errorMessage = null;
+                state.errors = [];
+
+            })
+            .addCase(change.rejected, (state, action) => {
+                state.loading = false;
+                state.errorMessage = action.payload.message;
+                state.errors = action.payload.data;
+
             })
     }
 });
 
+export const { resetErrorMessage } = meSlice.actions;
 export default meSlice.reducer;
