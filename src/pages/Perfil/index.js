@@ -14,7 +14,8 @@ import ChangePassword from './ChangePassword';
 import EditProfile from './EditProfile';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { logout, reset } from '../../slices/authSlice';
+import { logout } from '../../slices/authSlice';
+import { reset, resetForm } from '../../slices/resetPasswordSlice';
 import { change } from '../../slices/meSlice';
 //Navigation
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -58,6 +59,11 @@ const Perfil = () => {
   const [ primaryColor, setPrimaryColor ] = useState('#fff');
   const [ photoPerfil, setPhotoPerfil ] = useState(null);
   const [ namePerfil, setNamePerfil ] = useState('');
+
+  //Resetar formulário ao entrar na página
+  useEffect(() => {
+    dispatch(resetForm());
+  }, []);
 
   useEffect(()=>{
     if(userData){
@@ -126,9 +132,7 @@ const Perfil = () => {
     );  
 
   }, [primaryColor, currentRouteName]); //Quando atualizar o dado vai renavegar pra página que estiver selecionada
-
-  const { loadingResetpassword } = useSelector((state) => state.auth);
-
+  
   const handleSubmitEdit = (data) => {
     dispatch(change(data));
   };
@@ -136,10 +140,6 @@ const Perfil = () => {
   const handleChangePassword = (data) => {
     dispatch(reset(data));
   };
-
-  useEffect(() => {
-    setLoading(loadingResetpassword);
-  }, [loadingResetpassword]);
 
   return (
     <>
