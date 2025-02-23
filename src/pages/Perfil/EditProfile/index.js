@@ -40,7 +40,7 @@ const EditProfile = ({ route }) => {
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: color, padding: 10, alignItems: 'flex-start' }}>
             { showAlertError && <Alert message={errorMessage} setShow={setShowAlertError}/> }
-            <TitleArea style={{ alignSelf: 'stretch' }}>
+            <TitleArea style={{ alignSelf: 'stretch', marginBottom: 10 }}>
                 <Title>Altere abaixo suas informações:</Title>
             </TitleArea>
             <FormArea style={{ alignSelf: 'stretch' }}>
@@ -51,7 +51,7 @@ const EditProfile = ({ route }) => {
                     </Errors>
                 </ItemFormArea>
                 <ItemFormArea>
-                    <InputForm label='CPF' setValue={setDocNumber} value={doc_number} secureTextEntry={false}/>
+                    <InputForm label='CPF' cpfMask={true} setValue={setDocNumber} value={doc_number} secureTextEntry={false}/>
                     <Errors>
                         { errors.doc_number && errors.doc_number.map((error, i) => <Error key={i}>{ error }</Error>) }
                     </Errors>

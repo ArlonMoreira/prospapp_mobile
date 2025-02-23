@@ -46,7 +46,7 @@ export const PerfilContent = styled.View`
 `;
 
 export const Photo = styled(Image).attrs({
-  resizeMode: 'cover'    
+  resizeMode: 'cover'  
 })`
   width: 100%;
   height: 100%;

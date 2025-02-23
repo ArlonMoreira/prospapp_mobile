@@ -49,7 +49,7 @@ const ChangePassword = ({ route }) => {
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: color, padding: 10, alignItems: 'flex-start' }}>
       { showAlertError && <Alert message={errorMessage} setShow={setShowAlertError}/> }
-      <TitleArea style={{ alignSelf: 'stretch' }}>
+      <TitleArea style={{ alignSelf: 'stretch', marginBottom: 10 }}>
         <Title>Altere abaixo sua senha:</Title>
       </TitleArea>
       <FormArea style={{ alignSelf: 'stretch' }}>

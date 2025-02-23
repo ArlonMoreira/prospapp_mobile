@@ -3,15 +3,10 @@ import { Animated } from 'react-native';
 //Hooks
 import { useState, useEffect, useRef } from 'react';
 //Styles
-import { 
-    Container,
-    Input,
-    Stick,
-    ShowPassword
-} from './styles';
-import { Feather } from '@expo/vector-icons'; 
+import { Container, Input, InputMask, Stick, ShowPassword } from './styles';
+import { Feather } from '@expo/vector-icons';
 
-const InputForm = ({label, value, setValue, secureTextEntry, color='#fff'}) => {
+const InputForm = ({label, value, setValue, secureTextEntry, color='#fff', cpfMask=false}) => {
 
     const [isFocused, setIsFocused] = useState(false);
     const [isPasswordSecure, setIsPasswordSecure] = useState(secureTextEntry);
@@ -51,16 +46,33 @@ const InputForm = ({label, value, setValue, secureTextEntry, color='#fff'}) => {
             <Stick style={{backgroundColor: color}}/>
             <Animated.Text style={labelStyle}>
                 {label}
-            </Animated.Text>        
-            <Input
-                value={value}
-                onChangeText={(text) => setValue(text)}
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-                secureTextEntry={isPasswordSecure}   
-                style={{borderBottomColor: color, color: color}}       
-            >
-            </Input>
+            </Animated.Text>
+            {
+                cpfMask ? (
+                    <InputMask
+                        type={'cpf'}
+                        value={value}
+                        onChangeText={(text) => setValue(text)}
+                        onFocus={() => setIsFocused(true)}
+                        onBlur={() => setIsFocused(false)}
+                        style={{borderBottomColor: color, color: color}}   
+                        selectionColor={'#fff'} 
+                    >
+
+                    </InputMask>
+                ) : (
+                    <Input
+                        value={value}
+                        onChangeText={(text) => setValue(text)}
+                        onFocus={() => setIsFocused(true)}
+                        onBlur={() => setIsFocused(false)}
+                        secureTextEntry={isPasswordSecure}   
+                        style={{borderBottomColor: color, color: color}}  
+                        selectionColor={'#fff'}     
+                    >
+                    </Input>
+                )
+            }        
             {
                 secureTextEntry && (
                     <ShowPassword onPress={() => handleShowPassword()}>

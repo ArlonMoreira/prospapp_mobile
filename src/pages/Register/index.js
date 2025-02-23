@@ -39,7 +39,7 @@ const Register = () => {
   const handleSubmit = async () => {
     const data = {
       full_name,
-      doc_number,
+      doc_number: doc_number.replace(/\D/g, ""),
       email,
       password,
       confirm_password
@@ -152,7 +152,7 @@ const Register = () => {
               </Errors>
             </ItemFormArea>
             <ItemFormArea>
-              <InputForm label='CPF' setValue={setDocNumber} value={doc_number} secureTextEntry={false}/>
+              <InputForm label='CPF' setValue={setDocNumber} value={doc_number} secureTextEntry={false} cpfMask={true}/>
               <Errors>
                 { 
                   Object.keys(errors).length > 0 && 
