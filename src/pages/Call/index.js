@@ -90,7 +90,7 @@ const Call = ({ route }) => {
   const [ showModal, setShowModal ] = useState(false);
 
   const [ name, setName ] = useState('');
-  const [ identification_number, setIdentification_number ] = useState(0);
+  const [ identification_number, setIdentification_number ] = useState('');
 
   const [ disabledSubmit, setDisabledSubmit ] = useState(true);
 
@@ -100,9 +100,10 @@ const Call = ({ route }) => {
   const handleSubmit = () => {
     const data = {
       name,
-      identification_number,
       classId: classIdSelected
     };
+
+    if(identification_number !== '') data.identification_number = identification_number.replace(/\D/g, "");
 
     dispatch(register(data));
     
@@ -132,13 +133,13 @@ const Call = ({ route }) => {
   useEffect(()=>{ //Limpar o formulário caso ocorrer o cadastro com sucesso.
     if(success){
       setName('');
-      setIdentification_number(0);
+      setIdentification_number('');
       closeModal();
     }
   }, [success]);
 
   useEffect(()=>{ //Desabilitar o botão de submit quando o formulário estiver vazio.
-    if(name !== '' && identification_number !== ''){
+    if(name !== ''){
       setDisabledSubmit(false);
     } else {
       setDisabledSubmit(true);
@@ -593,17 +594,19 @@ const Call = ({ route }) => {
     //Definir os dados para serem editados.
     setNameEditStudent(student.name);
     setIdEditStudent(student.id);
-    setIdentificationNumber(student.identification_number.toString());
+    console.log(student)
+    setIdentificationNumber(student.identification_number);
     //Abrir o modal
     setShowModalEditStudent(true);
   };
 
   const handleSubmitEditStudent = () => {
     const data = {
-      name: nameEditStudent,
-      identification_number: identificationNumber
+      name: nameEditStudent
     };
-    
+
+    if(identificationNumber) data.identification_number = identificationNumber.replace(/\D/g, "");
+
     dispatch(change({student: idEditStudent, data}));
 
   };
@@ -712,8 +715,8 @@ const Call = ({ route }) => {
                   <ModalContent>
                     <ModalTitle style={{color: primaryColor}}>Adicionar aluno</ModalTitle>
                     <ModalResume>Nos campos abaixo, adicione os dados do aluno para que deseja cadastrado e clique em 'Adicionar'.</ModalResume>
-                    <InputForm label='Nome do aluno' value={name} setValue={setName} color={primaryColor}/>
-                    <InputForm label='CPF do aluno' value={identification_number} setValue={setIdentification_number} color={primaryColor}/>            
+                    <InputForm label='Nome do aluno' pointerColor={primaryColor} value={name} setValue={setName} color={primaryColor}/>
+                    <InputForm label='CPF do aluno' cpfMask={true} pointerColor={primaryColor} value={identification_number} setValue={setIdentification_number} color={primaryColor}/>            
                     <View style={{marginTop: 20}}>
                       <ButtonLg disabled={disabledSubmit} title='Adicionar' loading={loadingRegister} color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleSubmit}/>
                     </View>
@@ -769,8 +772,8 @@ const Call = ({ route }) => {
                   <ModalContent>
                     <ModalTitle style={{color: primaryColor}}>Alterar dados do aluno</ModalTitle>
                     <ModalResume>Nos campos abaixo, altere os dados do aluno e clique em 'Alterar'.</ModalResume>
-                    <InputForm label='Nome do aluno' value={nameEditStudent} setValue={setNameEditStudent} color={primaryColor}></InputForm>
-                    <InputForm label='CPF do aluno' value={identificationNumber} setValue={setIdentificationNumber} color={primaryColor}></InputForm>
+                    <InputForm label='Nome do aluno' pointerColor={primaryColor} value={nameEditStudent} setValue={setNameEditStudent} color={primaryColor}></InputForm>
+                    <InputForm label='CPF do aluno' cpfMask={true} pointerColor={primaryColor} value={identificationNumber} setValue={setIdentificationNumber} color={primaryColor}></InputForm>
                     <View style={{marginTop: 20}}>
                       <ButtonLg title='Alterar' loading={loadingChange} color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleSubmitEditStudent}/>
                     </View>                    
