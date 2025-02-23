@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 //Container
 import ButtonLg from '../../components/ButtonLg';
 import ButtonLgLight from '../../components/ButtonLgLight';
+import Footer from '../../components/Footer';
 //Styles
 import { LinearGradient } from 'expo-linear-gradient';
 import { 
@@ -32,14 +33,15 @@ const Login = () => {
       style={styles.background}
       >
       <LogoArea>
-        <Logo source={require('../../../assets/logo-2.png')}/>
-        <LogoTitle>Bem vindo(a) ao ProspApp!</LogoTitle>
+        <Logo source={require('../../../assets/logo-3.png')}/>
+        <LogoTitle>Bem vindo a Prospere!</LogoTitle>
       </LogoArea>
       <Container>
         <ButtonLg title="Entrar" action={accessSignIn}/>
         <View style={styles.buttonSpacing}/>
         <ButtonLgLight title="criar conta" action={accessRegister}/>
       </Container>
+      <Footer></Footer>
     </LinearGradient>
   )
 }

@@ -1,20 +1,24 @@
 import styled from 'styled-components/native';
+import { Image } from 'react-native';
 
 export const Container = styled.View`
-    height: 50px;
+    height: 100px;
     align-items: center;
     justify-content: center;
-    flex-direction: row;  
-    gap: 5px;
+    flex-direction: column;  
+    gap: 0;
 `;
 
-export const Logo = styled.Image`
-    width: 30px;
-    height: 30px;
+export const Logo = styled(Image).attrs({
+    resizeMode: 'center' 
+  })`
+    width: 60px;
+    height: 40px;
+    margin-right: 8px;
 `;
 
 export const LogoText = styled.Text`
     color: #fff;
-    font-size: 18px;
-    font-family: 'montserrat-bold';
+    font-size: 14px;
+    font-family: 'montserrat-regular';
 `;

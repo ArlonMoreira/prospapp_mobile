@@ -1,10 +1,12 @@
 {
   "expo": {
-    "name": "prospapp_mobile",
+    "name": "Prospere",
     "slug": "prospapp_mobile",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "newArchEnabled": true,
-    "version": "1.0.0",
+    "version": "1.0.0-beta",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -23,13 +25,19 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.arlonmoreira.prospapp_mobile.beta"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "063e7eff-be2e-4692-9fa9-13aa105bc783"
+      }
+    }
   }
 }
