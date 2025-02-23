@@ -8,14 +8,14 @@ const initialState = {
     loading: false,
     success: false,
     errorMessage: null,
-    errors: []
+    errors: {}
 };
 
 export const register = createAsyncThunk(
     'register/register',
     async(data, {rejectWithValue}) => {
         const response = await useRequest().register(data);
- 
+
         if(response.success){
             return response;
         } else {

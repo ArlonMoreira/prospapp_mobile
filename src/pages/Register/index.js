@@ -112,7 +112,11 @@ const Register = () => {
       setShowElements(true);
     });    
 
-  }, []);  
+  }, []);
+  
+  useEffect(() => {
+    console.log(errors)
+  }, [errors]);
 
   return (
     <LinearGradient
@@ -140,40 +144,50 @@ const Register = () => {
             <ItemFormArea>
               <InputForm label='Nome completo' setValue={setFullName} value={full_name} secureTextEntry={false}/>
               <Errors>
-                {
-                  errors.full_name && errors.full_name.map((error, i)=> <Error key={i}>{error}</Error>) 
+                { 
+                  Object.keys(errors).length > 0 && 
+                  Array.isArray(errors?.full_name) && 
+                  errors.full_name.map((error, i) => <Error key={i}>{error}</Error>) 
                 }
               </Errors>
             </ItemFormArea>
             <ItemFormArea>
               <InputForm label='CPF' setValue={setDocNumber} value={doc_number} secureTextEntry={false}/>
               <Errors>
-                {
-                  errors.doc_number && errors.doc_number.map((error, i)=> <Error key={i}>{error}</Error>) 
+                { 
+                  Object.keys(errors).length > 0 && 
+                  Array.isArray(errors?.doc_number) && 
+                  errors.doc_number.map((error, i) => <Error key={i}>{error}</Error>) 
                 }
               </Errors>
             </ItemFormArea>
             <ItemFormArea>
               <InputForm label='E-mail' setValue={setEmail} value={email} secureTextEntry={false}/>
               <Errors>
-                {
-                  errors.email && errors.email.map((error, i)=> <Error key={i}>{error}</Error>) 
+                { 
+                  Object.keys(errors).length > 0 && 
+                  Array.isArray(errors?.email) && 
+                  errors.email.map((error, i) => <Error key={i}>{error}</Error>) 
                 }
               </Errors>            
             </ItemFormArea>
             <ItemFormArea>
               <InputForm label='Senha' setValue={setPassword} value={password} secureTextEntry={true}/>
               <Errors>
-                {
-                  errors.password && errors.password.map((error, i)=> <Error key={i}>{error}</Error>) 
+                { 
+                  Object.keys(errors).length > 0 && 
+                  Array.isArray(errors?.password) && 
+                  errors.password.map((error, i) => <Error key={i}>{error}</Error>) 
                 }
               </Errors>
             </ItemFormArea>
             <ItemFormArea>
               <InputForm label='Confirmar Senha' setValue={setConfirmPassword} value={confirm_password} secureTextEntry={true}/>
               <Errors>
-                {
-                  errors.confirm_password && errors.confirm_password.map((error, i)=> <Error key={i}>{error}</Error>) 
+                { 
+                  Object.keys(errors).length > 0 && 
+                  Array.isArray(errors?.confirm_password) && 
+                  errors.confirm_password.map((error, i) => <Error key={i}>{error}</Error>) 
                 }
               </Errors>
             </ItemFormArea>
