@@ -16,7 +16,7 @@ import EditStudent from './EditStudent';
 import RemoveStudent from './RemoveStudent';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { register, list, call, change, remove } from '../../slices/studentSlice';
+import { register, list, call, change, remove, resetRegisterForm, resetChangeForm } from '../../slices/studentSlice';
 import { generated, resetReportState } from '../../slices/reportSlice';
 //Context
 import { LoadingContext } from '../../contexts/LoadingContext';
@@ -45,6 +45,7 @@ import {
   Select
 } from './styles'
 import { SimpleLineIcons, FontAwesome } from '@expo/vector-icons';
+import { Error, Errors } from '../Register/styles';
 //PDF
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
@@ -68,6 +69,10 @@ const Call = ({ route }) => {
   const [ secundaryColor, setSecundaryColor ] = useState('#fff');
   const [ nameUser, setNameUser ] = useState('');
   const [ logo, setLogo ] = useState(null);
+
+  useEffect(() => {
+    dispatch(resetRegisterForm()); //Limpa o formulário de cadastro de usuários toda vez que acessar a página
+  }, []);
   
   useEffect(()=>{
     if(userData){
@@ -83,7 +88,7 @@ const Call = ({ route }) => {
   }, [userData]);
 
   //Register student  
-  const { success, loadingList, loadingRegister, error, data, loadingCall, loadingChange, loadingRemove } = useSelector((state) => state.student);
+  const { success, loadingList, loadingRegister, errorRegister, errorsRegister, data, loadingCall, successChange, loadingChange, errorChange, errorsChange, loadingRemove  } = useSelector((state) => state.student);
   
   const dispatch = useDispatch();
 
@@ -110,7 +115,7 @@ const Call = ({ route }) => {
   };
   
   useEffect(()=>{        
-    if(!error){
+    if(!errorRegister){
       if(!loadingRegister){ //Fechar o modal quando finalizar o cadastro
         setShowModal(false);
       } else { //Desabilitar o botão quando estiver carregando.
@@ -122,7 +127,7 @@ const Call = ({ route }) => {
 
     }
 
-  }, [loadingRegister, error]);  
+  }, [loadingRegister, errorRegister]);  
   
   const closeModal = () => { //Fechar modal
     if(!loadingRegister){
@@ -135,6 +140,7 @@ const Call = ({ route }) => {
       setName('');
       setIdentification_number('');
       closeModal();
+      dispatch(resetRegisterForm());
     }
   }, [success]);
 
@@ -591,10 +597,10 @@ const Call = ({ route }) => {
   const [ identificationNumber, setIdentificationNumber ] = useState('');
 
   const handleEditStudent = (student) => {
+    dispatch(resetChangeForm()); //Limpa o formulário de edição sempre que acessar a página;
     //Definir os dados para serem editados.
     setNameEditStudent(student.name);
     setIdEditStudent(student.id);
-    console.log(student)
     setIdentificationNumber(student.identification_number);
     //Abrir o modal
     setShowModalEditStudent(true);
@@ -612,11 +618,11 @@ const Call = ({ route }) => {
   };
 
   useEffect(()=>{
-    if(!loadingChange){
+    if(successChange){ //Fechar o modal automaticamente quando o dado for alterado com sucesso.
       setShowModalEditStudent(false);
     }
 
-  }, [loadingChange]);
+  }, [successChange]);
 
   //Remover aluno
   const [ showModalRemoveStudent, setShowModalRemoveStudent ] = useState(false);
@@ -716,7 +722,21 @@ const Call = ({ route }) => {
                     <ModalTitle style={{color: primaryColor}}>Adicionar aluno</ModalTitle>
                     <ModalResume>Nos campos abaixo, adicione os dados do aluno para que deseja cadastrado e clique em 'Adicionar'.</ModalResume>
                     <InputForm label='Nome do aluno' pointerColor={primaryColor} value={name} setValue={setName} color={primaryColor}/>
+                    <Errors>
+                    { 
+                      Object.keys(errorsRegister).length > 0 && 
+                      Array.isArray(errorsRegister?.name) && 
+                      errorsRegister.name.map((error, i) => <Error key={i} style={{color: 'red'}}>{error}</Error>) 
+                    }
+                    </Errors>
                     <InputForm label='CPF do aluno' cpfMask={true} pointerColor={primaryColor} value={identification_number} setValue={setIdentification_number} color={primaryColor}/>            
+                    <Errors>
+                    { 
+                      Object.keys(errorsRegister).length > 0 && 
+                      Array.isArray(errorsRegister?.identification_number) && 
+                      errorsRegister.identification_number.map((error, i) => <Error key={i} style={{color: 'red'}}>{error}</Error>) 
+                    }
+                    </Errors>                    
                     <View style={{marginTop: 20}}>
                       <ButtonLg disabled={disabledSubmit} title='Adicionar' loading={loadingRegister} color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleSubmit}/>
                     </View>
@@ -773,7 +793,21 @@ const Call = ({ route }) => {
                     <ModalTitle style={{color: primaryColor}}>Alterar dados do aluno</ModalTitle>
                     <ModalResume>Nos campos abaixo, altere os dados do aluno e clique em 'Alterar'.</ModalResume>
                     <InputForm label='Nome do aluno' pointerColor={primaryColor} value={nameEditStudent} setValue={setNameEditStudent} color={primaryColor}></InputForm>
+                    <Errors>
+                    { 
+                      Object.keys(errorsChange).length > 0 && 
+                      Array.isArray(errorsChange?.name) && 
+                      errorsChange.name.map((error, i) => <Error key={i} style={{color: 'red'}}>{error}</Error>) 
+                    }
+                    </Errors>                    
                     <InputForm label='CPF do aluno' cpfMask={true} pointerColor={primaryColor} value={identificationNumber} setValue={setIdentificationNumber} color={primaryColor}></InputForm>
+                    <Errors>
+                    { 
+                      Object.keys(errorsChange).length > 0 && 
+                      Array.isArray(errorsChange?.identification_number) && 
+                      errorsChange.identification_number.map((error, i) => <Error key={i} style={{color: 'red'}}>{error}</Error>) 
+                    }
+                    </Errors>                    
                     <View style={{marginTop: 20}}>
                       <ButtonLg title='Alterar' loading={loadingChange} color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleSubmitEditStudent}/>
                     </View>                    

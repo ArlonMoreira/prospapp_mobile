@@ -11,9 +11,15 @@ const initialState = {
     loadingChange: false,
     loadingRemove: false,
     success: false,
-    error: false,
     loadingCall: false,
-    successCall: false
+    successCall: false,
+    errorRegister: false,
+    errorsRegister: [],
+    errorMenssageRegister: null,
+    successChange: false,
+    errorChange: false,
+    errorsChange: [],
+    errorMenssageChange: null    
 };
 
 export const list = createAsyncThunk(
@@ -108,6 +114,20 @@ export const remove = createAsyncThunk(
 export const studentSlice = createSlice({
     name: 'student',
     initialState,
+    reducers: {
+        resetRegisterForm:(state) => {
+            state.success = false;
+            state.errorRegister = false;
+            state.errorsRegister = [];
+            state.errorMenssageRegister = null;
+        },
+        resetChangeForm:(state) => {
+            state.successChange = false;
+            state.errorChange = false;
+            state.errorsChange = [];
+            state.errorMenssageChange = null;        
+        }
+    },
     extraReducers: (builder) => {
         builder
             //Aguardando remoção de aluno
@@ -128,20 +148,26 @@ export const studentSlice = createSlice({
             .addCase(register.pending, (state) => {
                 state.loadingRegister = true;
                 state.success = false;
-                state.error = false;     
+                state.errorRegister = false;
+                state.errorsRegister = [];
+                state.errorMenssageRegister = null;                  
             })
             //Sucesso cadastro
             .addCase(register.fulfilled, (state, action) => {
                 state.loadingRegister = false;
                 state.success = true;
-                state.error = false;
+                state.errorRegister = false;
                 state.data.push(action.payload.data);
+                state.errorsRegister = [];
+                state.errorMenssageRegister = null;
             })
             //Falha do cadastro
-            .addCase(register.rejected, (state) => {
+            .addCase(register.rejected, (state, action) => {
                 state.loadingRegister = false;
                 state.success = false;
-                state.error = true;
+                state.errorRegister = true;
+                state.errorsRegister = action.payload.data;
+                state.errorMenssageRegister = action.payload.message;
             })
             //Aguardando lista
             .addCase(list.pending, (state) => {
@@ -189,10 +215,13 @@ export const studentSlice = createSlice({
             //Aguardando alterar
             .addCase(change.pending, (state) => {
                 state.loadingChange = true;
+                state.successChange = false;
+                state.errorChange = false;
+                state.errorsChange = [];
+                state.errorMenssageChange = null;
             })
             //Sucesso ao alterar
             .addCase(change.fulfilled, (state, action) => {
-
                 state.data = state.data.map(data => {
                     if(data.id === action.payload.data.id){
                         data.name = action.payload.data.name;
@@ -202,17 +231,23 @@ export const studentSlice = createSlice({
                     return data;
 
                 });
-
                 state.loadingChange = false;
+                state.successChange = true;
+                state.errorChange = false;
+                state.errorsChange = [];
+                state.errorMenssageChange = null;                
                 
             })
             //Falha ao alterar
-            .addCase(change.rejected, (state) => {
+            .addCase(change.rejected, (state, action) => {
                 state.loadingChange = false;
+                state.successChange = false;
+                state.errorChange = true;
+                state.errorsChange = action.payload.data;
+                state.errorMenssageChange = action.payload.message;                
             })
-            //
-
     }
 });
 
+export const { resetRegisterForm, resetChangeForm } = studentSlice.actions;
 export default studentSlice.reducer;
