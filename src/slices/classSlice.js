@@ -10,7 +10,9 @@ const initialState = {
     loadingChange: false,
     loadingRemove: false,
     success: false,
-    error: false
+    errorRegister: false,
+    successChange: false,
+    errorsChange: []
 };
 
 export const register = createAsyncThunk(
@@ -90,8 +92,12 @@ export const classSlice = createSlice({
     name: 'class',
     initialState,
     reducers: {
-        resetErrorStatus:(state) =>{
-            state.error = false;
+        resetErrorStatus:(state) => {
+            state.errorRegister = false;
+        },
+        resetChangeForm: (state) => {
+            state.successChange = false;
+            state.errorsChange = [];
         }
     },
     extraReducers: (builder) => {
@@ -100,20 +106,20 @@ export const classSlice = createSlice({
             .addCase(register.pending, (state) => {
                 state.loadingRegister = true;
                 state.success = false;
-                state.error = false;     
+                state.errorRegister = false;     
             })
             //Sucesso cadastro
             .addCase(register.fulfilled, (state, action) => {
                 state.loadingRegister = false;
                 state.success = true;
-                state.error = false;
+                state.errorRegister = false;
                 state.data.push(action.payload.data);
             })
             //Falha do cadastro
             .addCase(register.rejected, (state) => {
                 state.loadingRegister = false;
                 state.success = false;
-                state.error = true;
+                state.errorRegister = true;
             })
             //Aguardando grupos
             .addCase(list.pending, (state, action) => {
@@ -131,6 +137,8 @@ export const classSlice = createSlice({
             //Aguardando alteração
             .addCase(change.pending, (state) => {
                 state.loadingChange = true;
+                state.successChange = false;
+                state.errorsChange = [];
             })
             //Sucesso alteração
             .addCase(change.fulfilled, (state, action) => {
@@ -142,7 +150,15 @@ export const classSlice = createSlice({
                 );
 
                 state.data = newData;
+                state.successChange = true;
+                state.errorsChange = [];
 
+            })
+            //Falha alteração
+            .addCase(change.rejected, (state, action) => {
+                state.loadingChange = false;
+                state.successChange = false;
+                state.errorsChange = action.payload.data;
             })
             //Falha ao remover turma
             .addCase(remove.pending, (state) => {
@@ -162,5 +178,5 @@ export const classSlice = createSlice({
     }
 });
 
-export const { resetErrorStatus } = classSlice.actions;
+export const { resetErrorStatus, resetChangeForm } = classSlice.actions;
 export default classSlice.reducer;

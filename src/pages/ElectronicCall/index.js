@@ -18,7 +18,7 @@ import { useNavigation } from '@react-navigation/native';
 import { LoadingContext } from '../../contexts/LoadingContext';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { register, list, change, remove } from '../../slices/classSlice';
+import { register, list, change, remove, resetChangeForm } from '../../slices/classSlice';
 //Styles
 import { StatusBar } from 'expo-status-bar';
 import { 
@@ -32,6 +32,7 @@ import {
   ModalTitle,
   ModalResume
 } from './styles';
+import { Errors, Error } from '../Register/styles';
 //Navigation
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigationState } from '@react-navigation/native';
@@ -61,7 +62,7 @@ const ElectronicCall = () => {
   }, [userData]);  
 
   //Register class
-  const { success, loadingRegister, error, data, loadingList, loadingChange, loadingRemove } = useSelector((state) => state.class);
+  const { success, loadingRegister, errorRegister, data, loadingList, loadingChange, loadingRemove, successChange, errorsChange } = useSelector((state) => state.class);
   
   const dispatch = useDispatch();
 
@@ -82,7 +83,7 @@ const ElectronicCall = () => {
   };
 
   useEffect(()=>{
-    if(!error){
+    if(!errorRegister){
       if(!loadingRegister){ //Fechar o modal quando finalizar o cadastro
         setShowModal(false);
       } else { //Desabilitar o botão quando estiver carregando.
@@ -94,7 +95,7 @@ const ElectronicCall = () => {
 
     }
 
-  }, [loadingRegister, error]);
+  }, [loadingRegister, errorRegister]);
 
   const closeModal = () => { //Fechar modal
     if(!loadingRegister){
@@ -122,13 +123,13 @@ const ElectronicCall = () => {
 
   //Apresentar o alert caso tiver mensagem de erro.
   useEffect(()=>{
-    if(error){
+    if(errorRegister){
       setShowAlertError(true);
     } else {
       setShowAlertError(false);
     }
 
-  }, [error]);
+  }, [errorRegister]);
 
   //Fechar a mensagem de erro automaticamente.
   useEffect(()=>{
@@ -180,6 +181,8 @@ const ElectronicCall = () => {
 
   const handleChangeClass = (item) => {
     if(item){
+      dispatch(resetChangeForm()); //Limpar estados dos formulários ao abrir o modal;
+
       setNameForm(item.name);
       setIdForm(item.id);
 
@@ -200,11 +203,11 @@ const ElectronicCall = () => {
   };
 
   useEffect(()=>{
-    if(!loadingChange){ //Fechar o modal quando finalizar o cadastro
+    if(successChange){ //Fechar o modal quando editar a turma
       setShowModalChange(false);
     }
 
-  }, [loadingChange]);
+  }, [successChange]);
 
   //Remover turma
   const [ showModalRemove, setShowModalRemove ] = useState(false);
@@ -287,7 +290,14 @@ const ElectronicCall = () => {
                   <ModalContent>
                     <ModalTitle style={{color: primaryColor}}>Alterar turma</ModalTitle>
                     <ModalResume>Alterar dados da turma, e clique no botão "Alterar/Confirmar" para estabelecer a mudança</ModalResume>
-                    <InputForm label='Nome da turma' value={nameForm} setValue={setNameForm} color={primaryColor}/>
+                    <InputForm label='Nome da turma' pointerColor={primaryColor} value={nameForm} setValue={setNameForm} color={primaryColor}/>
+                    <Errors>
+                    { 
+                      Object.keys(errorsChange).length > 0 && 
+                      Array.isArray(errorsChange?.name) && 
+                      errorsChange.name.map((error, i) => <Error key={i} style={{color: 'red'}}>{error}</Error>) 
+                    }                      
+                    </Errors>
                     <View style={{marginTop: 20}}>
                       <ButtonLg title='Alterar/Confirmar' loading={loadingChange} color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={submitChangeClass}/>
                     </View>             
