@@ -13,7 +13,7 @@ export const list = createAsyncThunk(
     'companys/list',
     async(_, { getState, rejectWithValue }) => {
         const userAuth = await getState().auth.userAuth; //Obter token que encontra-se no estado de autenticação
-        const response = await useRequest().companyList(userAuth.token)
+        const response = await useRequest().companyList("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxMzQ4MTc1LCJpYXQiOjE3NDA5MTYxNzUsImp0aSI6IjkxNTc1NmUwY2FkYjRlODZiOWJjNGE1OTdmMTY3Y2YzIiwidXNlcl9pZCI6MX0.QHMF2DbVFsT99YfJKbGC2GbYQAFKdpM1i_JaSmm26_g")
 
         if(response.success){          
             return response;
@@ -30,7 +30,7 @@ export const sendRequest = createAsyncThunk(
         const userAuth = await getState().auth.userAuth; //Obter token que encontra-se no estado de autenticação
         const response = await useRequest().companyPending({
             data,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxMzQ4MTc1LCJpYXQiOjE3NDA5MTYxNzUsImp0aSI6IjkxNTc1NmUwY2FkYjRlODZiOWJjNGE1OTdmMTY3Y2YzIiwidXNlcl9pZCI6MX0.QHMF2DbVFsT99YfJKbGC2GbYQAFKdpM1i_JaSmm26_g"
         });
 
         if(response.success){

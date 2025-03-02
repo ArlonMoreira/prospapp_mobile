@@ -13,12 +13,12 @@ const initialState = {
 export const generated = createAsyncThunk(
     'report/generated',
     async(data, {getState, rejectWithValue}) => {
-        const userAuth = await getState().auth.userAuth; //userAuth.token
+        const userAuth = await getState().auth.userAuth;
         const response = await useRequest().reportCall({
             classId: data.classId,
             year: data.year,
             month: data.month,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxMzQ4MTc1LCJpYXQiOjE3NDA5MTYxNzUsImp0aSI6IjkxNTc1NmUwY2FkYjRlODZiOWJjNGE1OTdmMTY3Y2YzIiwidXNlcl9pZCI6MX0.QHMF2DbVFsT99YfJKbGC2GbYQAFKdpM1i_JaSmm26_g"
         });
 
         if(response.success){

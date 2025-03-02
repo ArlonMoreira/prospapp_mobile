@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
+import useUtil from '../../../hooks/useUtil';
 //Hooks
 import { useNavigation } from '@react-navigation/native';
 //Styles
@@ -20,7 +21,12 @@ const ListClass = ({ route }) => {
     const navigation = useNavigation(); 
     
     const { classes, color } = route.params;
+    const { ordenarObjectAsc } = useUtil();
 
+    const classesOrder = useMemo(() => {
+      return classes && classes.length > 0? ordenarObjectAsc([...classes], 'name'): [];
+    }, [classes]);
+    
     return (
         <Container>
             <InstructionArea>
@@ -28,7 +34,7 @@ const ListClass = ({ route }) => {
             </InstructionArea>            
             <ScrollArea>
             {
-                classes && classes.length > 0 && classes.map((item, i) => (
+                classesOrder && classesOrder.length > 0 && classesOrder.map((item, i) => (
                     <ClassCard key={item.id} onPress={() => navigation.navigate('Call', {classId: item.id, className: item.name})}>
                         <TextArea>
                             <NameClass style={{color}}>{item.name}</NameClass>

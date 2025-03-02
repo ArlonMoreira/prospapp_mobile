@@ -18,10 +18,10 @@ const initialState = {
 export const register = createAsyncThunk(
     'class/register',
     async(data, {getState, rejectWithValue}) => {
-        const userAuth = await getState().auth.userAuth; //userAuth.token
+        const userAuth = await getState().auth.userAuth;
         const response = await useRequest().classRegister({
             data,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxMzQ4MTc1LCJpYXQiOjE3NDA5MTYxNzUsImp0aSI6IjkxNTc1NmUwY2FkYjRlODZiOWJjNGE1OTdmMTY3Y2YzIiwidXNlcl9pZCI6MX0.QHMF2DbVFsT99YfJKbGC2GbYQAFKdpM1i_JaSmm26_g"
         });
 
         if(response.success){
@@ -36,10 +36,10 @@ export const register = createAsyncThunk(
 export const list = createAsyncThunk(
     'class/list',
     async(company, {getState, rejectWithValue}) => {
-        const userAuth = await getState().auth.userAuth; //userAuth.token
+        const userAuth = await getState().auth.userAuth;
         const response = await useRequest().classList({
             company,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxMzQ4MTc1LCJpYXQiOjE3NDA5MTYxNzUsImp0aSI6IjkxNTc1NmUwY2FkYjRlODZiOWJjNGE1OTdmMTY3Y2YzIiwidXNlcl9pZCI6MX0.QHMF2DbVFsT99YfJKbGC2GbYQAFKdpM1i_JaSmm26_g"
         });
 
         if(response.success){
@@ -54,11 +54,11 @@ export const list = createAsyncThunk(
 export const change = createAsyncThunk(
     'class/change',
     async({classId, data}, {getState, rejectWithValue}) => {
-        const userAuth = await getState().auth.userAuth; //userAuth.token
+        const userAuth = await getState().auth.userAuth; //"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxMzQ4MTc1LCJpYXQiOjE3NDA5MTYxNzUsImp0aSI6IjkxNTc1NmUwY2FkYjRlODZiOWJjNGE1OTdmMTY3Y2YzIiwidXNlcl9pZCI6MX0.QHMF2DbVFsT99YfJKbGC2GbYQAFKdpM1i_JaSmm26_g"
         const response = await useRequest().classChange({
             classId,
             data,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxMzQ4MTc1LCJpYXQiOjE3NDA5MTYxNzUsImp0aSI6IjkxNTc1NmUwY2FkYjRlODZiOWJjNGE1OTdmMTY3Y2YzIiwidXNlcl9pZCI6MX0.QHMF2DbVFsT99YfJKbGC2GbYQAFKdpM1i_JaSmm26_g"
         });
 
         if(response.success){
@@ -76,7 +76,7 @@ export const remove = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().classRemove({
             classId,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxMzQ4MTc1LCJpYXQiOjE3NDA5MTYxNzUsImp0aSI6IjkxNTc1NmUwY2FkYjRlODZiOWJjNGE1OTdmMTY3Y2YzIiwidXNlcl9pZCI6MX0.QHMF2DbVFsT99YfJKbGC2GbYQAFKdpM1i_JaSmm26_g"
         });
 
         if(response.success){

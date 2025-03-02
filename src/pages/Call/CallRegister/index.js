@@ -1,5 +1,7 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { View } from 'react-native';
+//Hooks
+import useUtil from '../../../hooks/useUtil';
 //Components
 import ButtonLg from '../../../components/ButtonLg';
 //Styles
@@ -19,6 +21,11 @@ import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 const CallRegister = ({ route }) => {
 
   const { students, color, actionItem, action, disabled } = route.params;
+  const { ordenarObjectAsc } = useUtil(); // Evita recriação de `useUtil`
+
+  const studentsOrder = useMemo(() => {
+    return students && students.length > 0 ? ordenarObjectAsc([...students], 'name') : [];
+  }, [students]);
 
   return (
     <Container>
@@ -27,7 +34,7 @@ const CallRegister = ({ route }) => {
         </InstructionArea>
         <ContainerItem>
             {
-                (students && students.length > 0) && students.map((student)=>(
+                (studentsOrder && studentsOrder.length > 0) && studentsOrder.map((student)=>(
                     <StudentCard onPress={() => actionItem(student)} key={student.id}>
                         <StudentNameArea>
                             <StudentName style={{color}}>{student.name}</StudentName>

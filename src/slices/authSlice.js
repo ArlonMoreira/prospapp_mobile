@@ -34,7 +34,7 @@ export const logout = createAsyncThunk(
             data: {
                 refresh: userAuth.refresh
             },
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxMzQ4MTc1LCJpYXQiOjE3NDA5MTYxNzUsImp0aSI6IjkxNTc1NmUwY2FkYjRlODZiOWJjNGE1OTdmMTY3Y2YzIiwidXNlcl9pZCI6MX0.QHMF2DbVFsT99YfJKbGC2GbYQAFKdpM1i_JaSmm26_g"
         });
 
         if(response.success){
