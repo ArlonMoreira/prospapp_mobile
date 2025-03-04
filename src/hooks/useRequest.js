@@ -5,7 +5,7 @@ const URL = process.env.EXPO_PUBLIC_API_URL;
 const useRequest = () => {
 
     const request = async({endpoint, params}) => {
-        
+
         try {
             const response = await fetch(`${URL}/${endpoint}`, params);
             const result = await response.json();
@@ -186,13 +186,13 @@ const useRequest = () => {
                 }                
             }); 
         },
-        studentList: ({classId, token}) => {
+        studentList: ({classId, date, token}) => {
             return request({
-                endpoint: `call/student/list/${classId}/`,
+                endpoint: `call/student/list/${classId}/${date}/`,
                 params: {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${token}`,
                     }
                 }                
             });             

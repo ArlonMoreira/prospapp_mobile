@@ -36,14 +36,8 @@ export const InfoArea = styled.View`
 export const InfoText = styled.View`
     align-items: center;
     justify-content: start; 
-    flex-direction: row;
+    lex-direction: row;f
     gap: 5px;
-`;
-
-export const InfoName = styled.Text`
-    color: #c4c4c4;
-    font-size: 18px;
-    font-family: 'montserrat-semibold';
 `;
 
 export const ToolsArea = styled.ScrollView.attrs({
@@ -132,4 +126,44 @@ export const Select = styled.View`
     border-radius: 20px;
     height: 55px;
     margin-top: 10px;
+`;
+
+export const DateArea = styled.View`
+    width: 100%;
+    align-items: center;
+    justify-content: center; 
+    flex-direction: row;
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+`;
+
+export const IconAreaDate = styled(TouchableOpacity).attrs({
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4 
+})`
+    width: 48px;
+    height: 48px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;   
+    elevation: 6;
+`;
+
+export const TextDateArea = styled.View`
+    width: 82%;
+    height: 42px;
+    border: 1px;
+    border-radius: 20px;
+    align-items: start;
+    justify-content: center;
+    padding-left: 20px;    
+`;
+
+export const InfoName = styled.Text`
+    color: #8f8f8f;
+    font-size: 13px;
+    font-family: 'montserrat-regular';
 `;

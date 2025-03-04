@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Modal, TouchableWithoutFeedback, View, Text } from 'react-native';
+import { Modal, TouchableWithoutFeedback, View, Text, Platform } from 'react-native';
 //Hooks
 import useCurrentDate from '../../hooks/useCurrentDate';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
@@ -14,6 +14,7 @@ import BoxAction from '../../components/BoxAction';
 import CallRegister from './CallRegister';
 import EditStudent from './EditStudent';
 import RemoveStudent from './RemoveStudent';
+import RNDateTimePicker from "@react-native-community/datetimepicker";
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
 import { register, list, call, change, remove, resetRegisterForm, resetChangeForm } from '../../slices/studentSlice';
@@ -42,7 +43,10 @@ import {
   RadioIcon,
   RadioLabel,
   RadioText,
-  Select
+  Select,
+  DateArea,
+  IconAreaDate,
+  TextDateArea
 } from './styles'
 import { SimpleLineIcons, FontAwesome } from '@expo/vector-icons';
 import { Error, Errors } from '../Register/styles';
@@ -53,6 +57,8 @@ import { shareAsync } from 'expo-sharing';
 const Stack = createNativeStackNavigator();
 
 const URL = process.env.EXPO_PUBLIC_API_URL;
+
+const formatDate = dateStr => dateStr.split("-").reverse().join("/");
 
 const Call = ({ route }) => {
 
@@ -101,6 +107,14 @@ const Call = ({ route }) => {
 
   const [ classNameSelected, setClassNameSelected ] = useState(null);
   const [ classIdSelected, setClassIdSelected ] = useState(null);
+
+  useEffect(()=>{
+    if(classId){
+      setClassNameSelected(className);
+      setClassIdSelected(classId);      
+    }
+
+  }, [dispatch, classId, className]);
 
   const handleSubmit = () => {
     const data = {
@@ -152,16 +166,6 @@ const Call = ({ route }) => {
     }
 
   }, [name, identification_number]);
-
-  //Lista studants
-  useEffect(()=>{
-    if(classId){
-      dispatch(list(classId));
-      setClassNameSelected(className);
-      setClassIdSelected(classId);
-    }
-
-  }, [dispatch, classId, className]);
 
   //Call students
   const [ showModalCall, setShowModalCall ] = useState(false);
@@ -220,9 +224,9 @@ const Call = ({ route }) => {
   //Registrar chamada
   const handleCallRegister = () => {
     const data = [
-      ...students.map((student) => ({student: student.id, present: student.present}))
+      ...students.map((student) => ({student: student.id, present: student.present, date: student.date}))
     ]
-    
+    console.log(data)
     dispatch(call(data));
 
   };
@@ -563,7 +567,6 @@ const Call = ({ route }) => {
     
   }, [dispatch]);
 
-
   const currentRouteName = useNavigationState((state) => {
     const parentRoute = state.routes[state.index];
 
@@ -654,21 +657,49 @@ const Call = ({ route }) => {
       setShowModalRemoveStudent(false);
     }
 
-  }, [loadingRemove])
+  }, [loadingRemove]);
+
+  //Selecionar data
+  const [ showModalSelectDate, setShowModalSelectDate ] = useState(false);
+  const [ date, setDate ] = useState(new Date());
+
+  const closedSelectDateModal = (event, selectedDate) => {
+    setShowModalSelectDate(false);
+    if(selectedDate) setDate(selectedDate);
+  };
+
+  //Lista os estudantes de acordo com a data selecionada
+  useEffect(() => {
+    if(date, classIdSelected){
+      dispatch(list({classId: classIdSelected, date: date.toLocaleDateString("pt-BR")}));
+    }
+    
+  }, [date, classIdSelected]);
 
   return (
     <>
       {
         loading ? <LoadingPage/> : (
           <Container>
-            {(showModal || showModalCall || showModalReport || showModalEditStudent || showModalRemoveStudent) && <Fade/>}
+            {(showModal || showModalCall || showModalReport || showModalEditStudent || showModalRemoveStudent || showModalSelectDate) && <Fade/>}
+            {
+              showModalSelectDate && (
+                <RNDateTimePicker
+                  value={date}
+                  mode='date'
+                  textColor='green'
+                  display={ Platform.OS === "ios" ? "spinner": "default" }
+                  onChange={closedSelectDateModal}
+                />
+              )
+            }          
             <Modal
               transparent={true}
               animationType='slide'
               visible={showModalReport}
               onRequestClose={() => closeModalReport()} //Permite fechar o modal quando clicado em uma área fora      
             >
-              <TouchableWithoutFeedback onPress={() => closeModalReport()}>
+              <TouchableWithoutFeedback onPress={() => setShowModalSelectDate(false)}>
                 <ModalView>
                   <ModalContent>
                     <ModalTitle style={{color: primaryColor}}>Gerar relatório</ModalTitle>
@@ -756,7 +787,7 @@ const Call = ({ route }) => {
                     studentSelected && (
                       <ModalContent>
                         <ModalTitle style={{color: primaryColor}}>{studentSelected.name}</ModalTitle>
-                        <ModalResume>Defina a presença do aluno em {currentDate}.</ModalResume>
+                        <ModalResume>Defina a presença do aluno em {formatDate(studentSelected.date)}.</ModalResume>
                         <CallOptions>
                           <Radio onPress={() => handleCallPresent({student: studentSelected, present: true})}>
                             <RadioIcon style={{borderColor: studentSelected.present == true ? '#59DE7E': '#CCC'}}>
@@ -841,16 +872,15 @@ const Call = ({ route }) => {
             <Body>
               <TitleAreaPage>
                 <TitlePage style={{color: primaryColor}}>Chamada</TitlePage>
-              </TitleAreaPage>   
-              <InfoArea>
-                <InfoText>
-                  <InfoName style={{color:primaryColor}}>{classNameSelected}</InfoName>
-                </InfoText>
-                <InfoText>
-                  <SimpleLineIcons name='calendar' size={18} color={primaryColor}/>
-                  <InfoName style={{color:primaryColor}}>{currentDate}</InfoName>
-                </InfoText>          
-              </InfoArea>
+              </TitleAreaPage>
+              <DateArea>
+                <IconAreaDate style={{backgroundColor:primaryColor}} onPress={() => setShowModalSelectDate(true)}>
+                  <SimpleLineIcons name='calendar' size={20} color={'#fff'}/>
+                </IconAreaDate>
+                <TextDateArea style={{borderColor:primaryColor}}>
+                  <InfoName style={{color:primaryColor}}>Data selecionada: <Text style={{fontFamily:'montserrat-semibold'}}>{date.toLocaleDateString("pt-BR")}</Text></InfoName>
+                </TextDateArea>
+              </DateArea>
               <ToolsArea>
                 <BoxAction action={() => setShowModal(true)} color={primaryColor} iconName={'person-add'} title={'Adicionar aluno'}></BoxAction>
                 <BoxAction action={() => setShowModalReport(true)} color={primaryColor} iconName={'download'} title={'Baixa relatório'}></BoxAction>
