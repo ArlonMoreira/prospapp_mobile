@@ -226,7 +226,7 @@ const Call = ({ route }) => {
     const data = [
       ...students.map((student) => ({student: student.id, present: student.present, date: student.date}))
     ]
-    console.log(data)
+
     dispatch(call(data));
 
   };
