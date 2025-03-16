@@ -15,7 +15,7 @@ export const me = createAsyncThunk(
     'auth/me',
     async(_, { getState, rejectWithValue }) => {
         const userAuth = await getState().auth.userAuth;
-        const response = await useRequest().me("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxMzQ4MTc1LCJpYXQiOjE3NDA5MTYxNzUsImp0aSI6IjkxNTc1NmUwY2FkYjRlODZiOWJjNGE1OTdmMTY3Y2YzIiwidXNlcl9pZCI6MX0.QHMF2DbVFsT99YfJKbGC2GbYQAFKdpM1i_JaSmm26_g");
+        const response = await useRequest().me("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyNDk1ODQ1LCJpYXQiOjE3NDIwNjM4NDUsImp0aSI6ImNiNWY4ZDUxN2RiODQ2ZTg4MjIzOWI0NjU5YjQ2ZmRjIiwidXNlcl9pZCI6MX0.GqDLqchKyaNo0oZ86CW-A78z5577ZOQ74L5uQ7c4JGE");
 
         if(response.success){
             return response;
@@ -32,7 +32,7 @@ export const change = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().change({
             data,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxMzQ4MTc1LCJpYXQiOjE3NDA5MTYxNzUsImp0aSI6IjkxNTc1NmUwY2FkYjRlODZiOWJjNGE1OTdmMTY3Y2YzIiwidXNlcl9pZCI6MX0.QHMF2DbVFsT99YfJKbGC2GbYQAFKdpM1i_JaSmm26_g"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyNDk1ODQ1LCJpYXQiOjE3NDIwNjM4NDUsImp0aSI6ImNiNWY4ZDUxN2RiODQ2ZTg4MjIzOWI0NjU5YjQ2ZmRjIiwidXNlcl9pZCI6MX0.GqDLqchKyaNo0oZ86CW-A78z5577ZOQ74L5uQ7c4JGE"
         });
 
         if(response.success){

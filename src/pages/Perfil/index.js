@@ -11,6 +11,7 @@ import Header from '../../components/Header';
 import LoadingPage from '../../components/LoadingPage';
 //Pages
 import ChangePassword from './ChangePassword';
+import ManagerProfile from './ManagerProfile';
 import EditProfile from './EditProfile';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
@@ -59,6 +60,9 @@ const Perfil = () => {
   const [ primaryColor, setPrimaryColor ] = useState('#fff');
   const [ photoPerfil, setPhotoPerfil ] = useState(null);
   const [ namePerfil, setNamePerfil ] = useState('');
+  const [ rolePerfil, setRolePerfil ] = useState('');
+  const [ staffPerfil, setStaffPerfil ] = useState(false);
+  const [ companyId, setCompanyId ] = useState(null);
 
   //Resetar formulário ao entrar na página
   useEffect(() => {
@@ -70,8 +74,14 @@ const Perfil = () => {
       setNamePerfil(userData.full_name);
       setPhotoPerfil(`${URL}${userData.profileImage}`);
 
+      if(userData.is_staff) setStaffPerfil(true);
+
       if(userData.companys_joined.length){
         setPrimaryColor(userData.companys_joined[0].primary_color);
+        setRolePerfil(userData.companys_joined[0].role);
+        setCompanyId(userData.companys_joined[0].company_id_annotated);
+
+        if(userData.companys_joined[0].role == 'Gestor') setStaffPerfil(true);
       }
 
     }
@@ -165,7 +175,7 @@ const Perfil = () => {
                     </UploadFileButton>                                          
                   </PerfilPhotoContainer>
                   <ProfileName style={{ color:primaryColor }}>{ namePerfil }</ProfileName>
-                  <ProfileNameSubtitle>Colaborador</ProfileNameSubtitle>                         
+                  <ProfileNameSubtitle>{rolePerfil}</ProfileNameSubtitle>                         
                 </PerfilContent>           
               </Profile>                    
             </PerfilArea>
@@ -202,6 +212,22 @@ const Perfil = () => {
                           }}                  
                         >Alterar Senha</TabButtonLabel>
                       </TabButton>
+                      {
+                        staffPerfil && (
+                          <TabButton
+                            style={{
+                              backgroundColor: currentRouteName === 'ManagerProfile' ? '#fff': 'transparent',
+                            }}                
+                            onPress={() => navigation.navigate('ManagerProfile')}
+                          >
+                            <TabButtonLabel
+                              style={{
+                                color: currentRouteName === 'ManagerProfile' ? primaryColor: '#fff'
+                              }}                  
+                            >Gerir usuários</TabButtonLabel>
+                          </TabButton>
+                        )
+                      }                      
                     </ToolsArea>                    
                   )
                 }                
@@ -228,7 +254,22 @@ const Perfil = () => {
                       headerShown: false
                     }}                  
                   />
-                </Stack.Navigator>                
+                  {
+                    staffPerfil && (
+                      <Stack.Screen
+                        name='ManagerProfile'
+                        component={ManagerProfile}
+                        initialParams={{
+                          color: primaryColor,
+                          companyId
+                        }}                  
+                        options={{
+                          headerShown: false
+                        }}                  
+                      />                         
+                    )
+                  }             
+                </Stack.Navigator>                               
               </Body>
             </KeyboardAvoidingView>          
           </Container>

@@ -29,7 +29,9 @@ export const PerfilArea = styled.View`
 `;
 
 export const PerfilLabel = styled.View`
+    padding-top: 5px;
     flex-direction: column;
+    align-itens: flex-end;
     gap: 0px;
 `
 
@@ -38,11 +40,20 @@ export const NameArea = styled.Text`
     font-family: 'montserrat-semibold'; 
 `;
 
-export const LoadArea = styled.Text`
-    font-size: 12px;
+export const RoleArea = styled.View`
+    background: #dfdfdf;
+    border-radius: 20px;
+    align-items: center;
+    justify-content: center;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-bottom: 2px;
+`;
+
+export const RoleText = styled.Text`
+    font-size: 9px;
     font-family: 'montserrat-medium';
-    color: '#cecece'; 
-    margin-top: -4px;
+    color: #6c6c6c; 
 `;
 
 export const PhotoContainer = styled.View`
@@ -131,5 +142,5 @@ export const TitleModule = styled.Text`
     font-family: 'montserrat-semibold';
     text-align: center;
     align-items: center;
-    margin-left: 5px;    
+    margin-left: 5px;
 `;

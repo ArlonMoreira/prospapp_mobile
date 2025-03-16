@@ -11,7 +11,8 @@ import {
     PerfilArea,
     Logo,
     NameArea,
-    LoadArea,
+    RoleArea,
+    RoleText,
     PerfilLabel,
     PhotoContainer,
     Photo,
@@ -37,12 +38,14 @@ const Home = () => {
     const [ primaryColor, setPrimaryColor ] = useState('#fff');
     const [ photoPerfil, setPhotoPerfil ] = useState(null);
     const [ namePerfil, setNamePerfil ] = useState('');
+    const [ rolePerfil, setRolePerfil ] = useState('');
 
     useEffect(()=>{
         if(userData){
             if(userData.companys_joined.length){
                 setLogo(`${URL}/files/${userData.companys_joined[0].logo}`);
                 setPrimaryColor(userData.companys_joined[0].primary_color);
+                setRolePerfil(userData.companys_joined[0].role);
             }
 
             if(userData.profileImage){
@@ -73,7 +76,9 @@ const Home = () => {
                 <PerfilArea>
                     <PerfilLabel>
                         <NameArea style={{color: primaryColor}}>{namePerfil}</NameArea>
-                        <LoadArea>Colaborador</LoadArea>
+                        <RoleArea>
+                            <RoleText>{rolePerfil}</RoleText>
+                        </RoleArea>
                     </PerfilLabel>
                     <PhotoContainer>
                         {

@@ -125,6 +125,17 @@ const useRequest = () => {
                 }                
             }); 
         },
+        listUsersManager: ({companyId, token}) => {
+            return request({
+                endpoint: `companys/listusers/${companyId}/`,
+                params: {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }                
+            }); 
+        },        
         classRegister: ({data, token}) => {
             return request({
                 endpoint: 'call/class/register/',

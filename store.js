@@ -8,6 +8,7 @@ import classReducer from './src/slices/classSlice';
 import studentReducer from './src/slices/studentSlice';
 import reportReducer from './src/slices/reportSlice';
 import resetPasswordReducer from './src/slices/resetPasswordSlice';
+import managerReducer from "./src/slices/managerSlice";
 
 export const store = configureStore({
     reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
         class: classReducer,
         student: studentReducer,
         report: reportReducer,
-        resetPassword: resetPasswordReducer
+        resetPassword: resetPasswordReducer,
+        manager: managerReducer
     }
 });

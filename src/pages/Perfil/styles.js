@@ -83,7 +83,7 @@ export const ProfileNameSubtitle = styled.Text`
 export const ToolsArea = styled.View`
   flex-direction: row;
   margin: 20px;
-  gap: 20px;
+  gap: 10px;
 `;
 
 export const TabButton = styled.TouchableOpacity`
@@ -97,7 +97,11 @@ export const TabButton = styled.TouchableOpacity`
 `;
 
 export const TabButtonLabel = styled.Text`
-  font-size: 14px;
+  font-size: 12px;
   font-family: 'montserrat-medium';
+  word-break: 'normal';
+  text-align: center;
+  width: 60%;
   color: #fff;
+  line-height: 14px;
 `;
