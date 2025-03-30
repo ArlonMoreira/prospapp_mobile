@@ -135,7 +135,20 @@ const useRequest = () => {
                     }
                 }                
             }); 
-        },        
+        },
+        updateUsersManager: ({companyId, userId, data, token}) => {
+            return request({
+                endpoint: `companys/listusers/${companyId}/${userId}/`,
+                params: {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }                
+            }); 
+        },            
         classRegister: ({data, token}) => {
             return request({
                 endpoint: 'call/class/register/',

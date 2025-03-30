@@ -14,7 +14,27 @@ export const listUsersManager = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().listUsersManager({
             companyId,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyNDk1ODQ1LCJpYXQiOjE3NDIwNjM4NDUsImp0aSI6ImNiNWY4ZDUxN2RiODQ2ZTg4MjIzOWI0NjU5YjQ2ZmRjIiwidXNlcl9pZCI6MX0.GqDLqchKyaNo0oZ86CW-A78z5577ZOQ74L5uQ7c4JGE"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNjc5NzQ4LCJpYXQiOjE3NDMyNDc3NDgsImp0aSI6IjFhOGRhM2U2MWIzMDQ5MGU4ZTZiZDUzZTRhZTBjZjM3IiwidXNlcl9pZCI6MX0.bPkhiM_Oa0H_TCd41U_KRxX3ZimJUPz6rWz8AKkdstY"
+        });
+
+        if(response.success){
+            return response;
+        } else {
+            return rejectWithValue(response);
+        }
+
+    }
+);
+
+export const updateUsersManager = createAsyncThunk(
+    'manager/update',
+    async({ companyId, userId, data }, { getState, rejectWithValue }) => {
+        const userAuth = await getState().auth.userAuth;
+        const response = await useRequest().updateUsersManager({
+            companyId,
+            userId,
+            data,
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNjc5NzQ4LCJpYXQiOjE3NDMyNDc3NDgsImp0aSI6IjFhOGRhM2U2MWIzMDQ5MGU4ZTZiZDUzZTRhZTBjZjM3IiwidXNlcl9pZCI6MX0.bPkhiM_Oa0H_TCd41U_KRxX3ZimJUPz6rWz8AKkdstY"
         });
 
         if(response.success){
@@ -31,6 +51,7 @@ export const managerSlice = createSlice({
     initialState,
     extraReducers: (builder) => {
         builder
+            //Listar usuários
             .addCase(listUsersManager.pending, (state) => {
                 state.loading = true;
             })
@@ -41,6 +62,17 @@ export const managerSlice = createSlice({
             .addCase(listUsersManager.rejected, (state) => {
                 state.loading = false;
             })
+            //Atualizar os dados pro usuário
+            .addCase(updateUsersManager.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(updateUsersManager.fulfilled, (state, action) => {
+                state.loading = false;
+                state.data = action.payload.data;
+            })
+            .addCase(updateUsersManager.rejected, (state) => {
+                state.loading = false;
+            })            
     }
 });
 

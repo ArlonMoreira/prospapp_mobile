@@ -10,6 +10,7 @@ export const Container = styled.View`
     right: 0;
     bottom: 0;
     zIndex: 1;
+    elevation: 10;
 `;
 
 export const FadingContainer = styled.View`

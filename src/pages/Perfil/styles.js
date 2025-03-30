@@ -105,3 +105,25 @@ export const TabButtonLabel = styled.Text`
   color: #fff;
   line-height: 14px;
 `;
+
+export const OptionsContainer = styled.View`
+  align-items: center;
+  justify-content: start;
+  flex-direction: row;
+  gap: 10px;
+  margin-top: 10px;
+`;
+
+export const Option = styled.TouchableOpacity`
+  background: #cecece;
+  padding: 10px;
+  border-radius: 20px;
+  min-width: 105px;
+  align-items: center;
+  justify-content: center; 
+  border: 1px solid; 
+`;
+
+export const OptionLabel = styled.Text`
+  color: #000;
+`;
