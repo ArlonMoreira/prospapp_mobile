@@ -1,17 +1,32 @@
 import React from 'react';
 import { View, ActivityIndicator } from 'react-native';
+//Styles
+import { Logo, LogoContainer } from './styles';
+import { StatusBar } from 'expo-status-bar';
 
-const LoadingPage = () => {
-  return (
+const LoadingPage = ({backgroundColor, logo}) => {
+  return (     
     <View
         style={{
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F0F4FF',
+        backgroundColor,
         }}
-    >
-        <ActivityIndicator size="large" color="#131313" />
+    > 
+      <StatusBar 
+        translucent
+        backgroundColor="transparent"
+        style="light" 
+      />      
+      {
+        logo && (
+          <LogoContainer>
+            <Logo source={{uri: logo}}/>
+          </LogoContainer>
+        ) 
+      }
+      <ActivityIndicator size="large" color="#fff" />
     </View>
   )
 }

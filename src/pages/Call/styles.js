@@ -26,20 +26,6 @@ export const TitlePage = styled.Text`
     font-family: 'montserrat-bold';
 `;
 
-export const InfoArea = styled.View`
-    flex-direction: column;
-    margin-top: 10px;
-    margin-bottom: 20px;
-    gap: 5px;
-`;
-
-export const InfoText = styled.View`
-    align-items: center;
-    justify-content: start; 
-    lex-direction: row;f
-    gap: 5px;
-`;
-
 export const ToolsArea = styled.ScrollView.attrs({
     horizontal: true, // Torna o ScrollView horizontal
     contentContainerStyle: {

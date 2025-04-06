@@ -39,6 +39,8 @@ import { useNavigationState } from '@react-navigation/native';
 
 const Stack = createNativeStackNavigator();
 
+const URL = process.env.EXPO_PUBLIC_API_URL;
+
 const ElectronicCall = () => {
 
   const { loading, setLoading } = useContext(LoadingContext);
@@ -49,12 +51,14 @@ const ElectronicCall = () => {
 
   const [ primaryColor, setPrimaryColor ] = useState('#fff');
   const [ company, setCompany ] = useState(null);
+  const [ logo, setLogo ] = useState(null);
   
   useEffect(()=>{
     if(userData){
       if(userData.companys_joined.length){
         setPrimaryColor(userData.companys_joined[0].primary_color);
         setCompany(userData.companys_joined[0].company_id_annotated);
+        setLogo(`${URL}/files/${userData.companys_joined[0].logo}`);
       }
 
     }
@@ -252,7 +256,7 @@ const ElectronicCall = () => {
   return (
     <>
       {
-        loading ? <LoadingPage/> : (
+        loading ? <LoadingPage backgroundColor={primaryColor} logo={logo}/> : (
           <Container>
             {showAlertError && <Alert message='Falha ao cadastrar turma' setShow={setShowAlertError}/>}
             {(showModal || showModalChange || showModalRemove) && <Fade/>}

@@ -5,7 +5,7 @@ import { listUsersManager } from '../../../slices/managerSlice';
 //Hooks
 import { useDispatch, useSelector } from 'react-redux';
 //Styles
-import { CardUser, Label, LabelsArea, IconArea, RoleUser, RoleContainer } from './styles';
+import { CardUser, Label, LabelsArea, IconArea, RoleUser, RoleContainer, CardUserLoading } from './styles';
 import { TitleArea, Title } from '../EditProfile/styles';
 
 import { FontAwesome } from '@expo/vector-icons';
@@ -60,7 +60,13 @@ const ManagerProfile = ({ route }) => {
                         ))
                     }            
                     </View>
-                ): <></>
+                ): (
+                    <View style={{paddingInline: 10, width: '100%'}}>
+                        <CardUserLoading></CardUserLoading>
+                        <CardUserLoading></CardUserLoading>
+                        <CardUserLoading></CardUserLoading>
+                    </View>
+                )
             }
         </ScrollView>
     )

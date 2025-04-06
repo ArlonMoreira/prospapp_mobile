@@ -8,7 +8,6 @@ import { useNavigation } from '@react-navigation/native';
 import { LoadingContext } from '../../contexts/LoadingContext';
 //Components
 import Header from '../../components/Header';
-import LoadingPage from '../../components/LoadingPage';
 import Fade from '../../components/Fade';
 //Pages
 import ChangePassword from './ChangePassword';
@@ -65,7 +64,7 @@ const Perfil = () => {
   const [ showKeyboard, setShowKeyboard ] = useState(false);
 
   const { loadingLogout } = useSelector((state) => state.auth);
-  const { loading, setLoading } = useContext(LoadingContext);
+  const { setLoading } = useContext(LoadingContext);
 
   const { userData } = useSelector((state) => state.me);
   const [ primaryColor, setPrimaryColor ] = useState('#fff');
@@ -178,7 +177,6 @@ const Perfil = () => {
     setUserManagerName(user.full_name);
     setRoleSelected(user.role);
     setIsPendingValue('');
-    user.is_pending ? setIsPendingValue('Sim'): setIsPendingValue('Não');
     setIsPending(user.is_pending);
     user.is_joined ? setIsJoinedValue('Vinculada'): setIsJoinedValue('Desvinculada');
     setUserId(user.user_id);
@@ -190,6 +188,7 @@ const Perfil = () => {
   };
   
   const handlePendingChange = (accept) => {
+    setShowModal(false);
     setIsPendingValue(accept);
     
     const isAccepted = accept === 'Sim';
@@ -260,9 +259,10 @@ const Perfil = () => {
                     </Text>
                     <OptionsContainer>
                       {
-                        ['Vinculada', 'Desvinculada'].map((joined) => (
+                        ['Vinculada', 'Desvinculada'].map((joined, i) => (
                           <Option
                             onPress={() => handleJoinedChange(joined)}
+                            key={i}
                             style={{ 
                               backgroundColor: isJoinedValue == joined ? loadingManager ? '#d9d9d9': primaryColor: '#fff',
                               borderColor: loadingManager ? '#d9d9d9': primaryColor
@@ -299,9 +299,10 @@ const Perfil = () => {
                     </Text>
                     <OptionsContainer>
                       {
-                        ['Sim', 'Não'].map((pending) => (
+                        ['Sim', 'Não'].map((pending, i) => (
                           <Option
                             onPress={() => handlePendingChange(pending)}
+                            key={i}
                             style={{ 
                               backgroundColor: isPendingValue == pending ? loadingManager ? '#d9d9d9': primaryColor: '#fff',
                               borderColor: loadingManager ? '#d9d9d9': primaryColor
@@ -338,10 +339,11 @@ const Perfil = () => {
                     </Text>
                     <OptionsContainer>
                       {
-                        ['Gestor', 'Colaborador'].map((role) => (
+                        ['Gestor', 'Colaborador'].map((role, i) => (
                           <Option
                             onPress={() => handleRoleChange(role)}
                             disabled={ loadingManager ? true: false }
+                            key={i}
                             style={{ 
                               backgroundColor: role == roleSelected ? loadingManager ? '#d9d9d9': primaryColor: '#fff',
                               borderColor: loadingManager ? '#d9d9d9': primaryColor

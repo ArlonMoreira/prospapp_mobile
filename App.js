@@ -29,7 +29,7 @@ export default function App() {
 
   if(!fontsLoaded){
     return (
-      <LoadingPage/>
+      <LoadingPage backgroundColor={'#fff'}/>
     )
   }  
 
@@ -49,3 +49,6 @@ export default function App() {
     </Provider>
   );
 }
+
+
+// eas build --platform android --profile preview

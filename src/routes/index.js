@@ -1,6 +1,4 @@
 import React, { useEffect, useState, useContext } from 'react';
-//Components
-import LoadingPage from '../components/LoadingPage';
 //Redux
 import { useDispatch, useSelector } from 'react-redux';
 import { me } from '../slices/meSlice';
@@ -11,8 +9,6 @@ import AuthRoutes from './auth.routes';
 import AppRoutes from './app.routes';
 //Hooks
 import userAuth from '../hooks/useAuth';
-//Context
-import { LoadingContext } from '../contexts/LoadingContext';
 
 const Routes = () => {
 

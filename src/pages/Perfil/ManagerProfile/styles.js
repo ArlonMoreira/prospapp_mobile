@@ -17,6 +17,16 @@ export const CardUser = styled.TouchableOpacity`
     height: 90px;
 `;
 
+export const CardUserLoading = styled.View`
+    width: 100%;
+    margin-top: 20px;
+    border-radius: 10px;
+    border: 1px solid;
+    border-color: transparent;
+    background: #ffffff24;
+    height: 90px;
+`;
+
 export const Label = styled.Text`
     color: #fff;
     font-size: 14px;

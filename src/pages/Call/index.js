@@ -30,8 +30,6 @@ import {
   Body,
   TitleAreaPage,
   TitlePage,
-  InfoArea,
-  InfoText,
   InfoName,
   ToolsArea,
   ModalView,
@@ -679,7 +677,7 @@ const Call = ({ route }) => {
   return (
     <>
       {
-        loading ? <LoadingPage/> : (
+        loading ? <LoadingPage backgroundColor={primaryColor} logo={logo}/> : (
           <Container>
             {(showModal || showModalCall || showModalReport || showModalEditStudent || showModalRemoveStudent || showModalSelectDate) && <Fade/>}
             {
