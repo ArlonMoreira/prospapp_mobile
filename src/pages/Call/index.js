@@ -18,7 +18,7 @@ import RNDateTimePicker from "@react-native-community/datetimepicker";
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
 import { register, list, call, change, remove, resetRegisterForm, resetChangeForm } from '../../slices/studentSlice';
-import { generated, resetReportState } from '../../slices/reportSlice';
+import { generated, resetReportState, stopLoading } from '../../slices/reportSlice';
 //Context
 import { LoadingContext } from '../../contexts/LoadingContext';
 //Navigation
@@ -516,7 +516,7 @@ const Call = ({ route }) => {
     
     </html>
     `;
-    
+
     try {
 
       const { uri } = await Print.printToFileAsync({ html });
@@ -524,7 +524,7 @@ const Call = ({ route }) => {
       await shareAsync(uri, { 
         UTI: '.pdf',
         mimeType: 'application/pdf'
-      });      
+      });
 
     } catch (error) {
       console.error("Erro ao compartilhar:", error);
@@ -697,7 +697,7 @@ const Call = ({ route }) => {
               visible={showModalReport}
               onRequestClose={() => closeModalReport()} //Permite fechar o modal quando clicado em uma área fora      
             >
-              <TouchableWithoutFeedback onPress={() => setShowModalSelectDate(false)}>
+              <TouchableWithoutFeedback onPress={() => closeModalReport()}>
                 <ModalView>
                   <ModalContent>
                     <ModalTitle style={{color: primaryColor}}>Gerar relatório</ModalTitle>

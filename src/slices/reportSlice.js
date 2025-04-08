@@ -53,7 +53,7 @@ export const generatedSlice = createSlice({
             .addCase(generated.fulfilled, (state, action) => {
                 state.data = action.payload.data;
                 state.success = true;
-                state.loading = false;
+                //state.loading = false;
                 state.error = false;
             })
             //Erro ao gerar o relatorio
