@@ -6,7 +6,7 @@
       "**/*"
     ],
     "newArchEnabled": true,
-    "version": "1.0.0-beta",
+    "version": "1.0.1-beta",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -36,8 +36,9 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "063e7eff-be2e-4692-9fa9-13aa105bc783"
+        "projectId": "9ae15988-f9f0-4807-b033-4ba0b96aea34"
       }
-    }
+    },
+    "owner": "asmoreira"
   }
 }

@@ -29,7 +29,7 @@ export default function App() {
 
   if(!fontsLoaded){
     return (
-      <LoadingPage backgroundColor={'#fff'}/>
+      <LoadingPage backgroundColor={'#046b5b'}/>
     )
   }  
 

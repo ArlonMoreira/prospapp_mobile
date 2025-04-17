@@ -9,6 +9,8 @@ import AuthRoutes from './auth.routes';
 import AppRoutes from './app.routes';
 //Hooks
 import userAuth from '../hooks/useAuth';
+//Components
+import LoadingPage from '../components/LoadingPage';
 
 const Routes = () => {
 
@@ -36,27 +38,41 @@ const Routes = () => {
   //Direcionar pra página Home automaticamente caso estiver associado a uma empresa;
   useEffect(()=>{
 
-    if(!loadingMe && userData){
+    if(userData){
       if(userData.companys_joined.length){
         setAccessHome(true);
         setAccessCompany(false);
 
-      }
-
-      if(!userData.companys_joined.length){
+      } else {
         setAccessCompany(true);
-        setAccessHome(false);
+        setAccessHome(false); 
+               
       }
 
     }
     
-  }, [userData, loadingMe]);
+  }, [userData]);
 
   return (
     <>
-      { auth && accessHome && <AppRoutes /> }
-      { auth && accessCompany && <Company /> }
-      { !auth && <AuthRoutes /> } 
+    {
+      auth ? (
+        <>
+          {
+            loadingMe ? (
+              <LoadingPage backgroundColor={'#046b5b'}/>
+            ) : (
+              <>
+                { auth && accessHome && <AppRoutes /> }
+                { auth && accessCompany && <Company /> }          
+              </>
+            )
+          }        
+        </>
+      ): (
+        <AuthRoutes />
+      )
+    }
     </>
   )
 };

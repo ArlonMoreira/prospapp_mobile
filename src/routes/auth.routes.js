@@ -3,6 +3,7 @@ import React from 'react'
 import Login from '../pages/Login';
 import SignIn from '../pages/SignIn';
 import Register from '../pages/Register';
+import CodeVerificationRegister from '../pages/CodeVerificationRegister';
 //Navigation
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -31,7 +32,14 @@ const AuthRoutes = () => {
         options={{
           headerShown: false
         }}
-      />      
+      />     
+      <Stack.Screen
+        name="CodeVerificationRegister"
+        component={CodeVerificationRegister}
+        options={{
+          headerShown: false
+        }}
+      />         
     </Stack.Navigator>
   )
 }

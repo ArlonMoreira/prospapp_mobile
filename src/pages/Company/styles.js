@@ -8,6 +8,15 @@ export const Container = styled.View`
     elevation: 0;    
 `;
 
+export const Logo = styled(Image).attrs({
+    resizeMode: 'contain'    
+})`
+    width: 65px;
+    height: 65px;
+    margin-left: 10px;
+    margin-top: 10px;
+`;
+
 export const ExitContainerButton = styled.TouchableOpacity`
     align-items: center;
     justify-content: center;

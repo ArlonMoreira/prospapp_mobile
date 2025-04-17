@@ -9,7 +9,6 @@ import { register, resetErrorMessage, resetForm } from '../../slices/registerSli
 import Header from '../../components/Header';
 import InputForm from '../../components/InputForm';
 import ButtonLg from '../../components/ButtonLg';
-import Footer from '../../components/Footer';
 import Alert from '../../components/Alert';
 //Styles
 import { LinearGradient } from 'expo-linear-gradient';
@@ -30,11 +29,11 @@ const Register = () => {
   //Formulário de cadastro
   const dispatch = useDispatch();
 
-  const [ full_name, setFullName] = useState('');
-  const [ doc_number, setDocNumber ] = useState('');
-  const [ email, setEmail] = useState('');
-  const [ password, setPassword ] = useState('');
-  const [ confirm_password, setConfirmPassword ] = useState('');
+  const [ full_name, setFullName] = useState('Arlon da Silva Minsait');
+  const [ doc_number, setDocNumber ] = useState('93781723003');
+  const [ email, setEmail] = useState('asmoreira@minsait.com');
+  const [ password, setPassword ] = useState('1Ndr@123*');
+  const [ confirm_password, setConfirmPassword ] = useState('1Ndr@123*');
 
   const handleSubmit = async () => {
     const data = {
@@ -45,7 +44,13 @@ const Register = () => {
       confirm_password
     };
 
-    await dispatch(register(data));
+    navigation.navigate('CodeVerificationRegister', {
+      email
+    });
+
+    console.log(data);
+
+    // await dispatch(register(data));
 
   };
 
@@ -113,10 +118,6 @@ const Register = () => {
     });    
 
   }, []);
-  
-  useEffect(() => {
-    console.log(errors)
-  }, [errors]);
 
   return (
     <LinearGradient
@@ -195,8 +196,6 @@ const Register = () => {
               <ButtonLg title="cadastrar" action={handleSubmit} loading={loading} disabled={loading}></ButtonLg>
             </SubmitButton>
           </FormArea>
-          
-          <Footer/>
 
         </ScrollView>
       </KeyboardAvoidingView>

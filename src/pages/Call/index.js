@@ -270,15 +270,17 @@ const Call = ({ route }) => {
 
   };
 
-  const printToFile = async (data) => {
+  const printToFile = (data) => {
+
+    const obj = JSON.parse(JSON.stringify(data)); // clone profundo e seguro
 
     /**Start: Remover todas as datas que não possui nenhum registro de chamada */
-    const dates = Object.keys(data[Object.keys(data)[0]]).reduce((acc, key) => {
+    const dates = Object.keys(obj[Object.keys(obj)[0]]).reduce((acc, key) => {
       acc[key] = []; // Define cada chave com um array vazio
       return acc;
     }, {});
 
-    Object.values(data).forEach((obj)=>{
+    Object.values(obj).forEach((obj)=>{
       Object.keys(dates).map((date) => dates[date].push(obj[date]));
     });
 
@@ -289,24 +291,26 @@ const Call = ({ route }) => {
       }
     });
 
-    for (const person in data) {
-      dataNotNull.forEach(date => {
-        delete data[person][date];
-      });
+    if(obj){
+      for (const person in obj) {
+        dataNotNull.forEach(date => {
+          delete obj[person][date];
+        });
+      }
     }
 
     let globalTotalPresences = 0;
     let globalValidDates = 0;
-  
+    
     const filteredData = {};
-    for (const person in data) {
+    for (const person in obj) {
       filteredData[person] = {}; // Inicializar o objeto para cada pessoa
       let totalPresences = 0; // Contador de presenças
       let validDates = 0; // Contador de datas válidas
     
-      Object.keys(data[person]).forEach((date) => {
+      Object.keys(obj[person]).forEach((date) => {
         if (!dataNotNull.includes(date)) {
-          const value = data[person][date];
+          const value = obj[person][date];
           filteredData[person][date] = value;
     
           // Contar somente os valores não nulos
@@ -333,12 +337,12 @@ const Call = ({ route }) => {
 
     /**End: Remover todas as datas que não possui nenhum registro de chamada */    
 
-    const breakObjectInParts = (obj, daysPerPart) => {
-      const keys = Object.keys(obj);
+    const breakObjectInParts = (o, daysPerPart) => {
+      const keys = Object.keys(o);
       let result = [];
       for (let i = 0; i < keys.length; i += daysPerPart) {
         const part = keys.slice(i, i + daysPerPart).reduce((acc, key) => {
-          acc[key] = obj[key];
+          acc[key] = o[key];
           return acc;
         }, {});
         result.push(part);
@@ -346,16 +350,16 @@ const Call = ({ route }) => {
       return result;
     };
     
-    const obj = {};
+    const obj_n = {};
     
     Object.keys(filteredData).forEach((al) => {
-      obj[al] = breakObjectInParts(filteredData[al], 6);
+      obj_n[al] = breakObjectInParts(filteredData[al], 6);
     }); 
   
     const tables = []
 
-    Object.keys(obj).forEach((key) => {
-      obj[key].forEach((x, i) => {
+    Object.keys(obj_n).forEach((key) => {
+      obj_n[key].forEach((x, i) => {
         if (!tables[i]) {
           tables[i] = {};  // Cria o objeto vazio para a posição i
         }
@@ -517,28 +521,46 @@ const Call = ({ route }) => {
     </html>
     `;
 
-    try {
+    return {
+      html
+    };
 
-      const { uri } = await Print.printToFileAsync({ html });
+    // try {
 
-      await shareAsync(uri, { 
-        UTI: '.pdf',
-        mimeType: 'application/pdf'
-      });
+    //   const { uri } = await Print.printToFileAsync({ html });
+    //   console.log('TESTEEE', uri)
+    //   await shareAsync(uri, { 
+    //     UTI: '.pdf',
+    //     mimeType: 'application/pdf'
+    //   });
 
-    } catch (error) {
-      console.error("Erro ao compartilhar:", error);
+    // } catch (error) {
+    //   console.error("Erro ao compartilhar:", error);
 
-    }
+    // }
 
   }; 
 
   //Caso for gerado com sucesso, irá fechar o modal e reiniciar os estados;
   useEffect(()=>{
     if(successReport){
-      printToFile(dataReport);
-      dispatch(resetReportState()); //Reiniciar o estado do relatório quando o mesmo for gerado com sucesso
-      closeModalReport();
+
+      const { html } = printToFile(dataReport);
+
+      const sharePdf = async(html) => {
+        const { uri } = await Print.printToFileAsync({ html });
+  
+        await shareAsync(uri, { 
+          UTI: '.pdf',
+          mimeType: 'application/pdf'
+        });
+
+        dispatch(resetReportState()); //Reiniciar o estado do relatório quando o mesmo for gerado com sucesso
+        closeModalReport();
+
+      };
+
+      sharePdf(html);
 
     }
 

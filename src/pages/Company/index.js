@@ -29,7 +29,8 @@ import {
   Companys,
   Photo,
   ExitContainerButton,
-  ExitContainerButtonText
+  ExitContainerButtonText,
+  Logo
 } from './styles';
 import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons';
 import { ActivityIndicator } from 'react-native'
@@ -53,6 +54,7 @@ const Company = () => {
 
       const profileImage = userData.profileImage
       setPhotoPerfil(`${URL}${profileImage}`);
+
     }
 
   }, [userData]);  
@@ -107,7 +109,7 @@ const Company = () => {
         style={styles.background}
       >
         <Header>
-          <LogoArea/>
+          <Logo source={require('../../../assets/logo-3.png')}/>
         </Header>
         <Perfil>
           <PerfilContainer>
