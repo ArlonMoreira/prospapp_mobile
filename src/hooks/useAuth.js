@@ -8,6 +8,7 @@ const userAuth = () => {
     const { userAuth } = useSelector((state) => state.auth);
 
     useEffect(()=>{
+        console.log(userAuth)
         if(userAuth){
             setAuth(true);
         } else {

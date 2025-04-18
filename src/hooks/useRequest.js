@@ -41,7 +41,7 @@ const useRequest = () => {
         },
         register: (data) => {
             return request({
-                endpoint: 'user/register/',
+                endpoint: 'user/register_v2/',
                 params: {
                     method: 'POST',
                     headers: {
@@ -51,6 +51,18 @@ const useRequest = () => {
                 }                
             });
         },
+        register_check: (data) => {
+            return request({
+                endpoint: 'user/register_check/',
+                params: {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }                
+            });
+        },        
         logout: ({data, token}) => {
             return request({
                 endpoint: 'user/logout/',

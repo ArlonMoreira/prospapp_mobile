@@ -44,13 +44,7 @@ const Register = () => {
       confirm_password
     };
 
-    navigation.navigate('CodeVerificationRegister', {
-      email
-    });
-
-    console.log(data);
-
-    // await dispatch(register(data));
+    await dispatch(register(data));
 
   };
 
@@ -63,8 +57,14 @@ const Register = () => {
       setDocNumber('');
       setEmail('');
       setPassword('');
-      setConfirmPassword('');       
-      navigation.navigate('SignIn');
+      setConfirmPassword('');
+
+      dispatch(resetForm());      
+
+      navigation.navigate('CodeVerificationRegister', {
+        email
+      });
+
     }
 
   }, [success]);
@@ -72,7 +72,6 @@ const Register = () => {
   //Limpar formulário assim que acessar a página de cadastro.
   useEffect(()=>{   
     dispatch(resetForm());
-
   }, []);  
 
   //Alert mensagem

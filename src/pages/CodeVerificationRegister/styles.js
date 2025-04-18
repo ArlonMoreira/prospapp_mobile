@@ -32,5 +32,23 @@ export const NumberInput = styled.TextInput`
     border: #fff;
     color: #fff;
     font-size: 32;
-    font-family: montserrat-bold;  
+    font-family: montserrat-bold;
+    border-radius: 5px; 
+    background: #ffffff14;
+`;
+
+export const RecoverCode = styled.View`
+    width: 100%;
+    height: 28px;
+    align-items: start;
+    justify-content: center;
+    padding-left: 20px;    
+`;
+
+export const RecoverCodeLink = styled.TouchableOpacity`
+    width: 45%;
+`;
+
+export const ButtonSendArea = styled.View`
+    margin-top: 60px;
 `;
