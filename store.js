@@ -10,6 +10,7 @@ import reportReducer from './src/slices/reportSlice';
 import resetPasswordReducer from './src/slices/resetPasswordSlice';
 import managerReducer from "./src/slices/managerSlice";
 import codeReducer from "./src/slices/codeSlice";
+import codeRefreshReducer from "./src/slices/codeRefresh";
 
 export const store = configureStore({
     reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
         report: reportReducer,
         resetPassword: resetPasswordReducer,
         manager: managerReducer,
-        code: codeReducer
+        code: codeReducer,
+        codeRefresh: codeRefreshReducer
     }
 });

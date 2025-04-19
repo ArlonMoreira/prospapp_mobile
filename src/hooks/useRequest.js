@@ -62,7 +62,19 @@ const useRequest = () => {
                     body: JSON.stringify(data)
                 }                
             });
-        },        
+        },
+        register_refresh_code: (data) => {
+            return request({
+                endpoint: 'user/register_refresh_code/',
+                params: {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }                
+            });
+        },               
         logout: ({data, token}) => {
             return request({
                 endpoint: 'user/logout/',

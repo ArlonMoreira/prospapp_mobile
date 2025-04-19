@@ -29,11 +29,11 @@ const Register = () => {
   //Formulário de cadastro
   const dispatch = useDispatch();
 
-  const [ full_name, setFullName] = useState('Arlon da Silva Minsait');
-  const [ doc_number, setDocNumber ] = useState('93781723003');
-  const [ email, setEmail] = useState('asmoreira@minsait.com');
-  const [ password, setPassword ] = useState('1Ndr@123*');
-  const [ confirm_password, setConfirmPassword ] = useState('1Ndr@123*');
+  const [ full_name, setFullName] = useState('');
+  const [ doc_number, setDocNumber ] = useState('');
+  const [ email, setEmail] = useState('');
+  const [ password, setPassword ] = useState('');
+  const [ confirm_password, setConfirmPassword ] = useState('');
 
   const handleSubmit = async () => {
     const data = {

@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { list, sendRequest } from '../../slices/companysSlice';
 import { logout } from '../../slices/authSlice';
 //Components
-import LogoArea from '../../components/LogoArea';
 import CompanyCard from '../../components/CompanyCard';
 import SkeletonPlaceholder from '../../components/SkeletonPlaceholder';
 import Fade from '../../components/Fade';
