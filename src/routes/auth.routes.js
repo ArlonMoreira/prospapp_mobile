@@ -4,6 +4,8 @@ import Login from '../pages/Login';
 import SignIn from '../pages/SignIn';
 import Register from '../pages/Register';
 import CodeVerificationRegister from '../pages/CodeVerificationRegister';
+import RecoverPassword from '../pages/RecoverPassword';
+import GeneratedPassword from '../pages/GeneratedPassword';
 //Navigation
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -39,7 +41,21 @@ const AuthRoutes = () => {
         options={{
           headerShown: false
         }}
-      />         
+      />
+      <Stack.Screen
+        name="RecoverPassword"
+        component={RecoverPassword}
+        options={{
+          headerShown: false
+        }}
+      />
+      <Stack.Screen
+        name="GeneratedPassword"
+        component={GeneratedPassword}
+        options={{
+          headerShown: false
+        }}
+      />            
     </Stack.Navigator>
   )
 }

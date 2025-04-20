@@ -34,6 +34,9 @@ export const resetPasswordSlice = createSlice({
     reducers: {
         resetForm: (state) => {
             state.success = false;
+            state.loading = false;
+            state.errorMessage = null;
+            state.errors = [];              
         },
         resetErrorMessage: (state) => {
             state.errorMessage = null;

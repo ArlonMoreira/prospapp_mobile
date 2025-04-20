@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { KeyboardAvoidingView, Platform, Text, BackHandler, Keyboard } from 'react-native';
+import { KeyboardAvoidingView, Platform, Text, View, Keyboard } from 'react-native';
 import { useState } from 'react';
 //Redux
 import { register } from '../../slices/codeSlice';
@@ -8,8 +8,10 @@ import { resetState } from '../../slices/codeSlice';
 import { resetErrorMessage } from '../../slices/codeSlice';
 import { refresh } from '../../slices/codeRefresh';
 //hooks
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import useKeyboardStatus from '../../hooks/useKeyboardStatus';
+import useDisableBackHandler from '../../hooks/useDisableBackHandler';
 //Components
 import Footer from '../../components/Footer';
 import ButtonLg from '../../components/ButtonLg';
@@ -29,23 +31,23 @@ import {
 } from './styles';
 
 const CodeVerificationRegister = ({ route }) => {
+
+    //Não é possível voltar pra página anterior
+    useDisableBackHandler();
+
+    //Hooks que identifica se o teclado está aberto
+    const keyboardOpen = useKeyboardStatus(); 
+
+    //Usado para navegação
+    const navigation = useNavigation();
+
     //Dispatch
     const dispatch = useDispatch();
     const { loading, data, errorMessage, error } = useSelector((state) => state.code);
+    const { recoverPassword } = useSelector((state) => state.auth);
 
     useEffect(() => {
         dispatch(resetState());
-
-        const backAction = () => {
-            return true; // retorna true para impedir a ação
-        };
-    
-        const backHandler = BackHandler.addEventListener(
-            "hardwareBackPress",
-            backAction
-        );
-    
-        return () => backHandler.remove();
 
     }, []);
 
@@ -89,11 +91,10 @@ const CodeVerificationRegister = ({ route }) => {
 
     }, [error]);
 
-
     //Enviar código
     const handleSendCode = () => {
         dispatch(register({
-            code, email
+            code, email, recover_password: true
         }));
     };
 
@@ -101,8 +102,17 @@ const CodeVerificationRegister = ({ route }) => {
         if(data && Object.keys(data).length > 0){
             dispatch(setUserAuth(data));
             dispatch(resetState());
+
         }
+
     }, [data]);
+
+    useEffect(() => {
+        if(recoverPassword){
+            navigation.navigate('GeneratedPassword');
+        }
+
+    }, [recoverPassword]);
 
     //Alerta de erros
     const [showAlertError, setShowAlertError] = useState(false);
@@ -157,108 +167,104 @@ const CodeVerificationRegister = ({ route }) => {
     };
     
     return (
-        <LinearGradient
-        colors={['#008C81', '#0C6661']}
-        style={{
-            flex: 1,
-            paddingTop: 20
-        }}
+        <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
         >
-            {
-                showAlertError && <Alert message={errorMessage} setShow={setShowAlertError}/>
-            }            
-            <KeyboardAvoidingView 
-                behavior={Platform.OS === 'os' ? 'padding': 'height'} 
-                style={{
-                    flex: 1,
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                }} 
-                keyboardVerticalOffset={0}>
-                <TitleArea>
-                    <Title>Confirmação</Title>
-                    <Instruction>Por favor, entre com o código de verificação enviado para o e-mail: { email }</Instruction>
-                </TitleArea>
-                <CodeArea>
-                    <NumberInput
-                        ref={input1Ref}
-                        onChangeText={(value) => {
-                            setN1(value);
-                            if(value.length === 1) input2Ref.current?.focus();
-                        }}
-                        value={n1}
-                        keyboardType='numeric'
-                        cursorColor='#fff'
-                        maxLength={1}
-                    ></NumberInput>
-                    <NumberInput 
-                        ref={input2Ref}
-                        onChangeText={(value) => {
-                            setN2(value);
-                            value.length === 1? input3Ref.current?.focus(): input1Ref.current?.focus();
-                        }}
-                        value={n2}
-                        keyboardType='numeric'
-                        cursorColor='#fff'
-                        maxLength={1}
-                    ></NumberInput>
-                    <NumberInput
-                        ref={input3Ref}
-                        onChangeText={(value) => {
-                            setN3(value);
-                            value.length === 1? input4Ref.current?.focus(): input2Ref.current?.focus();
-                        }}
-                        value={n3}
-                        keyboardType='numeric'
-                        cursorColor='#fff'
-                        maxLength={1}
-                    ></NumberInput>
-                    <NumberInput
-                        ref={input4Ref}
-                        onChangeText={(value) => {
-                            setN4(value);
-                            value.length === 1? input5Ref.current?.focus(): input3Ref.current?.focus();
-                        }}
-                        value={n4}
-                        keyboardType='numeric'
-                        cursorColor='#fff'
-                        maxLength={1}
-                    ></NumberInput>
-                    <NumberInput
-                        ref={input5Ref}
-                        onChangeText={(value) => {
-                            setN5(value);
-                            value.length === 1? input6Ref.current?.focus(): input4Ref.current?.focus();
-                        }}
-                        value={n5}
-                        keyboardType='numeric'
-                        cursorColor='#fff'
-                        maxLength={1}
-                    ></NumberInput>
-                    <NumberInput
-                        ref={input6Ref}
-                        onChangeText={(value) => {
-                            setN6(value);
-                            value.length === 0 && input5Ref.current?.focus();
-                        }}
-                        value={n6}
-                        keyboardType='numeric'
-                        cursorColor='#fff'
-                        maxLength={1}
-                    ></NumberInput>
-                </CodeArea>
-                <RecoverCode>
-                    <RecoverCodeLink onPress={() => handleRefreshCode()}>
-                        <Text style={{ color: '#fff', opacity: .65, fontSize: 14, fontFamily: 'montserrat-bold' }}>REENVIAR CÓDIGO</Text>
-                    </RecoverCodeLink>
-                </RecoverCode>
-                <ButtonSendArea>
-                    <ButtonLg disabled={loading} loading={loading} title='Confirmar' color='#fff' fontColor='#0C6661' largeWidth={350} action={() => handleSendCode()}/>
-                </ButtonSendArea>
-            </KeyboardAvoidingView>
-            <Footer/>
-        </LinearGradient>
-    )
+            <LinearGradient
+                colors={['#008C81', '#0C6661']}
+                style={{ flex: 1, paddingLeft: 8, paddingRight: 8 }}
+            >
+            {showAlertError && <Alert message={errorMessage} setShow={setShowAlertError} />}
+                <View style={{ flex: 1, paddingTop: 20 }}>
+                    <View style={{ flex: 1, justifyContent: 'center' }}>
+                        <TitleArea style={{ paddingRight: 18 }}>
+                            <Title>Confirmação</Title>
+                            <Instruction>Por favor, entre com o código de verificação enviado para o e-mail: { email }</Instruction>
+                        </TitleArea>
+                        <CodeArea>
+                            <NumberInput
+                                ref={input1Ref}
+                                onChangeText={(value) => {
+                                    setN1(value);
+                                    if(value.length === 1) input2Ref.current?.focus();
+                                }}
+                                value={n1}
+                                keyboardType='numeric'
+                                cursorColor='#fff'
+                                maxLength={1}
+                            ></NumberInput>
+                            <NumberInput 
+                                ref={input2Ref}
+                                onChangeText={(value) => {
+                                    setN2(value);
+                                    value.length === 1? input3Ref.current?.focus(): input1Ref.current?.focus();
+                                }}
+                                value={n2}
+                                keyboardType='numeric'
+                                cursorColor='#fff'
+                                maxLength={1}
+                            ></NumberInput>
+                            <NumberInput
+                                ref={input3Ref}
+                                onChangeText={(value) => {
+                                    setN3(value);
+                                    value.length === 1? input4Ref.current?.focus(): input2Ref.current?.focus();
+                                }}
+                                value={n3}
+                                keyboardType='numeric'
+                                cursorColor='#fff'
+                                maxLength={1}
+                            ></NumberInput>
+                            <NumberInput
+                                ref={input4Ref}
+                                onChangeText={(value) => {
+                                    setN4(value);
+                                    value.length === 1? input5Ref.current?.focus(): input3Ref.current?.focus();
+                                }}
+                                value={n4}
+                                keyboardType='numeric'
+                                cursorColor='#fff'
+                                maxLength={1}
+                            ></NumberInput>
+                            <NumberInput
+                                ref={input5Ref}
+                                onChangeText={(value) => {
+                                    setN5(value);
+                                    value.length === 1? input6Ref.current?.focus(): input4Ref.current?.focus();
+                                }}
+                                value={n5}
+                                keyboardType='numeric'
+                                cursorColor='#fff'
+                                maxLength={1}
+                            ></NumberInput>
+                            <NumberInput
+                                ref={input6Ref}
+                                onChangeText={(value) => {
+                                    setN6(value);
+                                    value.length === 0 && input5Ref.current?.focus();
+                                }}
+                                value={n6}
+                                keyboardType='numeric'
+                                cursorColor='#fff'
+                                maxLength={1}
+                            ></NumberInput>
+                        </CodeArea>
+                        <RecoverCode>
+                            <RecoverCodeLink onPress={() => handleRefreshCode()}>
+                                <Text style={{ color: '#fff', opacity: .65, fontSize: 14, fontFamily: 'montserrat-bold' }}>REENVIAR CÓDIGO</Text>
+                            </RecoverCodeLink>
+                        </RecoverCode>
+                        <ButtonSendArea style={{alignItems: 'center', justifyContent: 'center'}}>
+                            <ButtonLg largeWidth={346} disabled={loading} loading={loading} title='Confirmar' color='#fff' fontColor='#0C6661' action={() => handleSendCode()}/>
+                        </ButtonSendArea>
+                    </View>
+                    {!keyboardOpen && <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}><Footer /></View>}
+                </View>            
+            </LinearGradient>
+        </KeyboardAvoidingView>       
+    );
 };
 
 export default CodeVerificationRegister;

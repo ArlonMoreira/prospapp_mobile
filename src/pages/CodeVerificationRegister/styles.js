@@ -3,6 +3,10 @@ import styled from 'styled-components/native';
 export const TitleArea = styled.View`
     margin: 5px;
     margin-bottom: 60px;
+    align-items: start;
+    justify-content: center;
+    width: 100%;
+    padding: 8px;
 `;
 
 export const Title = styled.Text`
@@ -17,13 +21,14 @@ export const Instruction = styled.Text`
     font-family: montserrat-medium;
     font-size: 14;
     opacity: .66;
+    text-align: justify;
 `;
 
 export const CodeArea = styled.View`
     width: 100%;
     flex-direction: row;
     gap: 10px;
-    padding: 20px;
+    padding: 10px;
 `;
 
 export const NumberInput = styled.TextInput`
@@ -42,7 +47,7 @@ export const RecoverCode = styled.View`
     height: 28px;
     align-items: start;
     justify-content: center;
-    padding-left: 20px;    
+    padding-left: 10px;    
 `;
 
 export const RecoverCodeLink = styled.TouchableOpacity`

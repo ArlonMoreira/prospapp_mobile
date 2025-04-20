@@ -5,11 +5,13 @@ import { useSelector } from 'react-redux';
 const userAuth = () => {
     //Automaticamente quando userAuth for atualizado, irá identificar como sendo autenticado ou não;
     const [ auth, setAuth ] = useState(true);
-    const { userAuth } = useSelector((state) => state.auth);
+    const { userAuth, recoverPassword } = useSelector((state) => state.auth);
 
     useEffect(()=>{
-        console.log(userAuth)
-        if(userAuth){
+        console.log('**********')
+        console.log(userAuth, recoverPassword)
+        console.log('**********')
+        if(userAuth && !recoverPassword){
             setAuth(true);
         } else {
             setAuth(false);
@@ -18,7 +20,7 @@ const userAuth = () => {
     }, [userAuth]);
 
     return {
-        auth
+        auth, recoverPassword
     };
 
 };

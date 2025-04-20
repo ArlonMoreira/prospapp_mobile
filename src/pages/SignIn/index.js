@@ -143,7 +143,7 @@ const SignIn = () => {
             <InputForm label='Digite seu e-mail' setValue={setEmail} value={email} secureTextEntry={false}/>
             <InputForm label='Digite sua senha' setValue={setPassword} value={password} secureTextEntry={true}/>
             <RecoverPassword>
-              <RecoverPasswordButton>
+              <RecoverPasswordButton onPress={() => navigation.navigate('RecoverPassword')}>
                 <RecoverPasswordText>Esqueceu a senha ?</RecoverPasswordText>
               </RecoverPasswordButton>
             </RecoverPassword>

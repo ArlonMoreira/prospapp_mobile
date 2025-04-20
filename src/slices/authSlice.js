@@ -9,6 +9,7 @@ const initialState = {
     loadingLogout: false,
     loading: false,
     errorMessage: null,
+    recoverPassword: false,
     errors: [],
 };
 
@@ -53,8 +54,16 @@ export const authSlice = createSlice({
         resetErrorMessage: (state) => {
             state.errorMessage = null;
         },
+        resetRecoverPassword: (state) => {
+            state.recoverPassword = false;
+            state.userAuth = {
+                ...state.userAuth,
+                recoverPassword: state.recoverPassword
+            }
+        },
         setUserAuth: (state, action) => {
             state.userAuth = action.payload;
+            if(action.payload.recover_password) state.recoverPassword = action.payload.recover_password;
             state.loading = false;
             state.success = true;
             state.errorMessage = null;
@@ -95,5 +104,5 @@ export const authSlice = createSlice({
     }
 });
 
-export const { resetErrorMessage, setUserAuth } = authSlice.actions;
+export const { resetErrorMessage, setUserAuth, resetRecoverPassword } = authSlice.actions;
 export default authSlice.reducer;
