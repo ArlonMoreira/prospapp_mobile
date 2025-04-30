@@ -102,7 +102,7 @@ const GeneratedPassword = () => {
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : -50}
     >
       <LinearGradient
         colors={['#008C81', '#0C6661']}

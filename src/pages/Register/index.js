@@ -62,7 +62,8 @@ const Register = () => {
       dispatch(resetForm());      
 
       navigation.navigate('CodeVerificationRegister', {
-        email
+        email,
+        recover_password: false
       });
 
     }

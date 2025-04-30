@@ -60,7 +60,7 @@ const Routes = () => {
         <>
           {
             loadingMe ? (
-              <LoadingPage backgroundColor={'#046b5b'}/>
+              <LoadingPage backgroundColor={'#0C6661'}/>
             ) : (
               <>
                 { auth && accessHome && <AppRoutes /> }

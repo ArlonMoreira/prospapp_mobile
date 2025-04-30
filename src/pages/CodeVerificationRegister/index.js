@@ -32,6 +32,11 @@ import {
 
 const CodeVerificationRegister = ({ route }) => {
 
+    //Obter dados parâmetros
+    const { email: emailRoute, recover_password } = route.params;    
+
+    const [ email, setEmail ] = useState('');
+
     //Não é possível voltar pra página anterior
     useDisableBackHandler();
 
@@ -48,11 +53,9 @@ const CodeVerificationRegister = ({ route }) => {
 
     useEffect(() => {
         dispatch(resetState());
+        setEmail(emailRoute);
 
     }, []);
-
-    //Obter dados parâmetros
-    const { email } = route.params;
 
     const [ code, setCode ] = useState(null);
     const [n1, setN1] = useState(null);
@@ -94,7 +97,7 @@ const CodeVerificationRegister = ({ route }) => {
     //Enviar código
     const handleSendCode = () => {
         dispatch(register({
-            code, email, recover_password: true
+            code, email, recover_password
         }));
     };
 
@@ -170,7 +173,7 @@ const CodeVerificationRegister = ({ route }) => {
         <KeyboardAvoidingView
             style={{ flex: 1 }}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : -50}
         >
             <LinearGradient
                 colors={['#008C81', '#0C6661']}

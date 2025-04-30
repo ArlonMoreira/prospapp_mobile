@@ -8,9 +8,6 @@ const userAuth = () => {
     const { userAuth, recoverPassword } = useSelector((state) => state.auth);
 
     useEffect(()=>{
-        console.log('**********')
-        console.log(userAuth, recoverPassword)
-        console.log('**********')
         if(userAuth && !recoverPassword){
             setAuth(true);
         } else {

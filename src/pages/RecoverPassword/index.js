@@ -47,7 +47,12 @@ const RecoverPassword = () => {
     if(success){
       setEmail('');      
       dispatch(resetState());
-      navigation.navigate('CodeVerificationRegister', {email});
+
+      navigation.navigate('CodeVerificationRegister', {
+        email,
+        recover_password: true
+      });
+
     }
 
   }, [success]);
@@ -86,7 +91,7 @@ const RecoverPassword = () => {
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : -50}
     >
       <LinearGradient
         colors={['#008C81', '#0C6661']}
@@ -95,7 +100,12 @@ const RecoverPassword = () => {
         {showAlertError && <Alert message={errorMessage} setShow={setShowAlertError} />}
   
         <View style={{ flex: 1, paddingTop: 20 }}>
-          {!keyboardOpen && <View style={{ position: 'absolute', top: 20, left: 0, right: 0 }}><Header /></View>}
+          {!keyboardOpen && (
+            <View style={{ position: 'absolute', top: 20, left: 0, right: 0 }}>
+              <Header />
+            </View>
+          )}
+  
           <View style={{ flex: 1, justifyContent: 'center' }}>
             <TitleArea>
               <Title>Recuperar senha</Title>
@@ -103,10 +113,10 @@ const RecoverPassword = () => {
                 Por favor, insira seu e-mail para recuperação. Um código de verificação será encaminhado para o endereço de e-mail cadastrado.
               </Instruction>
             </TitleArea>
-            <InputForm element={input} label='E-mail' value={email} setValue={setEmail} />
-            <ButtonSendArea style={{alignItems: 'center', justifyContent: 'center'}}>
+            <InputForm element={input} label="E-mail" value={email} setValue={setEmail} />
+            <ButtonSendArea style={{ alignItems: 'center', justifyContent: 'center' }}>
               <ButtonLg
-                title='Gerar código'
+                title="Gerar código"
                 action={handleGeneratedCode}
                 loading={loading}
                 disabled={loading}
@@ -115,7 +125,11 @@ const RecoverPassword = () => {
             </ButtonSendArea>
           </View>
   
-          {!keyboardOpen && <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}><Footer /></View>}
+          {!keyboardOpen && (
+            <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+              <Footer />
+            </View>
+          )}
         </View>
       </LinearGradient>
     </KeyboardAvoidingView>

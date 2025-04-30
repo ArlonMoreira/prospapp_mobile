@@ -1,5 +1,5 @@
 //Redux
-import { createAsyncThunk, createSlice, formatProdErrorMessage  } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice  } from "@reduxjs/toolkit";
 //Hooks
 import useRequest from "../hooks/useRequest";
 
