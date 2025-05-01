@@ -6,6 +6,7 @@ export const Container = styled.View`
 `;
 
 export const InstructionArea = styled.View`
+    margin-top: 0px;
     height: 62px;
     align-items: start;
     justify-content: flex-end;
@@ -13,8 +14,9 @@ export const InstructionArea = styled.View`
 
 export const Instruction = styled.Text`
     color: #606060;
-    font-size: 16px;
-    font-family: 'montserrat-regular';    
+    font-size: 12px;
+    font-family: 'montserrat-medium';
+    text-align: justify;    
 `;
 
 export const ScrollArea = styled.ScrollView`

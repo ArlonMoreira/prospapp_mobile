@@ -9,7 +9,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { list } from '../../slices/pointLocalsSlice';
 //Styles
 import { StatusBar } from 'expo-status-bar';
-
 import { 
   Body,
   TitleAreaPage,

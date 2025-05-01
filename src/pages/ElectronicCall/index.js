@@ -399,21 +399,6 @@ const ElectronicCall = () => {
                   }}                  
                 />                                
               </Stack.Navigator>
-              {/* <ContainerClass>
-                {
-                  data && data.length > 0 && data.map((item, i) => (
-                    <ClassCard key={item.id} onPress={() => navigation.navigate('Call', {classId: item.id, className: item.name})}>
-                      <Stick/>
-                      <TextArea>
-                        <NameClass style={{color: primaryColor}}>{item.name}</NameClass>
-                      </TextArea>
-                      <IconArea>
-                        <Ionicons name='enter-outline' size={28} color={primaryColor}/>
-                      </IconArea>
-                    </ClassCard>              
-                  ))
-                }
-              </ContainerClass> */}
             </Body>
           </Container>
         )
