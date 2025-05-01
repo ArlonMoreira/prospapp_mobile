@@ -92,6 +92,7 @@ const Perfil = () => {
         setCompanyId(userData.companys_joined[0].company_id_annotated);
 
         if(userData.companys_joined[0].role == 'Gestor') setStaffPerfil(true);
+        
       }
 
     }

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 //Styles
 import { Container, Title } from './styles';
 import { Ionicons } from '@expo/vector-icons'; 

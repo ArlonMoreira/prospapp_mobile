@@ -11,6 +11,7 @@ import resetPasswordReducer from './src/slices/resetPasswordSlice';
 import managerReducer from "./src/slices/managerSlice";
 import codeReducer from "./src/slices/codeSlice";
 import codeRefreshReducer from "./src/slices/codeRefresh";
+import pointLocalsReducer from "./src/slices/pointLocalsSlice";
 
 export const store = configureStore({
     reducer: {
@@ -24,6 +25,7 @@ export const store = configureStore({
         resetPassword: resetPasswordReducer,
         manager: managerReducer,
         code: codeReducer,
-        codeRefresh: codeRefreshReducer
+        codeRefresh: codeRefreshReducer,
+        pointLocals: pointLocalsReducer
     }
 });

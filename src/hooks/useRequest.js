@@ -5,7 +5,6 @@ const URL = process.env.EXPO_PUBLIC_API_URL;
 const useRequest = () => {
 
     const request = async({endpoint, params}) => {
-
         try {
             const response = await fetch(`${URL}/${endpoint}`, params);
             const result = await response.json();
@@ -292,7 +291,18 @@ const useRequest = () => {
                     }
                 }                
             });             
-        }, 
+        },
+        pointLocalsList: ({ companyId, token }) => {
+            return request({
+                endpoint: `point/list/${companyId}/`,
+                params: {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }                
+            })
+        }
     };
 
 };

@@ -7,14 +7,14 @@ const userAuth = () => {
     const [ auth, setAuth ] = useState(true);
     const { userAuth, recoverPassword } = useSelector((state) => state.auth);
 
-    useEffect(()=>{
-        if(userAuth && !recoverPassword){
-            setAuth(true);
-        } else {
-            setAuth(false);
-        }
+    // useEffect(()=>{
+    //     if(userAuth && !recoverPassword){
+    //         setAuth(true);
+    //     } else {
+    //         setAuth(false);
+    //     }
 
-    }, [userAuth]);
+    // }, [userAuth]);
 
     return {
         auth, recoverPassword
