@@ -30,6 +30,18 @@ const Menager = ({primaryColor, locals}) => {
     return parentRoute.name;
 
   });
+
+  //Encaminhar parametros dinamicamnete
+  useEffect(() => {
+    navigation.navigate(currentRouteName, //Renavegar até a página atual
+      {
+        screen: currentRouteName, params: {
+          data: locals
+        }
+      }
+    );
+
+  }, [locals, currentRouteName]); //Quando atualizar o dado vai renavegar pra página que estiver selecionada
   
   return (
     <>
@@ -65,6 +77,9 @@ const Menager = ({primaryColor, locals}) => {
         <Stack.Screen
           name="ListLocals"
           component={ListLocals}
+          initialParams={{
+            data: locals
+          }}
           options={{
             headerShown: false,
           }}
@@ -72,6 +87,9 @@ const Menager = ({primaryColor, locals}) => {
         <Stack.Screen
           name="EditLocals"
           component={EditLocals}
+          initialParams={{
+            data: locals
+          }}          
           options={{
             headerShown: false,
           }}
@@ -79,6 +97,9 @@ const Menager = ({primaryColor, locals}) => {
         <Stack.Screen
           name="RemoveLocals"
           component={RemoveLocals}
+          initialParams={{
+            data: locals
+          }}               
           options={{
             headerShown: false,
           }}
