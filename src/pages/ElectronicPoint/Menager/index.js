@@ -78,7 +78,8 @@ const Menager = ({primaryColor, locals}) => {
           name="ListLocals"
           component={ListLocals}
           initialParams={{
-            data: locals
+            data: locals,
+            color: primaryColor
           }}
           options={{
             headerShown: false,

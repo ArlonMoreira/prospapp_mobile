@@ -21,6 +21,24 @@ export const LabelsArea = styled.View`
 export const Label = styled.Text`
     color: #000;
     font-size: 14px;
+    fontFamily: 'montserrat-medium';
 `;
 
+export const InfoArea = styled.View`
+    flex-direction: row;
+    margin-top: 14px;
+    gap: 10px;
+`;
 
+export const Info = styled.View`
+    background: #fff;
+    padding-inline: 10px;
+    border-radius: 20px;
+`;
+
+export const IconArea = styled.View`
+    width: 45px;
+    height: 100%;
+    align-items: center;
+    justify-content: center;    
+`;

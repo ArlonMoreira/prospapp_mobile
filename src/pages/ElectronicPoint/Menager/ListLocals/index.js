@@ -11,7 +11,7 @@ import {
 
 const ListLocals = ({ route }) => {
 
-  const { data } = route.params;
+  const { data, color } = route.params;
   
   return (
     <Container style={{ paddingTop: 20 }}>
@@ -21,7 +21,7 @@ const ListLocals = ({ route }) => {
       <ScrollArea>
       {
         data && Array.isArray(data) && data.length > 0 && data.map((item, i) => (
-          <WidgetLocals item={item} key={i}></WidgetLocals>
+          <WidgetLocals item={item} key={i} color={color}></WidgetLocals>
         ))
       }
       </ScrollArea>
