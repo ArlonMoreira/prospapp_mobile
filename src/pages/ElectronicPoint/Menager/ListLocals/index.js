@@ -16,7 +16,7 @@ const ListLocals = ({ route }) => {
   return (
     <Container style={{ paddingTop: 20 }}>
       <InstructionArea>
-        <Instruction>Abaixo, estão listados todos os locais/empresas para registro de ponto. Escolha um local para registro de ponto.</Instruction>
+        <Instruction>Abaixo estão listados todos os locais/empresas para registro de ponto. Escolha um local para registro de ponto.</Instruction>
       </InstructionArea>            
       <ScrollArea>
       {

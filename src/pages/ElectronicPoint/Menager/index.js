@@ -14,7 +14,7 @@ import { ToolsArea } from '../../ElectronicCall/styles';
 
 const Stack = createNativeStackNavigator();
 
-const Menager = ({primaryColor, locals}) => {
+const Menager = ({primaryColor, locals, setShowModalAddLocal}) => {
 
   const navigation = useNavigation(); 
 
@@ -44,12 +44,13 @@ const Menager = ({primaryColor, locals}) => {
   }, [locals, currentRouteName]); //Quando atualizar o dado vai renavegar pra página que estiver selecionada
   
   return (
-    <>
+    <>   
       <ToolsArea>
         <BoxAction
           color={primaryColor}
           iconName={'add-circle'}
           title={'Adicionar Local'}
+          action={() => setShowModalAddLocal(true)}
         />
         <BoxAction
           color={currentRouteName == 'ListLocals' ? '#f0f2f5': primaryColor}

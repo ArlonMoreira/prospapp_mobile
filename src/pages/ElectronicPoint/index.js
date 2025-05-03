@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { Modal, TouchableWithoutFeedback } from 'react-native';
 //Components
 import Header from '../../components/Header';
 import Menager from './Menager';
 import Employee from './Employee';
 import LoadingPage from '../../components/LoadingPage';
+import Fade from '../../components/Fade';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
 import { list } from '../../slices/pointLocalsSlice';
@@ -13,7 +15,11 @@ import {
   Body,
   TitleAreaPage,
   TitlePage,
-  Container, 
+  Container,
+  ModalView,
+  ModalContent,
+  ModalTitle,
+  ModalResume
 } from '../ElectronicCall/styles';
 
 const URL = process.env.EXPO_PUBLIC_API_URL;
@@ -55,11 +61,34 @@ const ElectronicPoint = () => {
     
   }, [companyId]);
 
+  //Registrar empresa
+  const [ showModalAddLocal, setShowModalAddLocal ] = useState(false);
+
+  const closeModalAddLocal = () => {
+    setShowModalAddLocal(false);
+  };
+
   return (
     <>
       {
         loading ? <LoadingPage backgroundColor={primaryColor} logo={logo}/> : (
           <Container>
+            {(showModalAddLocal) && <Fade/>}            
+            <Modal
+              transparent={true}
+              animationType='slide'
+              visible={showModalAddLocal}
+              onRequestClose={() => closeModalAddLocal()} //Permite fechar o modal quando clicado em uma área fora      
+            >
+              <TouchableWithoutFeedback onPress={() => closeModalAddLocal()}>
+                <ModalView>
+                  <ModalContent>
+                    <ModalTitle style={{color: primaryColor}}>Adicionar Local</ModalTitle>
+                    <ModalResume>Nos campos abaixo, você irá registrar o local de registro de ponto. </ModalResume>
+                  </ModalContent>
+                </ModalView>
+              </TouchableWithoutFeedback>
+            </Modal>            
             <StatusBar 
               translucent
               backgroundColor="transparent"
@@ -71,7 +100,10 @@ const ElectronicPoint = () => {
               </TitleAreaPage>
               {
                 staffPerfil ?        
-                  <Menager primaryColor={primaryColor} locals={data}/>
+                  <Menager 
+                    primaryColor={primaryColor}
+                    locals={data}
+                    setShowModalAddLocal={setShowModalAddLocal}/>
                 : 
                   <Employee/>
               }
