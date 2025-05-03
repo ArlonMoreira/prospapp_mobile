@@ -28,6 +28,7 @@ export const TitlePage = styled.Text`
 
 export const ToolsArea = styled.ScrollView.attrs({
     horizontal: true, // Torna o ScrollView horizontal
+    showsHorizontalScrollIndicator: false, // Oculta a barra de rolagem horizontal
     contentContainerStyle: {
       flexDirection: "row",
       gap: 10, // Controla o espaço entre os elementos
@@ -109,7 +110,7 @@ export const RadioText = styled.Text`
 
 export const Select = styled.View`
     background-color: #0000000d;
-    border-radius: 20px;
+    border-radius: 5px;
     height: 55px;
     margin-top: 10px;
 `;

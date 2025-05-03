@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, TouchableWithoutFeedback } from 'react-native';
+import { Modal, TouchableWithoutFeedback, View, Text } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 //Components
 import Header from '../../components/Header';
 import Menager from './Menager';
 import Employee from './Employee';
 import LoadingPage from '../../components/LoadingPage';
 import Fade from '../../components/Fade';
+import InputForm from '../../components/InputForm';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
 import { list } from '../../slices/pointLocalsSlice';
@@ -21,6 +23,11 @@ import {
   ModalTitle,
   ModalResume
 } from '../ElectronicCall/styles';
+import { Select } from '../Call/styles';
+import { 
+  SelectContainer,
+  LabelSelect
+} from './styles';
 
 const URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -63,10 +70,26 @@ const ElectronicPoint = () => {
 
   //Registrar empresa
   const [ showModalAddLocal, setShowModalAddLocal ] = useState(false);
+  const [ nameSelected, setNameSelected ] = useState('');
+  const [ idenSelected, setIdenSelected ] = useState(0);
+  const [ hourSelected, setHourSelected ] = useState('00');
+  const [ minuteSelected, setMinuteSelected ] = useState('00');
+
+  const [ hourOptions, setHourOptions ] = useState([]);
+  const [ minuteOptions, setMinuteOptions ] = useState([]);
 
   const closeModalAddLocal = () => {
     setShowModalAddLocal(false);
   };
+
+  useEffect(() => {
+    const hours = Array.from({ length: 24 }, (_, i) => String(i || 0).padStart(2, '0'));
+    setHourOptions(hours);
+
+    const minutes = Array.from({ length: 60 }, (_, i) => String(i || 0).padStart(2, '0'));
+    setMinuteOptions(minutes);
+
+  }, []);
 
   return (
     <>
@@ -84,7 +107,46 @@ const ElectronicPoint = () => {
                 <ModalView>
                   <ModalContent>
                     <ModalTitle style={{color: primaryColor}}>Adicionar Local</ModalTitle>
-                    <ModalResume>Nos campos abaixo, você irá registrar o local de registro de ponto. </ModalResume>
+                    <ModalResume>Nos campos abaixo, você irá registrar o local/empresa de registro de ponto. </ModalResume>
+                    <InputForm label='Nome do Local/Empresa' value={nameSelected} setValue={setNameSelected} color={primaryColor} pointerColor={primaryColor}/>
+                    <InputForm label='CNPJ do Local/Empresa' value={idenSelected} setValue={setIdenSelected} color={primaryColor} pointerColor={primaryColor}/>                  
+                    <Text style={{ color: primaryColor, marginLeft: 6, fontFamily: 'montserrat-medium', marginTop: 20, marginBottom: 10 }}> Carga horária: </Text>
+                    <SelectContainer>
+                      <View style={{width: '44%'}}>
+                        <LabelSelect style={{ color: primaryColor }}>Hora</LabelSelect>
+                        <Select style={{marginTop: 0}}>
+                          <Picker
+                            selectedValue={hourSelected}
+                            style={{
+                              backgroundColor: 'transparent', // deixa o Picker sem cor
+                              width: '100%',
+                              height: '100%'
+                            }}
+                            onValueChange={(hour) => setHourSelected(hour)}>
+                            {
+                              hourOptions.map((option) => <Picker.Item key={option} value={option} label={option}/>)
+                            }
+                          </Picker>
+                        </Select>
+                      </View>
+                      <View style={{width: '44%'}}>
+                        <LabelSelect style={{ color: primaryColor }}>Minuto</LabelSelect>
+                        <Select style={{marginTop: 0}}>
+                          <Picker
+                            selectedValue={minuteSelected}
+                            style={{
+                              backgroundColor: 'transparent', // deixa o Picker sem cor
+                              width: '100%',
+                              height: '100%'
+                            }}
+                            onValueChange={(hour) => setMinuteSelected(hour)}>
+                            {
+                              minuteOptions.map((option) => <Picker.Item key={option} value={option} label={option}/>)
+                            }
+                          </Picker>
+                        </Select>
+                      </View>
+                    </SelectContainer>                    
                   </ModalContent>
                 </ModalView>
               </TouchableWithoutFeedback>
