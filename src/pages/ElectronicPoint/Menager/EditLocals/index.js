@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+//Components
+import WidgetLocals from '../../../../components/WidgetLocals';
 //Styles
 import { 
   Container,
@@ -9,11 +11,7 @@ import {
 
 const EditLocals = ({ route }) => {
 
-  const { data } = route.params;
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+  const { data, color } = route.params;
 
   return (
     <Container>
@@ -22,7 +20,9 @@ const EditLocals = ({ route }) => {
       </InstructionArea>            
       <ScrollArea>
       {
-
+        data && Array.isArray(data) && data.length > 0 && data.map((item, i) => (
+          <WidgetLocals item={item} key={i} color={color} icon={'pencil'} iconSize={22}></WidgetLocals>
+        ))
       }
       </ScrollArea>
     </Container>

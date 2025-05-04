@@ -90,7 +90,8 @@ const Menager = ({primaryColor, locals, setShowModalAddLocal}) => {
           name="EditLocals"
           component={EditLocals}
           initialParams={{
-            data: locals
+            data: locals,
+            color: primaryColor
           }}          
           options={{
             headerShown: false,
@@ -100,7 +101,8 @@ const Menager = ({primaryColor, locals, setShowModalAddLocal}) => {
           name="RemoveLocals"
           component={RemoveLocals}
           initialParams={{
-            data: locals
+            data: locals,
+            color: primaryColor
           }}               
           options={{
             headerShown: false,

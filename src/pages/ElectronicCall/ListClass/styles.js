@@ -7,20 +7,20 @@ export const Container = styled.View`
 
 export const InstructionArea = styled.View`
     margin-top: 0px;
-    height: 62px;
     align-items: start;
-    justify-content: flex-end;
+    height: 82px;
+    padding-top: 25px;
 `;
 
 export const Instruction = styled.Text`
     color: #606060;
     font-size: 12px;
     font-family: 'montserrat-medium';
-    text-align: justify;    
+    text-align: justify; 
 `;
 
 export const ScrollArea = styled.ScrollView`
-    margin-top: 20px;
+    margin-top: 5px;
     width: 100%;
     flex: 1;
 `;

@@ -11,7 +11,7 @@ import {
 } from './styles';
 import { Ionicons } from '@expo/vector-icons';
 
-const WidgetLocals = ({ item, color }) => {
+const WidgetLocals = ({ item, color, icon="enter-outline", iconSize=32 }) => {
 
     const [hour, setHour] = useState('00');
     const [minutes, setMinutes] = useState('00');
@@ -53,7 +53,7 @@ const WidgetLocals = ({ item, color }) => {
                 </InfoArea>
             </LabelsArea>
             <IconArea>
-                <Ionicons name="enter-outline" size={32} color={color} />
+                <Ionicons name={icon} size={iconSize} color={color} />
             </IconArea>            
         </Container>
     );

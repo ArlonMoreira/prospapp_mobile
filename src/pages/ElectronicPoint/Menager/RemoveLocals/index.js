@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+//Components
+import WidgetLocals from '../../../../components/WidgetLocals';
 //Styles
 import { 
   Container,
@@ -9,20 +11,18 @@ import {
 
 const RemoveLocals = ({ route }) => {
 
-  const { data } = route.params;
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+  const { data, color } = route.params;
 
   return (
-    <Container style={{ paddingTop: 10 }}>
+    <Container>
       <InstructionArea>
         <Instruction>Remover local de registro de ponto. Porém, tenha cuidado com essa ação.</Instruction>
       </InstructionArea>            
       <ScrollArea>
       {
-
+        data && Array.isArray(data) && data.length > 0 && data.map((item, i) => (
+          <WidgetLocals item={item} key={i} color={color} icon={'close-circle-outline'} iconSize={30}></WidgetLocals>
+        ))
       }
       </ScrollArea>
     </Container>

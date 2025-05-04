@@ -95,6 +95,8 @@ const ElectronicPoint = () => {
     const minutes = Array.from({ length: 60 }, (_, i) => String(i || 0).padStart(2, '0'));
     setMinuteOptions(minutes);
 
+    dispatch(resetForm());
+
   }, []);
 
   const handleAddLocal = () => {  

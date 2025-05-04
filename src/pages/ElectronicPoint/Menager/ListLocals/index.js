@@ -14,7 +14,7 @@ const ListLocals = ({ route }) => {
   const { data, color } = route.params;
   
   return (
-    <Container style={{ paddingTop: 20 }}>
+    <Container>
       <InstructionArea>
         <Instruction>Abaixo estão listados todos os locais/empresas para registro de ponto. Escolha um local para registro de ponto.</Instruction>
       </InstructionArea>            
