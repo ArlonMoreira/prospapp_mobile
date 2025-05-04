@@ -5,7 +5,10 @@ import useRequest from "../hooks/useRequest";
 
 const initialState = {
     data: [],
-    loading: false
+    loading: false,
+    loadingRegister: false,
+    success: false,
+    errors: []
 };
 
 export const list = createAsyncThunk(
@@ -27,10 +30,35 @@ export const list = createAsyncThunk(
     }    
 );
 
+export const register = createAsyncThunk(
+    'pointLocals/register',
+    async(data, {getState, rejectWithValue}) => {
+        const userAuth = await getState().auth.userAuth;
+        const response = await useRequest().pointLocalRegister({
+            data,
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ2NTQyNzY5LCJpYXQiOjE3NDYxMTA3NjksImp0aSI6Ijg1ZDM0YjgxNmRiZjRmZWY5MTE0NDNiMTNhN2ZkNmY0IiwidXNlcl9pZCI6MX0.tLl5zWXJy1Oz5SvBSAqAVbWIIBXfN6B-VscB5o3DnuA"
+        });
+
+        if(response.success){
+            return response;
+        } else {
+            return rejectWithValue(response);
+        }        
+    }
+);
+
 export const pointLocalsSlice = createSlice({
     name: 'pointLocals',
     initialState,
     reducers: {},
+    reducers: {
+        resetForm: (state) => {
+            state.loading = false
+            state.loadingRegister = false
+            state.success = false
+            state.errors = []
+        }
+    },
     extraReducers: (builder) => {
         builder
             //Aguardando carregamento locais de pontos
@@ -46,7 +74,25 @@ export const pointLocalsSlice = createSlice({
             .addCase(list.rejected, (state) => {
                 state.loading = false;
             })
+            //Aguardando o carregamento do cadastro de local
+            .addCase(register.pending, (state) => {
+                state.loadingRegister = true;
+                state.success = false;
+            })
+            //Sucesso ao cadastrar local
+            .addCase(register.fulfilled, (state, action) => {
+                state.loadingRegister = false;
+                state.success = true;
+                state.data.push(action.payload.data);
+            })
+            //Falha ao cadastrar local
+            .addCase(register.rejected, (state, action) => {
+                state.success = false;
+                state.loadingRegister = false;
+                state.errors = action.payload.data;
+            })
     }
 });
 
+export const { resetForm } = pointLocalsSlice.actions;
 export default pointLocalsSlice.reducer;

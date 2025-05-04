@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Container, Input, InputMask, Stick, ShowPassword } from './styles';
 import { Feather } from '@expo/vector-icons';
 
-const InputForm = ({element, label, value, setValue, secureTextEntry, color='#fff', secundaryColor, cpfMask=false, pointerColor="#fff"}) => {
+const InputForm = ({element, label, value, setValue, secureTextEntry, color='#fff', secundaryColor, mask=false, pointerColor="#fff"}) => {
 
     const [isFocused, setIsFocused] = useState(false);
     const [isPasswordSecure, setIsPasswordSecure] = useState(secureTextEntry);
@@ -43,14 +43,14 @@ const InputForm = ({element, label, value, setValue, secureTextEntry, color='#ff
 
     return (
         <Container>
-            <Stick style={{backgroundColor: color}}/>
+            <Stick style={{backgroundColor: color, opacity: .7}}/>
             <Animated.Text style={labelStyle}>
                 {label}
             </Animated.Text>
             {
-                cpfMask ? (
+                mask ? (
                     <InputMask
-                        type={'cpf'}
+                        type={mask}
                         ref={element}
                         value={value}
                         onChangeText={(text) => setValue(text)}

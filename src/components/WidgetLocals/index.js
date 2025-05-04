@@ -25,12 +25,23 @@ const WidgetLocals = ({ item, color }) => {
         }
     }, [item]);
 
+    const formatCNPJ = (cnpj) => {
+        if (!cnpj) return '';
+      
+        const cleaned = cnpj.toString().replace(/\D/g, '').padStart(14, '0');
+      
+        if (cleaned.length !== 14) return cnpj;
+      
+        return cleaned.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, 
+                               '$1.$2.$3/$4-$5');
+    };    
+
     return (
         <Container>
             <LabelsArea>
                 <Label style={{ color, fontFamily: 'montserrat-semibold' }}>{item.name}</Label>
                 <Label style={{ fontSize: 12, opacity: 0.5 }}>
-                    {item.identification_number ? item.identification_number : '00.000.000/0000-00'}
+                    {item.identification_number ? formatCNPJ(item.identification_number) : '00.000.000/0000-00'}
                 </Label>
                 <InfoArea>
                     <Text style={{ opacity: 0.5, fontSize: 11 }}>Carga horária:</Text>

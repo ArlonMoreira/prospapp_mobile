@@ -51,7 +51,7 @@ const EditProfile = ({ route }) => {
                     </Errors>
                 </ItemFormArea>
                 <ItemFormArea>
-                    <InputForm label='CPF' cpfMask={true} setValue={setDocNumber} value={doc_number} secureTextEntry={false}/>
+                    <InputForm label='CPF' mask={'cpf'} setValue={setDocNumber} value={doc_number} secureTextEntry={false}/>
                     <Errors>
                         { errors.doc_number && errors.doc_number.map((error, i) => <Error key={i}>{ error }</Error>) }
                     </Errors>

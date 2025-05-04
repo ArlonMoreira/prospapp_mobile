@@ -28,7 +28,7 @@ export const Stick = styled.View`
     left: 7px;
     bottom: 8px;
     height: 10px;
-    width: 1px;
+    width: 2px;
     border: 0;
 `;
 

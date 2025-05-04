@@ -780,7 +780,7 @@ const Call = ({ route }) => {
                       errorsRegister.name.map((error, i) => <Error key={i} style={{color: 'red'}}>{error}</Error>) 
                     }
                     </Errors>
-                    <InputForm label='CPF do aluno' cpfMask={true} pointerColor={primaryColor} value={identification_number} setValue={setIdentification_number} color={primaryColor}/>            
+                    <InputForm label='CPF do aluno' mask={'cpf'} pointerColor={primaryColor} value={identification_number} setValue={setIdentification_number} color={primaryColor}/>            
                     <Errors>
                     { 
                       Object.keys(errorsRegister).length > 0 && 
@@ -851,7 +851,7 @@ const Call = ({ route }) => {
                       errorsChange.name.map((error, i) => <Error key={i} style={{color: 'red'}}>{error}</Error>) 
                     }
                     </Errors>                    
-                    <InputForm label='CPF do aluno' cpfMask={true} pointerColor={primaryColor} value={identificationNumber} setValue={setIdentificationNumber} color={primaryColor}></InputForm>
+                    <InputForm label='CPF do aluno' mask={'cpf'} pointerColor={primaryColor} value={identificationNumber} setValue={setIdentificationNumber} color={primaryColor}></InputForm>
                     <Errors>
                     { 
                       Object.keys(errorsChange).length > 0 && 

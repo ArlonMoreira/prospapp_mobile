@@ -11,9 +11,8 @@ import InputForm from '../../../components/InputForm';
 import ButtonLg from '../../../components/ButtonLg';
 import Alert from '../../../components/Alert';
 //Styles
-import { ItemFormArea, SubmitButton } from '../../Register/styles';
+import { ItemFormArea, SubmitButton, Errors, Error } from '../../Register/styles';
 import { TitleArea, Title, FormArea } from '../EditProfile/styles';
-import { Errors, Error } from '../../Register/styles';
 
 const ChangePassword = ({ route }) => {
 

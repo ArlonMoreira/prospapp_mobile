@@ -302,6 +302,19 @@ const useRequest = () => {
                     }
                 }                
             })
+        },
+        pointLocalRegister: ({ data, token }) => {
+            return request({
+                endpoint: 'point/register/',
+                params: {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }                
+            }); 
         }
     };
 

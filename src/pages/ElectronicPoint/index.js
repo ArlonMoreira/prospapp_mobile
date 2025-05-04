@@ -8,9 +8,10 @@ import Employee from './Employee';
 import LoadingPage from '../../components/LoadingPage';
 import Fade from '../../components/Fade';
 import InputForm from '../../components/InputForm';
+import ButtonLg from '../../components/ButtonLg';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { list } from '../../slices/pointLocalsSlice';
+import { list, register, resetForm } from '../../slices/pointLocalsSlice';
 //Styles
 import { StatusBar } from 'expo-status-bar';
 import { 
@@ -28,6 +29,7 @@ import {
   SelectContainer,
   LabelSelect
 } from './styles';
+import { Errors, Error } from '../Register/styles';
 
 const URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -58,7 +60,7 @@ const ElectronicPoint = () => {
 
   //Carregar locais de ponto
   const dispatch = useDispatch();
-  const { loading, data } = useSelector(state => state.pointLocals);
+  const { loading, data, success, errors, loadingRegister } = useSelector(state => state.pointLocals);
   
   //Carregr locais de ponto
   useEffect(() => {
@@ -71,7 +73,7 @@ const ElectronicPoint = () => {
   //Registrar empresa
   const [ showModalAddLocal, setShowModalAddLocal ] = useState(false);
   const [ nameSelected, setNameSelected ] = useState('');
-  const [ idenSelected, setIdenSelected ] = useState(0);
+  const [ idenSelected, setIdenSelected ] = useState(null);
   const [ hourSelected, setHourSelected ] = useState('00');
   const [ minuteSelected, setMinuteSelected ] = useState('00');
 
@@ -79,6 +81,10 @@ const ElectronicPoint = () => {
   const [ minuteOptions, setMinuteOptions ] = useState([]);
 
   const closeModalAddLocal = () => {
+    setNameSelected('');
+    setIdenSelected(null);
+    setHourSelected('00');
+    setMinuteSelected('00');    
     setShowModalAddLocal(false);
   };
 
@@ -91,6 +97,27 @@ const ElectronicPoint = () => {
 
   }, []);
 
+  const handleAddLocal = () => {  
+    const data = {
+      name: nameSelected,
+      identification_number: idenSelected && parseInt(idenSelected.replace(/\D/g, '')),
+      workload_hour: hourSelected,
+      workload_minutes: minuteSelected,
+      company: companyId
+    };
+
+    dispatch(register(data));
+    
+  };
+
+  useEffect(() => {
+    if(success){
+      closeModalAddLocal();
+      dispatch(resetForm());
+    }
+
+  }, [success]);
+
   return (
     <>
       {
@@ -101,15 +128,20 @@ const ElectronicPoint = () => {
               transparent={true}
               animationType='slide'
               visible={showModalAddLocal}
-              onRequestClose={() => closeModalAddLocal()} //Permite fechar o modal quando clicado em uma área fora      
+              onRequestClose={() => setShowModalAddLocal(false)} //Permite fechar o modal quando clicado em uma área fora      
             >
-              <TouchableWithoutFeedback onPress={() => closeModalAddLocal()}>
+              <TouchableWithoutFeedback onPress={() => setShowModalAddLocal(false)}>
                 <ModalView>
                   <ModalContent>
                     <ModalTitle style={{color: primaryColor}}>Adicionar Local</ModalTitle>
                     <ModalResume>Nos campos abaixo, você irá registrar o local/empresa de registro de ponto. </ModalResume>
                     <InputForm label='Nome do Local/Empresa' value={nameSelected} setValue={setNameSelected} color={primaryColor} pointerColor={primaryColor}/>
-                    <InputForm label='CNPJ do Local/Empresa' value={idenSelected} setValue={setIdenSelected} color={primaryColor} pointerColor={primaryColor}/>                  
+                    <Errors>
+                      {
+                        errors.name && errors.name.map((error, i) => <Error key={i}>{error}</Error>)
+                      }
+                    </Errors>
+                    <InputForm label='CNPJ do Local/Empresa' mask={'cnpj'} value={idenSelected} setValue={setIdenSelected} color={primaryColor} pointerColor={primaryColor}/>                  
                     <Text style={{ color: primaryColor, marginLeft: 6, fontFamily: 'montserrat-medium', marginTop: 20, marginBottom: 10 }}> Carga horária: </Text>
                     <SelectContainer>
                       <View style={{width: '44%'}}>
@@ -146,7 +178,10 @@ const ElectronicPoint = () => {
                           </Picker>
                         </Select>
                       </View>
-                    </SelectContainer>                    
+                    </SelectContainer>  
+                    <View style={{marginTop: 30, width: '100%', paddingLeft: 10}}>
+                      <ButtonLg loading={loadingRegister} disabled={loadingRegister} action={() => handleAddLocal()} title={'Adicionar'} color={primaryColor} fontColor='#fff' largeWidth={300}/>  
+                    </View>            
                   </ModalContent>
                 </ModalView>
               </TouchableWithoutFeedback>
