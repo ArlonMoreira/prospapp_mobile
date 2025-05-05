@@ -11,7 +11,7 @@ import {
 } from './styles';
 import { Ionicons } from '@expo/vector-icons';
 
-const WidgetLocals = ({ item, color, icon="enter-outline", iconSize=32 }) => {
+const WidgetLocals = ({ item, color, icon="enter-outline", iconSize=32, action }) => {
 
     const [hour, setHour] = useState('00');
     const [minutes, setMinutes] = useState('00');
@@ -37,7 +37,7 @@ const WidgetLocals = ({ item, color, icon="enter-outline", iconSize=32 }) => {
     };    
 
     return (
-        <Container>
+        <Container onPress={() => action()}>
             <LabelsArea>
                 <Label style={{ color, fontFamily: 'montserrat-semibold' }}>{item.name}</Label>
                 <Label style={{ fontSize: 12, opacity: 0.5 }}>

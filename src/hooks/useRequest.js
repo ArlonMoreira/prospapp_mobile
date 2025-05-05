@@ -294,7 +294,7 @@ const useRequest = () => {
         },
         pointLocalsList: ({ companyId, token }) => {
             return request({
-                endpoint: `point/list/${companyId}/`,
+                endpoint: `point/local/list/${companyId}/`,
                 params: {
                     method: 'GET',
                     headers: {
@@ -305,7 +305,7 @@ const useRequest = () => {
         },
         pointLocalRegister: ({ data, token }) => {
             return request({
-                endpoint: 'point/register/',
+                endpoint: 'point/local/register/',
                 params: {
                     method: 'POST',
                     headers: {

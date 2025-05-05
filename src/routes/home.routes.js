@@ -4,6 +4,7 @@ import Home from '../pages/Home';
 import ElectronicCall from '../pages/ElectronicCall';
 import ElectronicPoint from '../pages/ElectronicPoint';
 import Call from '../pages/Call';
+import Point from '../pages/Point';
 //Navigation
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -40,7 +41,14 @@ const HomeRoutes = () => {
         options={{
           headerShown: false
         }}
-      />                   
+      />
+      <Stack.Screen
+        name="Point"
+        component={Point}
+        options={{
+          headerShown: false
+        }}
+      />                          
     </Stack.Navigator>
   )
 }
