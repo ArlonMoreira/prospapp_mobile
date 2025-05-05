@@ -12,6 +12,7 @@ import managerReducer from "./src/slices/managerSlice";
 import codeReducer from "./src/slices/codeSlice";
 import codeRefreshReducer from "./src/slices/codeRefresh";
 import pointLocalsReducer from "./src/slices/pointLocalsSlice";
+import registerPointReducer from "./src/slices/registerPointSlice";
 
 export const store = configureStore({
     reducer: {
@@ -26,6 +27,7 @@ export const store = configureStore({
         manager: managerReducer,
         code: codeReducer,
         codeRefresh: codeRefreshReducer,
-        pointLocals: pointLocalsReducer
+        pointLocals: pointLocalsReducer,
+        registerPoint: registerPointReducer
     }
 });

@@ -50,7 +50,6 @@ export const register = createAsyncThunk(
 export const pointLocalsSlice = createSlice({
     name: 'pointLocals',
     initialState,
-    reducers: {},
     reducers: {
         resetForm: (state) => {
             state.loading = false

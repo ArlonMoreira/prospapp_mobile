@@ -13,7 +13,7 @@ import {
 
 const ListLocals = ({ route }) => {
 
-  const { data, color } = route.params;
+  const { data, color, logo } = route.params;
   const navigation = useNavigation();
 
   return (
@@ -24,7 +24,7 @@ const ListLocals = ({ route }) => {
       <ScrollArea>     
       {
         data && Array.isArray(data) && data.length > 0 && data.map((item, i) => (
-          <WidgetLocals item={item} key={i} color={color} action={() => navigation.navigate('Point', { color, data: item })}></WidgetLocals>
+          <WidgetLocals item={item} key={i} color={color} action={() => navigation.navigate('Point', { color, data: item, logo })}></WidgetLocals>
         ))
       }
       </ScrollArea>

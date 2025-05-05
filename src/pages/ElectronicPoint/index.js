@@ -202,7 +202,8 @@ const ElectronicPoint = () => {
                   <Menager 
                     primaryColor={primaryColor}
                     locals={data}
-                    setShowModalAddLocal={setShowModalAddLocal}/>
+                    setShowModalAddLocal={setShowModalAddLocal}
+                    logo={logo}/>
                 : 
                   <Employee/>
               }

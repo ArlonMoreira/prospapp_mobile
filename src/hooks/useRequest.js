@@ -315,7 +315,20 @@ const useRequest = () => {
                     body: JSON.stringify(data)
                 }                
             }); 
-        }
+        },
+        pointRegister: ({ data, token }) => {
+            return request({
+                endpoint: 'point/register/',
+                params: {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }                
+            }); 
+        }        
     };
 
 };

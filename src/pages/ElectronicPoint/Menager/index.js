@@ -14,7 +14,7 @@ import { ToolsArea } from '../../ElectronicCall/styles';
 
 const Stack = createNativeStackNavigator();
 
-const Menager = ({primaryColor, locals, setShowModalAddLocal}) => {
+const Menager = ({primaryColor, locals, setShowModalAddLocal, logo}) => {
 
   const navigation = useNavigation(); 
 
@@ -80,7 +80,8 @@ const Menager = ({primaryColor, locals, setShowModalAddLocal}) => {
           component={ListLocals}
           initialParams={{
             data: locals,
-            color: primaryColor
+            color: primaryColor,
+            logo: logo
           }}
           options={{
             headerShown: false,
