@@ -328,7 +328,18 @@ const useRequest = () => {
                     body: JSON.stringify(data)
                 }                
             }); 
-        }        
+        },
+        pointList: ({ localId, token }) => {
+            return request({
+                endpoint: `point/current/${localId}/`,
+                params: {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }                
+            })
+        },      
     };
 
 };

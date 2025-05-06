@@ -39,3 +39,21 @@ export const ButtonPoint = styled.TouchableOpacity`
     justify-content: center;
     border-radius: 5px;
 `;
+
+export const Table = styled.View`
+    margin-top: 80px;
+    flex: 1;
+`;
+
+export const HeaderTable = styled.View`
+    flex-direction: row;
+    padding-vertical: 8px;
+    border-bottom-width: 1px;
+    border-bottom-color: #cbd5e1; /* cinza claro */
+`;
+
+export const Cell = styled.Text`
+    flex: 1;
+    text-align: center;
+    color: #334155;
+`;
