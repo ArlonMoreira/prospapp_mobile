@@ -5,6 +5,7 @@ import useRequest from "../hooks/useRequest";
 
 const initialState = {
     loading: false,
+    loadingRemove: false,
     open_point: {},
     all_points_today: []
 };
@@ -15,7 +16,7 @@ export const register = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointRegister({
             data,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ2NTQyNzY5LCJpYXQiOjE3NDYxMTA3NjksImp0aSI6Ijg1ZDM0YjgxNmRiZjRmZWY5MTE0NDNiMTNhN2ZkNmY0IiwidXNlcl9pZCI6MX0.tLl5zWXJy1Oz5SvBSAqAVbWIIBXfN6B-VscB5o3DnuA"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3MDE2NzU1LCJpYXQiOjE3NDY1ODQ3NTUsImp0aSI6ImEwYTYzZjU3ZDI4MDQ5NDk5NTg5Zjc0YWFjMzIxODhlIiwidXNlcl9pZCI6MX0.3OTDo7ueD6i104rRzEW0yMJ9JXxB9oQLabDag7dg0J8"
         });
 
         if(response.success){
@@ -32,7 +33,24 @@ export const list = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointList({
             localId,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ2NTQyNzY5LCJpYXQiOjE3NDYxMTA3NjksImp0aSI6Ijg1ZDM0YjgxNmRiZjRmZWY5MTE0NDNiMTNhN2ZkNmY0IiwidXNlcl9pZCI6MX0.tLl5zWXJy1Oz5SvBSAqAVbWIIBXfN6B-VscB5o3DnuA"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3MDE2NzU1LCJpYXQiOjE3NDY1ODQ3NTUsImp0aSI6ImEwYTYzZjU3ZDI4MDQ5NDk5NTg5Zjc0YWFjMzIxODhlIiwidXNlcl9pZCI6MX0.3OTDo7ueD6i104rRzEW0yMJ9JXxB9oQLabDag7dg0J8"
+        });
+
+        if(response.success){
+            return response;
+        } else {
+            return rejectWithValue(response);
+        }        
+    }
+);
+
+export const removePointToday = createAsyncThunk(
+    'registerPoint/removePointToday',
+    async(pointId, {getState, rejectWithValue}) => {
+        const userAuth = await getState().auth.userAuth;
+        const response = await useRequest().pointRemoveToday({
+            pointId,
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3MDE2NzU1LCJpYXQiOjE3NDY1ODQ3NTUsImp0aSI6ImEwYTYzZjU3ZDI4MDQ5NDk5NTg5Zjc0YWFjMzIxODhlIiwidXNlcl9pZCI6MX0.3OTDo7ueD6i104rRzEW0yMJ9JXxB9oQLabDag7dg0J8"
         });
 
         if(response.success){
@@ -82,7 +100,24 @@ export const registerPointSlice = createSlice({
             })  
             .addCase(list.rejected, (state, action) => {
                 state.loading = false;
-            })                      
+            })
+            .addCase(removePointToday.pending, (state) => {
+                state.loadingRemove = true;
+            })
+            .addCase(removePointToday.fulfilled, (state, action) => {
+                state.loadingRemove = false;
+                //Selecionar o ponto que será removido
+                const removePoint = action.payload.data;
+                const index = state.all_points_today.findIndex(p => p.id === removePoint.id);
+            
+                if (index !== -1) {
+                    delete state.all_points_today[index];
+                }
+
+            })
+            .addCase(removePointToday.rejected, (state, action) => {
+                state.loadingRemove = false;
+            })                                  
     }    
 });
 

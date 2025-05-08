@@ -1,7 +1,7 @@
 import styled from 'styled-components/native';
 import { Image } from 'react-native';
 
-export const ScrollArea = styled.ScrollView`
+export const PageArea = styled.View`
     margin-top: 5px;
     padding-inline: 15px;
     width: 100%;
@@ -10,14 +10,15 @@ export const ScrollArea = styled.ScrollView`
 
 export const TitleArea = styled.View`
     height: 80px;
-    justify-content: center;      
+    justify-content: center;    
+    flex: 1;  
 `;
 
 export const ButtonsArea = styled.View`
     min-height: 80px;
     justify-content: center;
     gap: 10px;
-    margin-top: 28px;
+    flex: 1;
 `;
 
 export const ButtonsAreaIcon = styled.View`
@@ -41,11 +42,11 @@ export const ButtonPoint = styled.TouchableOpacity`
 `;
 
 export const Table = styled.View`
-    margin-top: 80px;
-    flex: 1;
+    flex: 3;
 `;
 
 export const HeaderTable = styled.View`
+    margin-top: 16;
     flex-direction: row;
     padding-vertical: 8px;
     border-bottom-width: 1px;
@@ -56,4 +57,22 @@ export const Cell = styled.Text`
     flex: 1;
     text-align: center;
     color: #334155;
+`;
+
+export const Row = styled.View`
+    flex-direction: row;
+    padding-vertical: 8px;
+    border-bottom-width: 1px;
+    border-bottom-color: #e2e8f0;
+    border-radius: 6px;
+    margin-vertical: 2px;
+    align-items: center;
+    justify-content: center;      
+`;
+
+export const DeleteButton = styled.TouchableOpacity`
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;   
 `;

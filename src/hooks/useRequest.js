@@ -339,7 +339,18 @@ const useRequest = () => {
                     }
                 }                
             })
-        },      
+        },   
+        pointRemoveToday: ({ pointId, token }) => {
+            return request({
+                endpoint: `point/remove/today/${pointId}/`,
+                params: {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }                
+            })
+        },            
     };
 
 };

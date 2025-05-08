@@ -31,7 +31,7 @@ export const list = createAsyncThunk(
         const response = await useRequest().studentList({
             classId,
             date: `${ano}${mes}${dia}`,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ2NTQyNzY5LCJpYXQiOjE3NDYxMTA3NjksImp0aSI6Ijg1ZDM0YjgxNmRiZjRmZWY5MTE0NDNiMTNhN2ZkNmY0IiwidXNlcl9pZCI6MX0.tLl5zWXJy1Oz5SvBSAqAVbWIIBXfN6B-VscB5o3DnuA"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3MDE2NzU1LCJpYXQiOjE3NDY1ODQ3NTUsImp0aSI6ImEwYTYzZjU3ZDI4MDQ5NDk5NTg5Zjc0YWFjMzIxODhlIiwidXNlcl9pZCI6MX0.3OTDo7ueD6i104rRzEW0yMJ9JXxB9oQLabDag7dg0J8"
         });
 
         if(response.success){
@@ -45,10 +45,10 @@ export const list = createAsyncThunk(
 export const register = createAsyncThunk(
     'student/register',
     async(data, {getState, rejectWithValue}) => {
-        const userAuth = await getState().auth.userAuth; //"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ2NTQyNzY5LCJpYXQiOjE3NDYxMTA3NjksImp0aSI6Ijg1ZDM0YjgxNmRiZjRmZWY5MTE0NDNiMTNhN2ZkNmY0IiwidXNlcl9pZCI6MX0.tLl5zWXJy1Oz5SvBSAqAVbWIIBXfN6B-VscB5o3DnuA"
+        const userAuth = await getState().auth.userAuth; //"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3MDE2NzU1LCJpYXQiOjE3NDY1ODQ3NTUsImp0aSI6ImEwYTYzZjU3ZDI4MDQ5NDk5NTg5Zjc0YWFjMzIxODhlIiwidXNlcl9pZCI6MX0.3OTDo7ueD6i104rRzEW0yMJ9JXxB9oQLabDag7dg0J8"
         const response = await useRequest().studentRegister({
             data,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ2NTQyNzY5LCJpYXQiOjE3NDYxMTA3NjksImp0aSI6Ijg1ZDM0YjgxNmRiZjRmZWY5MTE0NDNiMTNhN2ZkNmY0IiwidXNlcl9pZCI6MX0.tLl5zWXJy1Oz5SvBSAqAVbWIIBXfN6B-VscB5o3DnuA"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3MDE2NzU1LCJpYXQiOjE3NDY1ODQ3NTUsImp0aSI6ImEwYTYzZjU3ZDI4MDQ5NDk5NTg5Zjc0YWFjMzIxODhlIiwidXNlcl9pZCI6MX0.3OTDo7ueD6i104rRzEW0yMJ9JXxB9oQLabDag7dg0J8"
         });
 
         if(response.success){
@@ -63,10 +63,10 @@ export const register = createAsyncThunk(
 export const call = createAsyncThunk(
     'student/call',
     async(data, {getState, rejectWithValue}) => {
-        const userAuth = await getState().auth.userAuth; //"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ2NTQyNzY5LCJpYXQiOjE3NDYxMTA3NjksImp0aSI6Ijg1ZDM0YjgxNmRiZjRmZWY5MTE0NDNiMTNhN2ZkNmY0IiwidXNlcl9pZCI6MX0.tLl5zWXJy1Oz5SvBSAqAVbWIIBXfN6B-VscB5o3DnuA"
+        const userAuth = await getState().auth.userAuth; //"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3MDE2NzU1LCJpYXQiOjE3NDY1ODQ3NTUsImp0aSI6ImEwYTYzZjU3ZDI4MDQ5NDk5NTg5Zjc0YWFjMzIxODhlIiwidXNlcl9pZCI6MX0.3OTDo7ueD6i104rRzEW0yMJ9JXxB9oQLabDag7dg0J8"
         const response = await useRequest().callRegister({
             data,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ2NTQyNzY5LCJpYXQiOjE3NDYxMTA3NjksImp0aSI6Ijg1ZDM0YjgxNmRiZjRmZWY5MTE0NDNiMTNhN2ZkNmY0IiwidXNlcl9pZCI6MX0.tLl5zWXJy1Oz5SvBSAqAVbWIIBXfN6B-VscB5o3DnuA"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3MDE2NzU1LCJpYXQiOjE3NDY1ODQ3NTUsImp0aSI6ImEwYTYzZjU3ZDI4MDQ5NDk5NTg5Zjc0YWFjMzIxODhlIiwidXNlcl9pZCI6MX0.3OTDo7ueD6i104rRzEW0yMJ9JXxB9oQLabDag7dg0J8"
         });
 
         if(response.success){
@@ -84,7 +84,7 @@ export const change = createAsyncThunk(
         const response = await useRequest().studentChange({
             student,
             data,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ2NTQyNzY5LCJpYXQiOjE3NDYxMTA3NjksImp0aSI6Ijg1ZDM0YjgxNmRiZjRmZWY5MTE0NDNiMTNhN2ZkNmY0IiwidXNlcl9pZCI6MX0.tLl5zWXJy1Oz5SvBSAqAVbWIIBXfN6B-VscB5o3DnuA"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3MDE2NzU1LCJpYXQiOjE3NDY1ODQ3NTUsImp0aSI6ImEwYTYzZjU3ZDI4MDQ5NDk5NTg5Zjc0YWFjMzIxODhlIiwidXNlcl9pZCI6MX0.3OTDo7ueD6i104rRzEW0yMJ9JXxB9oQLabDag7dg0J8"
         });
 
         if(response.success){
@@ -102,7 +102,7 @@ export const remove = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().studentRemove({
             student,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ2NTQyNzY5LCJpYXQiOjE3NDYxMTA3NjksImp0aSI6Ijg1ZDM0YjgxNmRiZjRmZWY5MTE0NDNiMTNhN2ZkNmY0IiwidXNlcl9pZCI6MX0.tLl5zWXJy1Oz5SvBSAqAVbWIIBXfN6B-VscB5o3DnuA"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3MDE2NzU1LCJpYXQiOjE3NDY1ODQ3NTUsImp0aSI6ImEwYTYzZjU3ZDI4MDQ5NDk5NTg5Zjc0YWFjMzIxODhlIiwidXNlcl9pZCI6MX0.3OTDo7ueD6i104rRzEW0yMJ9JXxB9oQLabDag7dg0J8"
         });
 
         if(response.success){
