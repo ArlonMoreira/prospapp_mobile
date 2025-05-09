@@ -6,6 +6,7 @@ import useRequest from "../hooks/useRequest";
 const initialState = {
     loading: false,
     loadingRemove: false,
+    successRemove: false,
     open_point: {},
     all_points_today: []
 };
@@ -66,6 +67,7 @@ export const registerPointSlice = createSlice({
     initialState,
     reducers: {
         resetForm: (state) => {
+            state.successRemove = false;
         }
     },    
     extraReducers: (builder) => {
@@ -103,20 +105,25 @@ export const registerPointSlice = createSlice({
             })
             .addCase(removePointToday.pending, (state) => {
                 state.loadingRemove = true;
+                state.successRemove = false;
             })
             .addCase(removePointToday.fulfilled, (state, action) => {
                 state.loadingRemove = false;
+                state.successRemove = true;
                 //Selecionar o ponto que será removido
                 const removePoint = action.payload.data;
                 const index = state.all_points_today.findIndex(p => p.id === removePoint.id);
             
                 if (index !== -1) {
-                    delete state.all_points_today[index];
+                   state.all_points_today.splice(index, 1);
                 }
+
+                state.open_point = {};
 
             })
             .addCase(removePointToday.rejected, (state, action) => {
                 state.loadingRemove = false;
+                state.successRemove = false;
             })                                  
     }    
 });

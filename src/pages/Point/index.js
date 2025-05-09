@@ -38,7 +38,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 const Point = ({ route }) => {
 
   const dispatch = useDispatch();
-  const { loading, open_point, all_points_today, loadingRemove } = useSelector(state => state.registerPoint);
+  const { loading, open_point, all_points_today, loadingRemove, successRemove } = useSelector(state => state.registerPoint);
 
   const [ color, setColor ] = useState(null);
   const [ local, setLocal ] = useState(null);
@@ -73,29 +73,33 @@ const Point = ({ route }) => {
   
   // Gerar linhas dabela
   const renderItem = ({ item }) => {
-    const entry = new Date(item.entry_datetime);
-    const exit = item.exit_datetime ? new Date(item.exit_datetime) : null;
-  
-    const getDiffInHours = (start, end) => {
-      const diffMs = end.getTime() - start.getTime();
-      const diffHours = diffMs / (1000 * 60 * 60);
-      return diffHours.toFixed(2); // ex: "1.75"
-    };
-  
-    return (
-      <Row>
-        <Cell>{formatHour(entry)}</Cell>
-        <Cell style={{color: '#f66'}}>{exit ? formatHour(exit) : '?'}</Cell>
-        <Cell>
-          {exit ? getDiffInHours(entry, exit) : '-'}
-        </Cell>
-        <Cell>
-          <DeleteButton onPress={() => handleRemovePoint(item)}>
-            <MaterialCommunityIcons name='delete-circle' size={30} color={color} />
-          </DeleteButton>
-        </Cell>
-      </Row>
-    );
+    if (item) {
+      const entry = new Date(item.entry_datetime);
+      const exit = item.exit_datetime ? new Date(item.exit_datetime) : null;
+    
+      const getDiffInHours = (start, end) => {
+        const diffMs = end.getTime() - start.getTime();
+        const diffHours = diffMs / (1000 * 60 * 60);
+        return diffHours.toFixed(2); // ex: "1.75"
+      };
+    
+      return (
+        <Row>
+          <Cell>{formatHour(entry)}</Cell>
+          <Cell style={{color: '#f66'}}>{exit ? formatHour(exit) : '?'}</Cell>
+          <Cell>
+            {exit ? getDiffInHours(entry, exit) : '-'}
+          </Cell>
+          <Cell>
+            <DeleteButton onPress={() => handleRemovePoint(item)}>
+              <MaterialCommunityIcons name='delete-circle' size={30} color={color} />
+            </DeleteButton>
+          </Cell>
+        </Row>
+      );
+
+    }
+
   }; 
 
   const [now, setNow] = useState(new Date());
@@ -130,7 +134,11 @@ const Point = ({ route }) => {
     if(pointIdSelected) dispatch(removePointToday(pointIdSelected));
   };
 
-  useEffect(() => { console.log(all_points_today)}, [all_points_today])
+  useEffect(() => {
+    if(successRemove) setShowModalRemove(false);
+  }, [successRemove]);
+
+  useEffect(() => { console.log('teste',all_points_today)}, [all_points_today])
 
   return (
     <>
@@ -193,11 +201,11 @@ const Point = ({ route }) => {
                   <Cell>Remover</Cell>
                 </HeaderTable>
                 {
-                  all_points_today && (
+                  all_points_today && all_points_today.length > 0 && (
                     <FlatList
                       data={all_points_today}
                       renderItem={renderItem}
-                      keyExtractor={(item) => item.id.toString()}                  
+                      keyExtractor={(item) => item ? item.id.toString(): '-'}                  
                     />
                   )
                 }
