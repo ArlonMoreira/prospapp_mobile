@@ -19,7 +19,10 @@ export const Instruction = styled.Text`
     text-align: justify; 
 `;
 
-export const ScrollArea = styled.ScrollView`
+
+export const ScrollArea = styled.ScrollView.attrs({
+    showsVerticalScrollIndicator: false, // Oculta a barra de rolagem horizontal
+})`
     margin-top: 5px;
     width: 100%;
     flex: 1;

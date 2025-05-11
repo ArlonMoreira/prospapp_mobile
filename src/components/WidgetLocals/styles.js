@@ -3,7 +3,7 @@ import { Image } from 'react-native';
 
 export const Container = styled.TouchableOpacity`
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     border-radius: 10px;
     border-color: transparent;
     background: #f0f2f5bf;

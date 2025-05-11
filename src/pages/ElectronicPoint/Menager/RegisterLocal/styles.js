@@ -20,3 +20,14 @@ export const MapArea = styled.View`
     border-radius: 10px;
     margin-top: 20px;
 `;
+
+export const MapSearchArea = styled.View`
+    flex-direction: row;
+`;
+
+export const MapButtonSearch = styled.TouchableOpacity`
+    width: 45;
+    height: 45;
+    align-items: center;
+    justify-content: center;  
+`;
