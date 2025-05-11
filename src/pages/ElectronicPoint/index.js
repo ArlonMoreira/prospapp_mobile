@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, TouchableWithoutFeedback, View, Text } from 'react-native';
+import { Modal, TouchableWithoutFeedback, View, Text, TextInput, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import MapView, { Marker } from 'react-native-maps';
+//Hooks
+import { useSelector, useDispatch } from 'react-redux';
+import { useRef } from 'react';
 //Components
 import Header from '../../components/Header';
 import Menager from './Menager';
@@ -10,7 +14,6 @@ import Fade from '../../components/Fade';
 import InputForm from '../../components/InputForm';
 import ButtonLg from '../../components/ButtonLg';
 //Redux
-import { useSelector, useDispatch } from 'react-redux';
 import { list, register, resetForm } from '../../slices/pointLocalsSlice';
 //Styles
 import { StatusBar } from 'expo-status-bar';
@@ -27,9 +30,11 @@ import {
 import { Select } from '../Call/styles';
 import { 
   SelectContainer,
-  LabelSelect
+  LabelSelect,
+  MapArea
 } from './styles';
 import { Errors, Error } from '../Register/styles';
+import { Instruction } from '../ElectronicCall/ListClass/styles';
 
 const URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -71,70 +76,111 @@ const ElectronicPoint = () => {
   }, [companyId]);
 
   //Registrar empresa
-  const [ showModalAddLocal, setShowModalAddLocal ] = useState(false);
-  const [ nameSelected, setNameSelected ] = useState('');
-  const [ idenSelected, setIdenSelected ] = useState(null);
-  const [ hourSelected, setHourSelected ] = useState('00');
-  const [ minuteSelected, setMinuteSelected ] = useState('00');
+  // const [ showModalAddLocal, setShowModalAddLocal ] = useState(false);
+  // const [ nameSelected, setNameSelected ] = useState('');
+  // const [ idenSelected, setIdenSelected ] = useState(null);
+  // const [ hourSelected, setHourSelected ] = useState('00');
+  // const [ minuteSelected, setMinuteSelected ] = useState('00');
 
-  const [ hourOptions, setHourOptions ] = useState([]);
-  const [ minuteOptions, setMinuteOptions ] = useState([]);
+  // const [ hourOptions, setHourOptions ] = useState([]);
+  // const [ minuteOptions, setMinuteOptions ] = useState([]);
 
-  const closeModalAddLocal = () => {
-    setNameSelected('');
-    setIdenSelected(null);
-    setHourSelected('00');
-    setMinuteSelected('00');    
-    setShowModalAddLocal(false);
-  };
+  // const closeModalAddLocal = () => {
+  //   setNameSelected('');
+  //   setIdenSelected(null);
+  //   setHourSelected('00');
+  //   setMinuteSelected('00');    
+  //   setShowModalAddLocal(false);
+  // };
 
-  useEffect(() => {
-    const hours = Array.from({ length: 24 }, (_, i) => String(i || 0).padStart(2, '0'));
-    setHourOptions(hours);
+  // useEffect(() => {
+  //   const hours = Array.from({ length: 24 }, (_, i) => String(i || 0).padStart(2, '0'));
+  //   setHourOptions(hours);
 
-    const minutes = Array.from({ length: 60 }, (_, i) => String(i || 0).padStart(2, '0'));
-    setMinuteOptions(minutes);
+  //   const minutes = Array.from({ length: 60 }, (_, i) => String(i || 0).padStart(2, '0'));
+  //   setMinuteOptions(minutes);
 
-    dispatch(resetForm());
+  //   dispatch(resetForm());
 
-  }, []);
+  // }, []);
 
-  const handleAddLocal = () => {  
-    const data = {
-      name: nameSelected,
-      identification_number: idenSelected && parseInt(idenSelected.replace(/\D/g, '')),
-      workload_hour: hourSelected,
-      workload_minutes: minuteSelected,
-      company: companyId
-    };
+  // const handleAddLocal = () => {  
+  //   const data = {
+  //     name: nameSelected,
+  //     identification_number: idenSelected && parseInt(idenSelected.replace(/\D/g, '')),
+  //     workload_hour: hourSelected,
+  //     workload_minutes: minuteSelected,
+  //     company: companyId
+  //   };
 
-    dispatch(register(data));
+  //   dispatch(register(data));
     
+  // };
+
+  // useEffect(() => {
+  //   if(success){
+  //     closeModalAddLocal();
+  //     dispatch(resetForm());
+  //   }
+
+  // }, [success]);
+
+  //Obter localização geográfico do gráfico de locais de ponto
+
+  const mapRef = useRef(null);
+
+  const [ markerCoord, setMarkerCoord ] = useState({
+    latitude: -23.55052,
+    longitude: -46.633308,
+  });  
+
+  const handleMapPress = (e) => {
+    const coord = e.nativeEvent.coordinate;
+    setMarkerCoord(coord);
+
+    // Mover a câmera para a nova coordenada
+    mapRef.current?.animateToRegion({
+      ...coord,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
+    }, 1000);
+
   };
 
-  useEffect(() => {
-    if(success){
-      closeModalAddLocal();
-      dispatch(resetForm());
+  const searchLocation = async (query) => {
+    console.log(query)
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`
+    );
+
+    const data = await res.json();
+    
+    if (data.length > 0) {
+      const { lat, lon } = data[0];
+      setMarkerCoord({ latitude: parseFloat(lat), longitude: parseFloat(lon) });
     }
 
-  }, [success]);
+  };  
+
+  useEffect(() => {
+    console.log(markerCoord)
+  }, [markerCoord])
 
   return (
     <>
       {
         loading ? <LoadingPage backgroundColor={primaryColor} logo={logo}/> : (
           <Container>
-            {(showModalAddLocal) && <Fade/>}            
+            {/* {(showModalAddLocal) && <Fade/>}            
             <Modal
               transparent={true}
               animationType='slide'
               visible={showModalAddLocal}
               onRequestClose={() => setShowModalAddLocal(false)} //Permite fechar o modal quando clicado em uma área fora      
             >
-              <TouchableWithoutFeedback onPress={() => setShowModalAddLocal(false)}>
-                <ModalView>
-                  <ModalContent>
+              <ModalView style={{ flex: 1 }}>
+                <ModalContent>
+                  <ScrollView>
                     <ModalTitle style={{color: primaryColor}}>Adicionar Local</ModalTitle>
                     <ModalResume>Nos campos abaixo, você irá registrar o local/empresa de registro de ponto. </ModalResume>
                     <InputForm label='Nome do Local/Empresa' value={nameSelected} setValue={setNameSelected} color={primaryColor} pointerColor={primaryColor}/>
@@ -180,14 +226,34 @@ const ElectronicPoint = () => {
                           </Picker>
                         </Select>
                       </View>
-                    </SelectContainer>  
+                    </SelectContainer>
+                    <MapArea>
+                      <Instruction>Abaixo, selecione a localização da empresa. Esse local é obrigatório, será utilizado no "Check-in" identificando se o colaborador está de fato no local de registro de ponto.</Instruction>
+                      <TextInput
+                        placeholder="Digite um endereço"
+                        onSubmitEditing={(e) => searchLocation(e.nativeEvent.text)}
+                        style={{ backgroundColor: 'white', padding: 10, marginBottom: 10 }}
+                      />                    
+                      <MapView
+                        style={{ width: '100%', height: 300 }}
+                        initialRegion={{
+                          latitude: markerCoord.latitude,
+                          longitude: markerCoord.longitude,
+                          latitudeDelta: 0.01,
+                          longitudeDelta: 0.01
+                        }}
+                        onLongPress={handleMapPress}
+                      >
+                        <Marker coordinate={markerCoord}/>
+                      </MapView>
+                    </MapArea>
                     <View style={{marginTop: 30, width: '100%', paddingLeft: 10}}>
                       <ButtonLg loading={loadingRegister} disabled={loadingRegister} action={() => handleAddLocal()} title={'Adicionar'} color={primaryColor} fontColor='#fff' largeWidth={300}/>  
-                    </View>            
-                  </ModalContent>
-                </ModalView>
-              </TouchableWithoutFeedback>
-            </Modal>            
+                    </View> 
+                  </ScrollView>           
+                </ModalContent>
+              </ModalView>
+            </Modal>             */}
             <StatusBar 
               translucent
               backgroundColor="transparent"
@@ -202,7 +268,7 @@ const ElectronicPoint = () => {
                   <Menager 
                     primaryColor={primaryColor}
                     locals={data}
-                    setShowModalAddLocal={setShowModalAddLocal}
+                    //setShowModalAddLocal={setShowModalAddLocal}
                     logo={logo}/>
                 : 
                   <Employee/>

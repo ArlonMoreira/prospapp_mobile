@@ -7,6 +7,7 @@ import { useNavigation, useNavigationState } from '@react-navigation/native';
 import ListLocals from './ListLocals';
 import RemoveLocals from './RemoveLocals';
 import EditLocals from './EditLocals';
+import RegisterLocal from './RegisterLocal';
 //Routes
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 //Styles
@@ -14,7 +15,7 @@ import { ToolsArea } from '../../ElectronicCall/styles';
 
 const Stack = createNativeStackNavigator();
 
-const Menager = ({primaryColor, locals, setShowModalAddLocal, logo}) => {
+const Menager = ({primaryColor, locals, logo}) => {
 
   const navigation = useNavigation(); 
 
@@ -50,7 +51,7 @@ const Menager = ({primaryColor, locals, setShowModalAddLocal, logo}) => {
           color={primaryColor}
           iconName={'add-circle'}
           title={'Adicionar Local'}
-          action={() => setShowModalAddLocal(true)}
+          action={() => navigation.navigate('RegisterLocal', { color: primaryColor })}
         />
         <BoxAction
           color={currentRouteName == 'ListLocals' ? '#f0f2f5': primaryColor}
@@ -108,7 +109,17 @@ const Menager = ({primaryColor, locals, setShowModalAddLocal, logo}) => {
           options={{
             headerShown: false,
           }}
-        />                
+        /> 
+        <Stack.Screen
+          name="RegisterLocal"
+          component={RegisterLocal}
+          initialParams={{
+            color: primaryColor
+          }}               
+          options={{
+            headerShown: false,
+          }}
+        />                       
       </Stack.Navigator>      
     </>
   )

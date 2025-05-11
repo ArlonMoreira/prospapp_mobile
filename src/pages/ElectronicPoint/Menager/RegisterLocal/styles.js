@@ -5,6 +5,7 @@ export const SelectContainer = styled.View`
     flex-direction: row;
     gap: 20px;
     margin-left: 10px;
+    margin-top: 20;
 `;
 
 export const LabelSelect = styled.Text`
