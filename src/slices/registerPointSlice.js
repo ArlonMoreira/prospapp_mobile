@@ -1,3 +1,4 @@
+import * as Location from 'expo-location';
 //Redux
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 //Hooks
@@ -13,7 +14,30 @@ const initialState = {
 
 export const register = createAsyncThunk(
     'registerPoint/register',
-    async(data, {getState, rejectWithValue}) => {
+    async(data, {getState, rejectWithValue, dispatch}) => {
+        // Inicia o loading antes da captura de coordenadas
+
+        let { status } = await Location.requestForegroundPermissionsAsync();
+
+        if ( status !== 'granted' ) {
+          alert('Permissão para acessar a localização foi negada');
+          return;
+        }
+    
+        const location = await Location.getCurrentPositionAsync({
+            accuracy: Location.Accuracy.High,
+            maximumAge: 0, // força a não reutilizar cache
+            timeout: 10000 // tempo limite opcional
+        });
+
+        const { latitude, longitude } = location.coords;
+
+        data = {
+            ...data,
+            latitude,
+            longitude
+        };
+        console.log(data)
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointRegister({
             data,
@@ -68,13 +92,13 @@ export const registerPointSlice = createSlice({
     reducers: {
         resetForm: (state) => {
             state.successRemove = false;
+        },
+        startLoading: (state) => {
+            state.loading = true;
         }
     },    
     extraReducers: (builder) => {
         builder
-            .addCase(register.pending, (state) => {
-                state.loading = true;
-            })
             .addCase(register.fulfilled, (state, action) => {
                 state.loading = false;
                 state.open_point = action.payload.data;
@@ -128,5 +152,5 @@ export const registerPointSlice = createSlice({
     }    
 });
 
-export const { resetForm } = registerPointSlice.actions;
+export const { resetForm, startLoading } = registerPointSlice.actions;
 export default registerPointSlice.reducer;

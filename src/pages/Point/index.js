@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Text, FlatList, View, Modal, TouchableWithoutFeedback } from 'react-native';
 //Redux
-import { register } from '../../slices/registerPointSlice';
-import { list, removePointToday } from '../../slices/registerPointSlice';
+import { list, removePointToday, register } from '../../slices/registerPointSlice';
+import { startLoading } from '../../slices/registerPointSlice';
 //Hooks
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
@@ -55,12 +55,14 @@ const Point = ({ route }) => {
     if(local) dispatch(list(local.id));
   }, [local]);
 
-  const handleRegisterPoint = () => {
+  const handleRegisterPoint = async () => {
+    dispatch(startLoading());
+
     const data = {
-      local_id: local ? local.id: 0
+      local_id: local ? local.id: 0,
     };
 
-    dispatch(register(data));
+    await dispatch(register(data));
 
   };
 
@@ -137,8 +139,6 @@ const Point = ({ route }) => {
   useEffect(() => {
     if(successRemove) setShowModalRemove(false);
   }, [successRemove]);
-
-  useEffect(() => { console.log('teste',all_points_today)}, [all_points_today])
 
   return (
     <>
