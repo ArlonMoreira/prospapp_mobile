@@ -33,7 +33,7 @@ const RegisterLocal = ({ route }) => {
 
   const { success, errors, loadingRegister } = useSelector(state => state.pointLocals);
 
-  const { color, companyId } = route.params;
+  const { color, companyId, local } = route.params;
 
   const nameRef = useRef(null);
   const [ name, setName ] = useState('');  
@@ -43,7 +43,7 @@ const RegisterLocal = ({ route }) => {
   const [ limitRadius, setLimitRadius ] = useState('100');
 
   const [ hourOptions, setHourOptions ] = useState([]);
-  const [ minuteOptions, setMinuteOptions ] = useState([]);  
+  const [ minuteOptions, setMinuteOptions ] = useState([]);
 
   useEffect(() => {
     const hours = Array.from({ length: 24 }, (_, i) => String(i || 0).padStart(2, '0'));
@@ -53,8 +53,6 @@ const RegisterLocal = ({ route }) => {
     setMinuteOptions(minutes);
 
     dispatch(resetForm());
-
-    nameRef.current?.focus();
 
   }, []);
 
@@ -142,6 +140,24 @@ const RegisterLocal = ({ route }) => {
     }
 
   };
+
+  useEffect(() => {
+    if(local){
+      local.name && setName(local.name);
+      local.identification_number && setIden(local.identification_number.toString());
+      local.workload_hour && setHour(local.workload_hour.toString().padStart(2, '0'));
+      local.workload_minutes && setMinute(local.workload_minutes.toString().padStart(2, '0'));
+      local.limit_radius && setLimitRadius(local.limit_radius.toString());
+      if(local.latitude && local.latitude){
+        setMarkerCoord({
+          latitude: local.latitude,
+          longitude: local.longitude
+        });
+      }
+      
+    }
+    
+  }, [local]);    
 
   return (
     <Container>        

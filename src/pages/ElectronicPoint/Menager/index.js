@@ -66,8 +66,8 @@ const Menager = ({primaryColor, locals, logo, companyId}) => {
               title={'Registar ponto'}
             />
             <BoxAction
-              color={currentRouteName == 'EditLocals' ? '#f0f2f5': primaryColor}
-              backgroundColor={currentRouteName !== 'EditLocals' ? '#f0f2f5': primaryColor}
+              color={(currentRouteName == 'EditLocals' || currentRouteName == 'EditLocal') ? '#f0f2f5': primaryColor}
+              backgroundColor={(currentRouteName !== 'EditLocals' && currentRouteName !== 'EditLocal') ? '#f0f2f5': primaryColor}
               iconName={'pencil-sharp'}
               action={() => navigation.navigate('EditLocals')}
               title={'Editar Local'}
@@ -127,7 +127,18 @@ const Menager = ({primaryColor, locals, logo, companyId}) => {
           options={{
             headerShown: false,
           }}
-        />                       
+        />
+        <Stack.Screen
+          name="EditLocal"
+          component={RegisterLocal}
+          initialParams={{
+            color: primaryColor,
+            companyId
+          }}               
+          options={{
+            headerShown: false,
+          }}
+        />                             
       </Stack.Navigator>      
     </>
   )
