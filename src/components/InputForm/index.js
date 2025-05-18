@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Container, Input, InputMask, Stick, ShowPassword } from './styles';
 import { Feather } from '@expo/vector-icons';
 
-const InputForm = ({element, label, value, setValue, secureTextEntry, color='#fff', secundaryColor, mask=false, pointerColor="#fff"}) => {
+const InputForm = ({element, label, value, setValue, secureTextEntry, color='#fff', secundaryColor, mask=false, pointerColor="#fff", keyboardType='default'}) => {
 
     const [isFocused, setIsFocused] = useState(false);
     const [isPasswordSecure, setIsPasswordSecure] = useState(secureTextEntry);
@@ -71,6 +71,7 @@ const InputForm = ({element, label, value, setValue, secureTextEntry, color='#ff
                         secureTextEntry={isPasswordSecure}   
                         style={{borderBottomColor: color, color: secundaryColor ? secundaryColor: color}}  
                         selectionColor={pointerColor}     
+                        keyboardType={keyboardType} 
                     >
                     </Input>
                 )

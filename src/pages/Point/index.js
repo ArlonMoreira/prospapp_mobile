@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Text, FlatList, View, Modal, TouchableWithoutFeedback } from 'react-native';
 //Redux
-import { list, removePointToday, register } from '../../slices/registerPointSlice';
+import { list, removePointToday, register, resetErrorMessage } from '../../slices/registerPointSlice';
 import { startLoading } from '../../slices/registerPointSlice';
 //Hooks
 import { useDispatch } from 'react-redux';
@@ -11,6 +11,7 @@ import Header from '../../components/Header';
 import LoadingPage from '../../components/LoadingPage';
 import ButtonLg from '../../components/ButtonLg';
 import Fade from '../../components/Fade';
+import Alert from '../../components/Alert';
 //Styles
 import { StatusBar } from 'expo-status-bar';
 import { 
@@ -38,7 +39,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 const Point = ({ route }) => {
 
   const dispatch = useDispatch();
-  const { loading, open_point, all_points_today, loadingRemove, successRemove } = useSelector(state => state.registerPoint);
+  const { loading, open_point, all_points_today, loadingRemove, successRemove, errorMessage } = useSelector(state => state.registerPoint);
 
   const [ color, setColor ] = useState(null);
   const [ local, setLocal ] = useState(null);
@@ -72,6 +73,36 @@ const Point = ({ route }) => {
       minute: '2-digit',
     });
   };
+
+  //Alert mensagem
+  const [showAlertError, setShowAlertError] = useState(false);
+
+  //Apresentar o alert caso tiver mensagem de erro.
+  useEffect(()=>{
+    if(errorMessage){
+      setShowAlertError(true);
+    } else {
+      setShowAlertError(false);
+    }
+
+  }, [errorMessage, setShowAlertError]);
+
+  //Fechar a mensagem de erro automaticamente.
+  useEffect(()=>{
+    if(!showAlertError){ //Resetar o estado de errorMessage caso não tiver mais visível o alerta.
+      dispatch(resetErrorMessage());
+    } else { //Caso estiver aberto a mensagem de erro, 1 segundo depois será fechada sozinha.
+      const timeoutClearMessage = setTimeout(()=>{
+        dispatch(resetErrorMessage());
+      }, 6000);
+
+      return () => {
+        clearTimeout(timeoutClearMessage);
+      }
+
+    }
+
+  }, [showAlertError]);  
   
   // Gerar linhas dabela
   const renderItem = ({ item }) => {
@@ -146,6 +177,9 @@ const Point = ({ route }) => {
         loading ? <LoadingPage backgroundColor={color} logo={logo}/> : (
           <Container>
             {showModalRemove && <Fade/>}
+            {
+              showAlertError && <Alert message={errorMessage} setShow={setShowAlertError}/>
+            }            
             <Modal
               transparent={true}
               animationType='slide'

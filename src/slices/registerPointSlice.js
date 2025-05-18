@@ -8,6 +8,7 @@ const initialState = {
     loading: false,
     loadingRemove: false,
     successRemove: false,
+    errorMessage: null,
     open_point: {},
     all_points_today: []
 };
@@ -37,11 +38,11 @@ export const register = createAsyncThunk(
             latitude,
             longitude
         };
-        console.log(data)
+
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointRegister({
             data,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3MDE2NzU1LCJpYXQiOjE3NDY1ODQ3NTUsImp0aSI6ImEwYTYzZjU3ZDI4MDQ5NDk5NTg5Zjc0YWFjMzIxODhlIiwidXNlcl9pZCI6MX0.3OTDo7ueD6i104rRzEW0yMJ9JXxB9oQLabDag7dg0J8"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3OTEzMTIwLCJpYXQiOjE3NDc0ODExMjAsImp0aSI6ImEzNGJiODBmODFkZjQzYzI4YjliYTFiNmNlYzk5NDU1IiwidXNlcl9pZCI6MX0.dDmUNWcMWNgi_TsdCYEXu7Lrhfp3bIklz3zZ_eVjwnA"
         });
 
         if(response.success){
@@ -58,7 +59,7 @@ export const list = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointList({
             localId,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3MDE2NzU1LCJpYXQiOjE3NDY1ODQ3NTUsImp0aSI6ImEwYTYzZjU3ZDI4MDQ5NDk5NTg5Zjc0YWFjMzIxODhlIiwidXNlcl9pZCI6MX0.3OTDo7ueD6i104rRzEW0yMJ9JXxB9oQLabDag7dg0J8"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3OTEzMTIwLCJpYXQiOjE3NDc0ODExMjAsImp0aSI6ImEzNGJiODBmODFkZjQzYzI4YjliYTFiNmNlYzk5NDU1IiwidXNlcl9pZCI6MX0.dDmUNWcMWNgi_TsdCYEXu7Lrhfp3bIklz3zZ_eVjwnA"
         });
 
         if(response.success){
@@ -75,7 +76,7 @@ export const removePointToday = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointRemoveToday({
             pointId,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3MDE2NzU1LCJpYXQiOjE3NDY1ODQ3NTUsImp0aSI6ImEwYTYzZjU3ZDI4MDQ5NDk5NTg5Zjc0YWFjMzIxODhlIiwidXNlcl9pZCI6MX0.3OTDo7ueD6i104rRzEW0yMJ9JXxB9oQLabDag7dg0J8"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3OTEzMTIwLCJpYXQiOjE3NDc0ODExMjAsImp0aSI6ImEzNGJiODBmODFkZjQzYzI4YjliYTFiNmNlYzk5NDU1IiwidXNlcl9pZCI6MX0.dDmUNWcMWNgi_TsdCYEXu7Lrhfp3bIklz3zZ_eVjwnA"
         });
 
         if(response.success){
@@ -92,9 +93,13 @@ export const registerPointSlice = createSlice({
     reducers: {
         resetForm: (state) => {
             state.successRemove = false;
+            state.errorMessage = null;
         },
         startLoading: (state) => {
             state.loading = true;
+        },
+        resetErrorMessage: (state) => {
+            state.errorMessage = null;
         }
     },    
     extraReducers: (builder) => {
@@ -115,6 +120,7 @@ export const registerPointSlice = createSlice({
             })
             .addCase(register.rejected, (state, action) => {
                 state.loading = false;
+                state.errorMessage = action.payload.message;
             })
             .addCase(list.pending, (state) => {
                 state.loading = true;
@@ -152,5 +158,5 @@ export const registerPointSlice = createSlice({
     }    
 });
 
-export const { resetForm, startLoading } = registerPointSlice.actions;
+export const { resetForm, startLoading, resetErrorMessage } = registerPointSlice.actions;
 export default registerPointSlice.reducer;

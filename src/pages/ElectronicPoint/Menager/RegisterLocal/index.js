@@ -13,7 +13,6 @@ import ButtonLg from '../../../../components/ButtonLg';
 //Styles
 import { 
   Container,
-  InstructionArea,
   Instruction,
   ScrollArea
 } from '../../../ElectronicCall/ListClass/styles';
@@ -40,7 +39,8 @@ const RegisterLocal = ({ route }) => {
   const [ name, setName ] = useState('');  
   const [ iden, setIden ] = useState(null);
   const [ hour, setHour ] = useState('00');
-  const [ minute, setMinute ] = useState('00');  
+  const [ minute, setMinute ] = useState('00');
+  const [ limitRadius, setLimitRadius ] = useState('100');
 
   const [ hourOptions, setHourOptions ] = useState([]);
   const [ minuteOptions, setMinuteOptions ] = useState([]);  
@@ -66,9 +66,10 @@ const RegisterLocal = ({ route }) => {
       workload_minutes: minute,
       company: companyId,
       latitude: markerCoord.latitude,
-      longitude: markerCoord.longitude
+      longitude: markerCoord.longitude,
+      limit_radius: parseInt(limitRadius)
     };
-    console.log(data);
+
     dispatch(register(data));
   
   };
@@ -189,6 +190,8 @@ const RegisterLocal = ({ route }) => {
             </Select>
           </View>
         </SelectContainer> 
+        <Instruction style={{ marginTop: 30}}>Defina o raio limite para marcação de ponto (em metros). Este valor representa o perímetro de tolerância para registros. Colaboradores fora desse raio não poderão realizar a marcação de ponto.</Instruction>        
+        <InputForm label='Raio (Metros)' value={limitRadius} setValue={setLimitRadius} color={color} pointerColor={color} keyboardType='numeric'/>        
         <Instruction style={{ marginTop: 30}}>Abaixo, selecione a localização da empresa, clique e segure sobre a localização. Esse local é obrigatório, será utilizado no "Check-in" identificando se o colaborador está de fato no local de registro de ponto.</Instruction>        
         <MapArea>
           <MapSearchArea>
