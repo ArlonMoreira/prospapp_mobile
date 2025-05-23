@@ -7,6 +7,7 @@ const initialState = {
     data: [],
     loading: false,
     loadingRegister: false,
+    errorMessage: null, 
     success: false,
     errors: []
 };
@@ -18,7 +19,7 @@ export const list = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointLocalsList({
             companyId,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3OTEzMTIwLCJpYXQiOjE3NDc0ODExMjAsImp0aSI6ImEzNGJiODBmODFkZjQzYzI4YjliYTFiNmNlYzk5NDU1IiwidXNlcl9pZCI6MX0.dDmUNWcMWNgi_TsdCYEXu7Lrhfp3bIklz3zZ_eVjwnA"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ4NDY0NzE4LCJpYXQiOjE3NDgwMzI3MTgsImp0aSI6ImZmMDJmODkzMTlhYzRlYTNiODVmZjI0NzU1ZDhhNGQ2IiwidXNlcl9pZCI6MX0.CZWOuUWDC3xkb2F5S4PbaeM-t66Pp1K89dMoBE7P1eg"
         });
 
         if(response.success){
@@ -36,7 +37,25 @@ export const register = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointLocalRegister({
             data,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3OTEzMTIwLCJpYXQiOjE3NDc0ODExMjAsImp0aSI6ImEzNGJiODBmODFkZjQzYzI4YjliYTFiNmNlYzk5NDU1IiwidXNlcl9pZCI6MX0.dDmUNWcMWNgi_TsdCYEXu7Lrhfp3bIklz3zZ_eVjwnA"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ4NDY0NzE4LCJpYXQiOjE3NDgwMzI3MTgsImp0aSI6ImZmMDJmODkzMTlhYzRlYTNiODVmZjI0NzU1ZDhhNGQ2IiwidXNlcl9pZCI6MX0.CZWOuUWDC3xkb2F5S4PbaeM-t66Pp1K89dMoBE7P1eg"
+        });
+        
+        if(response.success){
+            return response;
+        } else {
+            return rejectWithValue(response);
+        }        
+    }
+);
+
+export const change = createAsyncThunk(
+    'pointLocals/change',
+    async({data, localId}, {getState, rejectWithValue}) => {
+        const userAuth = await getState().auth.userAuth;
+        const response = await useRequest().pointLocalEdit({
+            data,
+            localId,
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ4NDY0NzE4LCJpYXQiOjE3NDgwMzI3MTgsImp0aSI6ImZmMDJmODkzMTlhYzRlYTNiODVmZjI0NzU1ZDhhNGQ2IiwidXNlcl9pZCI6MX0.CZWOuUWDC3xkb2F5S4PbaeM-t66Pp1K89dMoBE7P1eg"
         });
         
         if(response.success){
@@ -54,9 +73,13 @@ export const pointLocalsSlice = createSlice({
         resetForm: (state) => {
             state.loading = false
             state.loadingRegister = false
+            state.errorMessage = null;
             state.success = false
             state.errors = []
-        }
+        },
+        resetErrorMessage: (state) => {
+            state.errorMessage = null;
+        }        
     },
     extraReducers: (builder) => {
         builder
@@ -89,9 +112,32 @@ export const pointLocalsSlice = createSlice({
                 state.success = false;
                 state.loadingRegister = false;
                 state.errors = action.payload.data;
+                state.errorMessage = action.payload.message;
             })
+            //Aguardando carregamento alteração de local
+            .addCase(change.pending, (state) => {
+                state.loadingRegister = true;
+                state.success = false;
+            })   
+            //Sucesso ao editar local
+            .addCase(change.fulfilled, (state, action) => {
+                state.loadingRegister = false;
+                state.success = true;
+                const index = state.data.findIndex(obj => obj.id === action.payload.data.id);
+                if(index > -1){
+                    state.data[index] = action.payload.data;
+                }
+
+            })
+            //Falha ao editar local
+            .addCase(change.rejected, (state, action) => {
+                state.success = false;
+                state.loadingRegister = false;
+                state.errors = action.payload.data;
+                state.errorMessage = action.payload.message;
+            })                                 
     }
 });
 
-export const { resetForm } = pointLocalsSlice.actions;
+export const { resetForm, resetErrorMessage } = pointLocalsSlice.actions;
 export default pointLocalsSlice.reducer;

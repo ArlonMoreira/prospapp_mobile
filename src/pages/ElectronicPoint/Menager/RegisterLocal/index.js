@@ -3,13 +3,14 @@ import { View, TextInput, Button } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import MapView, { Marker } from 'react-native-maps';
 //Redux
-import { register, resetForm } from '../../../../slices/pointLocalsSlice';
+import { register, resetForm, change, resetErrorMessage } from '../../../../slices/pointLocalsSlice';
 //Hooks
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 //Components
 import InputForm from '../../../../components/InputForm';
 import ButtonLg from '../../../../components/ButtonLg';
+import Alert from '../../../../components/Alert';
 //Styles
 import { 
   Container,
@@ -31,11 +32,14 @@ const RegisterLocal = ({ route }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  const { success, errors, loadingRegister } = useSelector(state => state.pointLocals);
+  const { success, errors, loadingRegister, errorMessage } = useSelector(state => state.pointLocals);
+
+  const [ editPage, setEditPage ] = useState(false);
 
   const { color, companyId, local } = route.params;
 
   const nameRef = useRef(null);
+  const [ id, setId ] = useState(null);
   const [ name, setName ] = useState('');  
   const [ iden, setIden ] = useState(null);
   const [ hour, setHour ] = useState('00');
@@ -59,7 +63,7 @@ const RegisterLocal = ({ route }) => {
   const handleAddLocal = () => {  
     const data = {
       name: name,
-      identification_number: iden && parseInt(idenSelected.replace(/\D/g, '')),
+      identification_number: iden && parseInt(iden.replace(/\D/g, '')),
       workload_hour: hour,
       workload_minutes: minute,
       company: companyId,
@@ -68,7 +72,11 @@ const RegisterLocal = ({ route }) => {
       limit_radius: parseInt(limitRadius)
     };
 
-    dispatch(register(data));
+    if(editPage){
+      dispatch(change({data, localId: id}))
+    } else {
+      dispatch(register(data));
+    }
   
   };
 
@@ -128,7 +136,7 @@ const RegisterLocal = ({ route }) => {
       if (result.length > 0) {
         //Dá preferência pra localização em Goiás
         const onlyGoias = result.filter(item => item.display_name.includes("Goiás"))[0];
-        console.log('onlyGoias', onlyGoias)
+
         const { lat, lon } = onlyGoias ? onlyGoias: result[0];
         const coord = { latitude: parseFloat(lat), longitude: parseFloat(lon) };
 
@@ -143,6 +151,8 @@ const RegisterLocal = ({ route }) => {
 
   useEffect(() => {
     if(local){
+      setEditPage(true); //Caso vinher os dados do local como parâmetro será identificado como página de edição.
+      local.id && setId(local.id);
       local.name && setName(local.name);
       local.identification_number && setIden(local.identification_number.toString());
       local.workload_hour && setHour(local.workload_hour.toString().padStart(2, '0'));
@@ -157,11 +167,44 @@ const RegisterLocal = ({ route }) => {
       
     }
     
-  }, [local]);    
+  }, [local]); 
+  
+  //Alert mensagem
+  const [showAlertError, setShowAlertError] = useState(false);
+
+  //Apresentar o alert caso tiver mensagem de erro.
+  useEffect(()=>{
+    if(errorMessage){
+      setShowAlertError(true);
+    } else {
+      setShowAlertError(false);
+    }
+
+  }, [errorMessage, setShowAlertError]);
+
+  //Fechar a mensagem de erro automaticamente.
+  useEffect(()=>{
+    if(!showAlertError){ //Resetar o estado de errorMessage caso não tiver mais visível o alerta.
+      dispatch(resetErrorMessage());
+    } else { //Caso estiver aberto a mensagem de erro, 1 segundo depois será fechada sozinha.
+      const timeoutClearMessage = setTimeout(()=>{
+        dispatch(resetErrorMessage());
+      }, 6000);
+
+      return () => {
+        clearTimeout(timeoutClearMessage);
+      }
+
+    }
+
+  }, [showAlertError]);   
 
   return (
     <Container>        
-      <ScrollArea>     
+      <ScrollArea> 
+        {
+          showAlertError && <Alert message={errorMessage} setShow={setShowAlertError}/>
+        }             
         <InputForm element={nameRef} label='Nome do Local/Empresa' value={name} setValue={setName} color={color} pointerColor={color}/>
         <Errors>
           {

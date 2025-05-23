@@ -35,7 +35,7 @@ export const logout = createAsyncThunk(
             data: {
                 refresh: userAuth.refresh
             },
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3OTEzMTIwLCJpYXQiOjE3NDc0ODExMjAsImp0aSI6ImEzNGJiODBmODFkZjQzYzI4YjliYTFiNmNlYzk5NDU1IiwidXNlcl9pZCI6MX0.dDmUNWcMWNgi_TsdCYEXu7Lrhfp3bIklz3zZ_eVjwnA"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ4NDY0NzE4LCJpYXQiOjE3NDgwMzI3MTgsImp0aSI6ImZmMDJmODkzMTlhYzRlYTNiODVmZjI0NzU1ZDhhNGQ2IiwidXNlcl9pZCI6MX0.CZWOuUWDC3xkb2F5S4PbaeM-t66Pp1K89dMoBE7P1eg"
         });
 
         if(response.success){

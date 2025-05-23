@@ -316,6 +316,19 @@ const useRequest = () => {
                 }                
             }); 
         },
+        pointLocalEdit: ({ data, token, localId }) => {
+            return request({
+                endpoint: `point/local/change/${localId}/`,
+                params: {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }                
+            }); 
+        },        
         pointRegister: ({ data, token }) => {
             return request({
                 endpoint: 'point/register/',
