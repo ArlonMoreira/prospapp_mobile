@@ -36,9 +36,8 @@ const RegisterLocal = ({ route }) => {
 
   const [ editPage, setEditPage ] = useState(false);
 
-  const { color, companyId, local } = route.params;
+  const { color, companyId, local, handleScroll, nameRef } = route.params;
 
-  const nameRef = useRef(null);
   const [ id, setId ] = useState(null);
   const [ name, setName ] = useState('');  
   const [ iden, setIden ] = useState(null);
@@ -201,7 +200,10 @@ const RegisterLocal = ({ route }) => {
 
   return (
     <Container>        
-      <ScrollArea> 
+      <ScrollArea
+        onScroll={handleScroll}
+        scrollEventThrottle={16}   
+      > 
         {
           showAlertError && <Alert message={errorMessage} setShow={setShowAlertError}/>
         }             
@@ -278,8 +280,8 @@ const RegisterLocal = ({ route }) => {
             <Marker coordinate={markerCoord}/>
           </MapView>
         </MapArea>
-        <View style={{marginTop: 30, width: '100%', paddingLeft: 10}}>
-          <ButtonLg loading={loadingRegister} disabled={loadingRegister} action={() => handleAddLocal()} title={'Adicionar'} color={color} fontColor='#fff' largeWidth={330}/>  
+        <View style={{marginTop: 30, width: '100%', paddingLeft: 10, marginBottom: 20}}>
+          <ButtonLg loading={loadingRegister} disabled={loadingRegister} action={() => handleAddLocal()} title={editPage ? 'Alterar': 'Adicionar'} color={color} fontColor='#fff' largeWidth={330}/>  
         </View>         
       </ScrollArea>
     </Container>

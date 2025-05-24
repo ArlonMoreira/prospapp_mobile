@@ -13,10 +13,15 @@ import {
 
 const EditLocals = ({ route }) => {
 
-  const { data, color } = route.params;
+  const { data, color, setShowTools } = route.params;
 
   //Navegar para página de login quando autenticado.
   const navigation = useNavigation();  
+
+  //Para evitar de não aparecer o topo quando for navegado para a página atual;
+  useEffect(() => {
+    setShowTools(true);
+  }, [route.params]);  
 
   return (
     <Container>

@@ -1,5 +1,4 @@
-import React from 'react';
-import { TouchableOpacity } from 'react-native';
+import React, { useEffect } from 'react';
 //Components
 import WidgetLocals from '../../../components/WidgetLocals';
 //Styles
@@ -12,7 +11,12 @@ import {
 
 const RemoveLocals = ({ route }) => {
 
-  const { data, color, actionItem } = route.params;
+  const { data, color, actionItem, setShowTools } = route.params;
+
+  //Para evitar de não aparecer o topo quando for navegado para a página atual;
+  useEffect(() => {
+    setShowTools(true);
+  }, [route.params]);     
 
   return (
     <Container>

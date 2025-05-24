@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Modal, TouchableWithoutFeedback, View } from 'react-native';
 //Hooks
 import { useSelector, useDispatch } from 'react-redux';
@@ -24,8 +24,7 @@ import { StatusBar } from 'expo-status-bar';
 import { 
   Body,
   TitleAreaPage,
-  TitlePage,
-  Container
+  TitlePage
 } from '../ElectronicCall/styles';
 import { 
   ModalView,
@@ -36,6 +35,7 @@ import {
 import { 
   ToolsArea
 } from '../ElectronicCall/styles';
+import { Container } from './styles';
 
 const URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -126,6 +126,37 @@ const ElectronicPoint = () => {
 
   }, [locals, currentRouteName]); //Quando atualizar o dado vai renavegar pra página que estiver selecionada
 
+  //Scroll
+  const [showTools, setShowTools] = useState(true);
+  const scrollOffsetY = useRef(0);
+  const debounceTimeout = useRef(null);
+  const nameRef = useRef(null);
+  
+  const handleScroll = (event) => {
+    const currentOffsetY = event.nativeEvent.contentOffset.y;
+    const isAtTop = currentOffsetY == 0;
+    scrollOffsetY.current = currentOffsetY;
+  
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+
+    if (!isAtTop) {
+      setShowTools(false);
+    }
+
+    debounceTimeout.current = setTimeout(() => {
+      if (isAtTop) {
+        setShowTools(true);
+      }
+    }, 100); // ajusta o delay conforme necessidade
+
+  };
+
+  //Focar no primeiro input ao scroolar pro topo
+  useEffect(() => {
+    if(showTools) nameRef.current?.focus();
+  }, [showTools]);
 
   return (
     <>
@@ -159,41 +190,53 @@ const ElectronicPoint = () => {
             />      
             <Header themeColor={primaryColor}/>
             <Body>
-                <TitleAreaPage>
-                  <TitlePage style={{color: primaryColor}}>Locais de Ponto</TitlePage>
-                </TitleAreaPage>
                 {
-                  !keyboardVisible && (
-                    <ToolsArea>
-                      <BoxAction
-                        color={currentRouteName == 'RegisterLocal' ? '#f0f2f5': primaryColor}
-                        backgroundColor={currentRouteName !== 'RegisterLocal' ? '#f0f2f5': primaryColor}
-                        iconName={'add-circle'}
-                        title={'Adicionar Local'}
-                        action={() => navigation.navigate('RegisterLocal', { color: primaryColor })}
-                      />
-                      <BoxAction
-                        color={currentRouteName == 'ListLocals' ? '#f0f2f5': primaryColor}
-                        backgroundColor={currentRouteName !== 'ListLocals' ? '#f0f2f5': primaryColor}
-                        iconName={'alarm-sharp'}
-                        action={() => navigation.navigate('ListLocals')}
-                        title={'Registar ponto'}
-                      />
-                      <BoxAction
-                        color={(currentRouteName == 'EditLocals' || currentRouteName == 'EditLocal') ? '#f0f2f5': primaryColor}
-                        backgroundColor={(currentRouteName !== 'EditLocals' && currentRouteName !== 'EditLocal') ? '#f0f2f5': primaryColor}
-                        iconName={'pencil-sharp'}
-                        action={() => navigation.navigate('EditLocals')}
-                        title={'Editar Local'}
-                      />
-                      <BoxAction
-                        color={currentRouteName == 'RemoveLocals' ? '#f0f2f5': primaryColor}
-                        backgroundColor={currentRouteName !== 'RemoveLocals' ? '#f0f2f5': primaryColor}
-                        iconName={'close-circle'}
-                        action={() => navigation.navigate('RemoveLocals')}
-                        title={'Remover Local'}
-                      />                   
-                    </ToolsArea>
+                  showTools && (
+                    <>
+                      <TitleAreaPage>
+                        <TitlePage style={{color: primaryColor}}>Locais de Ponto</TitlePage>
+                      </TitleAreaPage>
+                      {
+                        !keyboardVisible && (
+                          <ToolsArea>
+                            <BoxAction
+                              color={currentRouteName == 'ListLocals' ? '#f0f2f5': primaryColor}
+                              backgroundColor={currentRouteName !== 'ListLocals' ? '#f0f2f5': primaryColor}
+                              iconName={'alarm-sharp'}
+                              action={() => navigation.navigate('ListLocals')}
+                              title={'Registar ponto'}
+                            />                         
+                            {
+                              staffPerfil && (
+                              <>
+                                <BoxAction
+                                  color={currentRouteName == 'RegisterLocal' ? '#f0f2f5': primaryColor}
+                                  backgroundColor={currentRouteName !== 'RegisterLocal' ? '#f0f2f5': primaryColor}
+                                  iconName={'add-circle'}
+                                  title={'Adicionar Local'}
+                                  action={() => navigation.navigate('RegisterLocal', { color: primaryColor })}
+                                />
+                                <BoxAction
+                                  color={(currentRouteName == 'EditLocals' || currentRouteName == 'EditLocal') ? '#f0f2f5': primaryColor}
+                                  backgroundColor={(currentRouteName !== 'EditLocals' && currentRouteName !== 'EditLocal') ? '#f0f2f5': primaryColor}
+                                  iconName={'pencil-sharp'}
+                                  action={() => navigation.navigate('EditLocals')}
+                                  title={'Editar Local'}
+                                />
+                                <BoxAction
+                                  color={currentRouteName == 'RemoveLocals' ? '#f0f2f5': primaryColor}
+                                  backgroundColor={currentRouteName !== 'RemoveLocals' ? '#f0f2f5': primaryColor}
+                                  iconName={'close-circle'}
+                                  action={() => navigation.navigate('RemoveLocals')}
+                                  title={'Remover Local'}
+                                />                         
+                              </>
+                              )
+                            }                                     
+                          </ToolsArea>
+                        )
+                      }                    
+                    </>
                   )
                 }
                 <Stack.Navigator>
@@ -203,7 +246,8 @@ const ElectronicPoint = () => {
                     initialParams={{
                       data: locals,
                       color: primaryColor,
-                      logo: logo
+                      logo: logo,
+                      setShowTools
                     }}
                     options={{
                       headerShown: false,
@@ -214,7 +258,8 @@ const ElectronicPoint = () => {
                     component={EditLocals}
                     initialParams={{
                       data: locals,
-                      color: primaryColor
+                      color: primaryColor,
+                      setShowTools
                     }}          
                     options={{
                       headerShown: false,
@@ -225,7 +270,9 @@ const ElectronicPoint = () => {
                     component={RegisterLocal}
                     initialParams={{
                       color: primaryColor,
-                      companyId
+                      companyId,
+                      handleScroll,
+                      nameRef
                     }}               
                     options={{
                       headerShown: false,
@@ -236,7 +283,9 @@ const ElectronicPoint = () => {
                     component={RegisterLocal}
                     initialParams={{
                       color: primaryColor,
-                      companyId
+                      companyId,
+                      handleScroll,
+                      nameRef
                     }}               
                     options={{
                       headerShown: false,
@@ -248,12 +297,13 @@ const ElectronicPoint = () => {
                     initialParams={{
                       data: locals,
                       color: primaryColor,
-                      actionItem: handleRemoveLocal
+                      actionItem: handleRemoveLocal,
+                      setShowTools
                     }}               
                     options={{
                       headerShown: false,
                     }}
-                  />                                              
+                  />                                            
                 </Stack.Navigator>
             </Body>
           </Container>        
