@@ -1,27 +1,28 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import { TouchableOpacity } from 'react-native';
 //Components
-import WidgetLocals from '../../../../components/WidgetLocals';
+import WidgetLocals from '../../../components/WidgetLocals';
 //Styles
 import { 
   Container,
   InstructionArea,
   Instruction,
   ScrollArea
-} from '../../../ElectronicCall/ListClass/styles';
+} from '../../ElectronicCall/ListClass/styles';
 
 const RemoveLocals = ({ route }) => {
 
-  const { data, color } = route.params;
+  const { data, color, actionItem } = route.params;
 
   return (
     <Container>
       <InstructionArea>
         <Instruction>Remover local de registro de ponto. Porém, tenha cuidado com essa ação.</Instruction>
-      </InstructionArea>            
+      </InstructionArea>
       <ScrollArea>
       {
         data && Array.isArray(data) && data.length > 0 && data.map((item, i) => (
-          <WidgetLocals item={item} key={i} color={color} icon={'close-circle-outline'} iconSize={30}></WidgetLocals>
+          <WidgetLocals item={item} key={i} color={color} icon={'close-circle-outline'} iconSize={30} action={() => actionItem(item)}></WidgetLocals>
         ))
       }
       </ScrollArea>

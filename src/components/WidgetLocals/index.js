@@ -37,7 +37,7 @@ const WidgetLocals = ({ item, color, icon="enter-outline", iconSize=32, action }
     };    
 
     return (
-        <Container onPress={() => action()}>
+        <Container onPress={action}>
             <LabelsArea>
                 <Label style={{ color, fontFamily: 'montserrat-semibold' }}>{item.name}</Label>
                 <Label style={{ fontSize: 12, opacity: 0.5 }}>

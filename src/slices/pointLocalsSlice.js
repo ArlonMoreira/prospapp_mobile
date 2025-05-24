@@ -7,7 +7,9 @@ const initialState = {
     data: [],
     loading: false,
     loadingRegister: false,
-    errorMessage: null, 
+    successRemove: false,
+    errorMessage: null,
+    loadingRemove: false,
     success: false,
     errors: []
 };
@@ -66,13 +68,33 @@ export const change = createAsyncThunk(
     }
 );
 
+export const remove = createAsyncThunk(
+    'pointLocals/remove',
+    async(localId, {getState, rejectWithValue}) => {
+        const userAuth = await getState().auth.userAuth;
+        const response = await useRequest().pointLocalRemove({
+            localId,
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ4NDY0NzE4LCJpYXQiOjE3NDgwMzI3MTgsImp0aSI6ImZmMDJmODkzMTlhYzRlYTNiODVmZjI0NzU1ZDhhNGQ2IiwidXNlcl9pZCI6MX0.CZWOuUWDC3xkb2F5S4PbaeM-t66Pp1K89dMoBE7P1eg"
+        });
+        console.log(response)
+        if(response.success){
+            return response;
+        } else {
+            return rejectWithValue(response);
+        }        
+    }
+);
+
+
 export const pointLocalsSlice = createSlice({
     name: 'pointLocals',
     initialState,
     reducers: {
         resetForm: (state) => {
-            state.loading = false
-            state.loadingRegister = false
+            state.loading = false;
+            state.loadingRegister = false;
+            state.loadingRemove = false;
+            state.successRemove = false;
             state.errorMessage = null;
             state.success = false
             state.errors = []
@@ -135,7 +157,22 @@ export const pointLocalsSlice = createSlice({
                 state.loadingRegister = false;
                 state.errors = action.payload.data;
                 state.errorMessage = action.payload.message;
-            })                                 
+            })
+            //Carregando remove local
+            .addCase(remove.pending, (state) => {
+                state.loadingRemove = true;
+                state.successRemove = false;
+            })     
+            //Sucesso ao remover local
+            .addCase(remove.fulfilled, (state, action) => {
+                state.loadingRemove = false;
+                state.successRemove = true;
+                
+                const index = state.data.findIndex(obj => obj.id === action.payload.data.id);
+                if(index > -1){
+                    state.data.splice(index, 1);
+                }                
+            })                                  
     }
 });
 

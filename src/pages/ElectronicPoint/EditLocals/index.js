@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 //Components
-import WidgetLocals from '../../../../components/WidgetLocals';
+import WidgetLocals from '../../../components/WidgetLocals';
 //Hooks
 import { useNavigation } from '@react-navigation/native';
 //Styles
@@ -9,7 +9,7 @@ import {
   InstructionArea,
   Instruction,
   ScrollArea
-} from '../../../ElectronicCall/ListClass/styles';
+} from '../../ElectronicCall/ListClass/styles';
 
 const EditLocals = ({ route }) => {
 

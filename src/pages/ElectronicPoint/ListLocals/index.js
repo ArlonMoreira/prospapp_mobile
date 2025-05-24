@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 //Hooks
 import { useNavigation } from '@react-navigation/native';
 //Components
-import WidgetLocals from '../../../../components/WidgetLocals';
+import WidgetLocals from '../../../components/WidgetLocals';
 //Styles
 import { 
   Container,
   InstructionArea,
   Instruction,
   ScrollArea
-} from '../../../ElectronicCall/ListClass/styles';
+} from '../../ElectronicCall/ListClass/styles';
 
 const ListLocals = ({ route }) => {
 

@@ -328,7 +328,19 @@ const useRequest = () => {
                     body: JSON.stringify(data)
                 }                
             }); 
-        },        
+        },  
+        pointLocalRemove: ({ token, localId }) => {
+            return request({
+                endpoint: `point/local/disabled/${localId}/`,
+                params: {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }                
+            }); 
+        },               
         pointRegister: ({ data, token }) => {
             return request({
                 endpoint: 'point/register/',

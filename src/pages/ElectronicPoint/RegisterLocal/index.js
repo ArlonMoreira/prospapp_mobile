@@ -3,28 +3,28 @@ import { View, TextInput, Button } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import MapView, { Marker } from 'react-native-maps';
 //Redux
-import { register, resetForm, change, resetErrorMessage } from '../../../../slices/pointLocalsSlice';
+import { register, resetForm, change, resetErrorMessage } from '../../../slices/pointLocalsSlice';
 //Hooks
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 //Components
-import InputForm from '../../../../components/InputForm';
-import ButtonLg from '../../../../components/ButtonLg';
-import Alert from '../../../../components/Alert';
+import InputForm from '../../../components/InputForm';
+import ButtonLg from '../../../components/ButtonLg';
+import Alert from '../../../components/Alert';
 //Styles
 import { 
   Container,
   Instruction,
   ScrollArea
-} from '../../../ElectronicCall/ListClass/styles';
+} from '../../ElectronicCall/ListClass/styles';
 import { 
   SelectContainer,
   LabelSelect,
   MapArea
 } from './styles';
-import { Select } from '../../../Call/styles';
+import { Select } from '../../Call/styles';
 import { MapSearchArea, MapButtonSearch } from './styles';
-import { Errors, Error } from '../../../Register/styles';
+import { Errors, Error } from '../../Register/styles';
 import { Octicons } from '@expo/vector-icons';
 
 const RegisterLocal = ({ route }) => {
