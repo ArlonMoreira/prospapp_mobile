@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Modal, TouchableWithoutFeedback, View } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 //Hooks
 import { useSelector, useDispatch } from 'react-redux';
 import useKeyboardStatus from '../../hooks/useKeyboardStatus';
@@ -17,6 +18,7 @@ import ButtonLg from '../../components/ButtonLg';
 import BoxAction from '../../components/BoxAction';
 //Redux
 import { list, remove } from '../../slices/pointLocalsSlice';
+import { listUsersManager } from '../../slices/managerSlice';
 //Navigation
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 //Styles
@@ -36,6 +38,8 @@ import {
   ToolsArea
 } from '../ElectronicCall/styles';
 import { Container } from './styles';
+import { Select } from '../Call/styles';
+import { LabelSelect, SelectContainer } from './styles';
 
 const URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -158,14 +162,149 @@ const ElectronicPoint = () => {
     if(showTools) nameRef.current?.focus();
   }, [showTools]);
 
+  //Gerar relatório
+  const [ showModalReport, setShowModalReport ] = useState(false);
+  //Usuário relatório
+  const [ userSelected, setUserSlelected ] = useState(null);
+  const { data: users } = useSelector((state) => state.manager);
+  const [ usersOptions, setUserOptions ] = useState([]);
+  //Ano relatório
+  const [ yearSelected, setYearSelected ] = useState([]);  
+  const [ yearsOptions, setYearOptions ] = useState([]);  
+  //Mês relatório
+  const [ monthSelected, setMonthSelected ] = useState([]);
+  const [ monthsOptiopns ] = useState(['12', '11', '10', '09', '08', '07', '06', '05', '04', '03', '02', '01']);
+
+  useEffect(() => {
+    if(companyId){
+      dispatch(listUsersManager(companyId));
+    }
+  }, [companyId]);
+
+  useEffect(() => {
+    if(users && users.length > 0){
+      setUserOptions(users.map(obj => 
+        (
+          {
+            'value': obj.user_id,
+            'label': obj.full_name
+          }
+        )
+      ));
+    }
+
+  }, [users]);
+
+  useEffect(() => {
+    if(usersOptions.length > 0){
+      setUserSlelected(usersOptions[0]);
+    }
+
+  }, [usersOptions]);
+
+  useEffect(() => {
+    //Obter data atual
+    const currentTime = new Date();
+
+    //Criar uma lista com todos os anos incluindo o ano atual
+    const year = currentTime.getFullYear();
+    setYearOptions(Array.from({ length: 3 }, (_, i) => year - i));
+    setYearSelected(year);
+
+    //Selecionar o mês atual
+    const month = (currentTime.getMonth() + 1).toString().padStart(2, '0');
+    setMonthSelected(month);    
+
+  }, [dispatch]);
+
+  const handleReportGenerated = () => {
+    console.log(userSelected)
+    console.log(yearSelected)
+    console.log(monthSelected)
+  };
+
   return (
     <>
       {
         loading ? <LoadingPage backgroundColor={primaryColor} logo={logo}/> : (
           <Container>
             {
-              showModal && <Fade/>
+              (showModal || showModalReport) && <Fade/>
             }
+            <Modal
+              transparent={true}
+              animationType='slide'
+              visible={showModalReport}
+              onRequestClose={() => setShowModalReport(false)} //Permite fechar o modal quando clicado em uma área fora      
+            >
+              <TouchableWithoutFeedback onPress={() => setShowModalReport(false)}>
+                <ModalView>
+                  <ModalContent>
+                    <ModalTitle style={{color: primaryColor}}>Gerar relatório de ponto</ModalTitle>
+                    <ModalResume>Selecione o usuário e o período que deseja gerar o relatório.</ModalResume>
+                    <View style={{width: '100%', marginTop: 20}}>
+                      <LabelSelect style={{ color: primaryColor }}>Usuário</LabelSelect>
+                      <Select>
+                        <Picker
+                          selectedValue={userSelected}
+                          style={{
+                            backgroundColor: 'transparent', // deixa o Picker sem cor
+                            width: '100%',
+                            height: '100%'
+                          }}
+                          onValueChange={(itemValue) => setUserSlelected(itemValue)}
+                        >
+                          {
+                            usersOptions.map((option, i) => <Picker.Item key={i} value={option.value} label={option.label}/>)
+                          }
+                        </Picker>                      
+                      </Select>                       
+                    </View>
+                    <SelectContainer style={{ marginTop: 20 }}>
+                      <View style={{width: '44%'}}>
+                        <LabelSelect style={{ color: primaryColor }}>Ano</LabelSelect>
+                        <Select>
+                          <Picker
+                            selectedValue={yearSelected}
+                            style={{
+                              backgroundColor: 'transparent', // deixa o Picker sem cor
+                              width: '100%',
+                              height: '100%'
+                            }}
+                            onValueChange={(itemValue) => setYearSelected(itemValue)}
+                          >
+                            {
+                              yearsOptions.map((option) => <Picker.Item key={option} value={option} label={option}/>)
+                            }
+                          </Picker>                      
+                        </Select>
+                      </View>                      
+                      <View style={{width: '44%'}}>
+                        <LabelSelect style={{ color: primaryColor }}>Mês</LabelSelect>
+                        <Select>
+                          <Picker
+                            selectedValue={monthSelected}
+                            style={{
+                              backgroundColor: 'transparent', // deixa o Picker sem cor
+                              width: '100%',
+                              height: '100%'
+                            }}
+                            onValueChange={(itemValue) => setMonthSelected(itemValue)}
+                          >
+                            {
+                              monthsOptiopns.map((option) => <Picker.Item key={option} value={option} label={option}/>)
+                            }
+                          </Picker>                      
+                        </Select>
+                      </View>
+                    </SelectContainer>
+                    <View style={{marginTop: 30}}>
+                      <ButtonLg title='Salvar e compartilhar' color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleReportGenerated}/>
+                    </View>                                           
+                  </ModalContent>
+                </ModalView>
+              </TouchableWithoutFeedback>
+            </Modal>              
             <Modal
               transparent={true}
               animationType='slide'
@@ -209,6 +348,12 @@ const ElectronicPoint = () => {
                             {
                               staffPerfil && (
                               <>
+                                <BoxAction 
+                                  color={primaryColor}
+                                  iconName={'download'}
+                                  action={() => setShowModalReport(true)}
+                                  title={'Baixa relatório'}
+                                ></BoxAction>
                                 <BoxAction
                                   color={currentRouteName == 'RegisterLocal' ? '#f0f2f5': primaryColor}
                                   backgroundColor={currentRouteName !== 'RegisterLocal' ? '#f0f2f5': primaryColor}
