@@ -7,6 +7,7 @@ import meReducer from './src/slices/meSlice';
 import classReducer from './src/slices/classSlice';
 import studentReducer from './src/slices/studentSlice';
 import reportReducer from './src/slices/reportSlice';
+import reportPointReducer from './src/slices/reportPointSlice';
 import resetPasswordReducer from './src/slices/resetPasswordSlice';
 import managerReducer from "./src/slices/managerSlice";
 import codeReducer from "./src/slices/codeSlice";
@@ -23,6 +24,7 @@ export const store = configureStore({
         class: classReducer,
         student: studentReducer,
         report: reportReducer,
+        reportPoint: reportPointReducer,
         resetPassword: resetPasswordReducer,
         manager: managerReducer,
         code: codeReducer,

@@ -5,6 +5,7 @@ import { Picker } from '@react-native-picker/picker';
 import { useSelector, useDispatch } from 'react-redux';
 import useKeyboardStatus from '../../hooks/useKeyboardStatus';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
+import useCurrentDate from '../../hooks/useCurrentDate';
 //Pages
 import ListLocals from './ListLocals';
 import EditLocals from './EditLocals';
@@ -19,6 +20,7 @@ import BoxAction from '../../components/BoxAction';
 //Redux
 import { list, remove } from '../../slices/pointLocalsSlice';
 import { listUsersManager } from '../../slices/managerSlice';
+import { resetReportState, generated } from '../../slices/reportPointSlice';
 //Navigation
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 //Styles
@@ -40,12 +42,17 @@ import {
 import { Container } from './styles';
 import { Select } from '../Call/styles';
 import { LabelSelect, SelectContainer } from './styles';
+//PDF
+import * as Print from 'expo-print';
+import { shareAsync } from 'expo-sharing';
 
 const URL = process.env.EXPO_PUBLIC_API_URL;
 
 const Stack = createNativeStackNavigator();
 
 const ElectronicPoint = () => {
+
+  const { currentDate, currentHour } = useCurrentDate();  
 
   const keyboardVisible = useKeyboardStatus();
 
@@ -197,7 +204,7 @@ const ElectronicPoint = () => {
 
   useEffect(() => {
     if(usersOptions.length > 0){
-      setUserSlelected(usersOptions[0]);
+      setUserSlelected(usersOptions[0].value);
     }
 
   }, [usersOptions]);
@@ -218,10 +225,135 @@ const ElectronicPoint = () => {
   }, [dispatch]);
 
   const handleReportGenerated = () => {
-    console.log(userSelected)
-    console.log(yearSelected)
-    console.log(monthSelected)
+    const data = {
+      "user_id": userSelected,
+      "year": yearSelected,
+      "month": parseInt(monthSelected)
+    }
+
+    dispatch(generated(data));
+
   };
+
+  //Gerar relatório
+  const { data: dataReport } = useSelector(state => state.reportPoint);
+
+  const printToFile = (data) => {
+    console.log('data', data)
+    const html = `
+      <html lang="en">
+
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Tabela PDF</title>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                font-size: 12px;
+                margin: 20px;
+              }
+
+              table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 0.9em;
+                font-family: sans-serif;
+                margin-top: 20px;
+              }
+
+              table thead tr {
+                background-color: ${primaryColor};
+                color: #ffffff;
+                text-align: left;
+              }
+
+              table th,
+              table td {
+                padding: 12px 15px;
+              }
+
+              table tbody tr {
+                border-bottom: 1px solid #dddddd;
+              }
+
+              table tbody tr:nth-of-type(even) {
+                background-color: #f3f3f3;
+              }
+
+              table tbody tr:last-of-type {
+                border-bottom: 2px solid ${primaryColor};
+              }
+
+              table tbody tr.active-row {
+                font-weight: bold;
+                color: ${primaryColor};
+              }
+
+              .report-head {
+                min-height: 45px;
+                margin-bottom: 20px;
+              }
+
+              .report-title {
+                display: flex;
+                flex-direction: column-reverse;
+                color: ${primaryColor};
+              }
+
+              .report-logo {
+                width: 75px;
+                height: 45px;
+              }
+
+              .report-logo img {
+                width: 100%;
+                height: 100%;
+              }
+
+              .report-body ul {
+                margin: 0;
+                padding: 0;
+                list-style-type: none;
+              }            
+            </style>
+        </head>
+        
+        <body>
+          <div class="report-head">
+              <div class="report-title">
+                  <h3>Relatório de ponto</h3>
+                  <div class="report-logo">
+                    <img src="${logo}" alt="logo">
+                  </div>
+              </div>
+              <div class="report-body">
+                <ul>
+                  <li>Colaborador: ${ usersOptions.filter(user => user.value == userSelected)[0].label }</li>
+                  <li>Data de emissão: ${currentDate} ${currentHour}</li>
+                  <li>Período selecionado: ${yearSelected}/${monthSelected}</li>
+                </ul>
+              </div>
+          </div>
+
+        </body>
+      
+      </html>    
+    `
+
+    return {
+      html
+    };
+
+  };
+
+  useEffect(() => {
+    if(dataReport){
+      const { html } = printToFile(dataReport);
+      console.log('html', html)
+    }
+
+  }, [dataReport]);
 
   return (
     <>
@@ -260,7 +392,7 @@ const ElectronicPoint = () => {
                         </Picker>                      
                       </Select>                       
                     </View>
-                    <SelectContainer style={{ marginTop: 20 }}>
+                    <SelectContainer style={{ width: '100%', marginTop: 20 }}>
                       <View style={{width: '44%'}}>
                         <LabelSelect style={{ color: primaryColor }}>Ano</LabelSelect>
                         <Select>
@@ -298,7 +430,7 @@ const ElectronicPoint = () => {
                         </Select>
                       </View>
                     </SelectContainer>
-                    <View style={{marginTop: 30}}>
+                    <View style={{marginTop: 20}}>
                       <ButtonLg title='Salvar e compartilhar' color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleReportGenerated}/>
                     </View>                                           
                   </ModalContent>

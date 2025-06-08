@@ -16,6 +16,7 @@ export const TitleArea = styled.View`
 
 export const ButtonsArea = styled.View`
     min-height: 80px;
+    align-items: center;
     justify-content: center;
     gap: 10px;
     flex: 1;
@@ -33,12 +34,12 @@ export const ButtonsAreaIcon = styled.View`
 `;
 
 export const ButtonPoint = styled.TouchableOpacity`
-    width: 100%;
+    width: 90%;
     height: 76px;
     align-items: center;
     flex-direction: row;
     justify-content: center;
-    border-radius: 5px;
+    border-radius: 50px;
 `;
 
 export const Table = styled.View`

@@ -375,7 +375,20 @@ const useRequest = () => {
                     }
                 }                
             })
-        },            
+        },
+        pointReport: ({ data, token }) => {
+            return request({
+                endpoint: `point/report/`,
+                params: {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }                
+            })
+        },       
     };
 
 };
