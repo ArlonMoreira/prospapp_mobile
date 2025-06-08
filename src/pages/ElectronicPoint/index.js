@@ -236,10 +236,24 @@ const ElectronicPoint = () => {
   };
 
   //Gerar relatório
-  const { data: dataReport } = useSelector(state => state.reportPoint);
+  const { data:dataReport, loading:loadingReport, success: successReport } = useSelector(state => state.reportPoint);
+
+  const closeModalReport = () => {
+    if(!loadingReport){
+      setShowModalReport(false);
+    }
+  };
 
   const printToFile = (data) => {
-    console.log('data', data)
+
+    const user = usersOptions.length > 0 && usersOptions.filter(user => user.value == userSelected)[0].label;
+    
+    const total_hours = Object.values(data).reduce((total, points) => {
+      return total + points.reduce((sum, point) => {
+        return sum + point.hours_worked;
+      }, 0);
+    }, 0);
+
     const html = `
       <html lang="en">
 
@@ -273,6 +287,11 @@ const ElectronicPoint = () => {
                 padding: 12px 15px;
               }
 
+              table th,
+              table tr {
+                  width: 10%;
+              }              
+
               table tbody tr {
                 border-bottom: 1px solid #dddddd;
               }
@@ -285,7 +304,7 @@ const ElectronicPoint = () => {
                 border-bottom: 2px solid ${primaryColor};
               }
 
-              table tbody tr.active-row {
+              table tbody tr.active-row, h3 {
                 font-weight: bold;
                 color: ${primaryColor};
               }
@@ -296,9 +315,10 @@ const ElectronicPoint = () => {
               }
 
               .report-title {
-                display: flex;
-                flex-direction: column-reverse;
-                color: ${primaryColor};
+                  display: flex;
+                  flex-direction: column-reverse;
+                  color: #0C6661;
+                  margin-top: 20px;
               }
 
               .report-logo {
@@ -309,6 +329,12 @@ const ElectronicPoint = () => {
               .report-logo img {
                 width: 100%;
                 height: 100%;
+              }
+
+              .report-body {
+                  margin-bottom: 20px;
+                  padding-bottom: 20px;
+                  border-bottom: 1px solid #ccc;
               }
 
               .report-body ul {
@@ -329,13 +355,48 @@ const ElectronicPoint = () => {
               </div>
               <div class="report-body">
                 <ul>
-                  <li>Colaborador: ${ usersOptions.filter(user => user.value == userSelected)[0].label }</li>
+                  <li>Colaborador: ${user}</li>
                   <li>Data de emissão: ${currentDate} ${currentHour}</li>
                   <li>Período selecionado: ${yearSelected}/${monthSelected}</li>
+                  <li>Total de horas: ${total_hours.toFixed(2)}</li>
                 </ul>
               </div>
-          </div>
-
+              ${
+                Object.keys(data).map(key => {
+                  return `
+                    <div class="report-section">
+                      <h3>${key}</h3>
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>Data</th>
+                            <th>Dia da Semana</th>
+                            <th>Entrada</th>
+                            <th>Saída</th>
+                            <th>Horas trabalhadas</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          ${
+                            data[key].map(object => {
+                              const formattedDate = new Date(object.date).toLocaleDateString('pt-BR');
+                              return `
+                                <tr>
+                                  <td>${ formattedDate }</td>
+                                  <td>${ object.dayOfWeek }</td>
+                                  <td>${ object.entry_datetime }</td>
+                                  <td>${ object.exit_datetime ? object.exit_datetime : '-' }</td>
+                                  <td>${ object.hours_worked ? object.hours_worked : 0 }</td>
+                                </tr>
+                              `;
+                            }).join('')
+                          }
+                        </tbody>
+                      </table>
+                    </div>
+                  `;              
+                }).join('')
+              }
         </body>
       
       </html>    
@@ -348,9 +409,25 @@ const ElectronicPoint = () => {
   };
 
   useEffect(() => {
-    if(dataReport){
+    if(successReport){
+
       const { html } = printToFile(dataReport);
-      console.log('html', html)
+
+      const sharePdf = async(html) => {
+        const { uri } = await Print.printToFileAsync({ html });
+  
+        await shareAsync(uri, { 
+          UTI: '.pdf',
+          mimeType: 'application/pdf'
+        });
+
+        dispatch(resetReportState()); //Reiniciar o estado do relatório quando o mesmo for gerado com sucesso
+        closeModalReport();
+
+      };
+
+      sharePdf(html);
+
     }
 
   }, [dataReport]);
@@ -431,7 +508,7 @@ const ElectronicPoint = () => {
                       </View>
                     </SelectContainer>
                     <View style={{marginTop: 20}}>
-                      <ButtonLg title='Salvar e compartilhar' color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleReportGenerated}/>
+                      <ButtonLg title='Salvar e compartilhar' loading={loadingReport} color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleReportGenerated}/>
                     </View>                                           
                   </ModalContent>
                 </ModalView>
