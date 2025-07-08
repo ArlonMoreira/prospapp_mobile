@@ -26,6 +26,8 @@ import {
   TitleArea,
   ButtonsArea,
   ButtonPoint,
+  ButtonsAreaIconJustify,
+  ButtonJustify,
   ButtonsAreaIcon,
   Table,
   HeaderTable,
@@ -221,8 +223,14 @@ const Point = ({ route }) => {
                   <ButtonsAreaIcon>
                     <MaterialCommunityIcons name={ 'exit_datetime' in open_point && !open_point.exit_datetime ? 'clock-alert-outline': 'clock-check-outline' } color={ 'exit_datetime' in open_point && !open_point.exit_datetime ? '#f66': '#4db086' } size={33}></MaterialCommunityIcons>
                   </ButtonsAreaIcon>
-                  <Text style={{ fontFamily: 'montserrat-semibold', fontSize: 16, color: '#fff' }}>{  'exit_datetime' in open_point && !open_point.exit_datetime ? 'Registrar Saída': 'Registrar Entrada'}</Text>
+                  <Text style={{ fontFamily: 'montserrat-semibold', fontSize: 16, color: '#fff', wordBreak: 'break-word' }}>{  'exit_datetime' in open_point && !open_point.exit_datetime ? 'Registrar\nSaída': 'Registrar\nEntrada'}</Text>
                 </ButtonPoint>      
+                <ButtonJustify> 
+                  <Text style={{ fontFamily: 'montserrat-semibold', fontSize: 16, color: '#fff', wordBreak: 'break-word', textAlign: 'right' }}>Justificar{"\n"}Ponto</Text>
+                  <ButtonsAreaIconJustify>
+                    <MaterialCommunityIcons name='alert' color={'#ccc'} size={33}></MaterialCommunityIcons>
+                  </ButtonsAreaIconJustify>                   
+                </ButtonJustify>
               </ButtonsArea>    
               <Table>
                 <View style={{ alignItems: 'center' }}>

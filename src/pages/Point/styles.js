@@ -18,8 +18,8 @@ export const ButtonsArea = styled.View`
     min-height: 80px;
     align-items: center;
     justify-content: center;
-    gap: 10px;
     flex: 1;
+    flex-direction: row;
 `;
 
 export const ButtonsAreaIcon = styled.View`
@@ -33,13 +33,35 @@ export const ButtonsAreaIcon = styled.View`
     left: 20;
 `;
 
+export const ButtonsAreaIconJustify = styled.View`
+    width: 45px;
+    height: 45px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    align-items: center;
+    justify-content: center;    
+    right: 20;
+`;
+
 export const ButtonPoint = styled.TouchableOpacity`
-    width: 90%;
+    width: 50%;
     height: 76px;
     align-items: center;
     flex-direction: row;
-    justify-content: center;
-    border-radius: 50px;
+    border-radius: 50px 0px 0px 50px;
+    background: #ccc;
+    padding-left: 80px;
+`;
+
+export const ButtonJustify = styled.TouchableOpacity`
+    width: 50%;
+    height: 76px;
+    align-items: center;
+    flex-direction: row;
+    border-radius: 0px 50px 50px 0px;
+    background: #ccc;
+    padding-left: 20px;
 `;
 
 export const Table = styled.View`
