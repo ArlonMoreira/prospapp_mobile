@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+//Redux
+import { resetForm } from '../../../slices/pointLocalsSlice';
 //Hooks
 import { useNavigation } from '@react-navigation/native';
 //Components
@@ -13,13 +15,8 @@ import {
 
 const ListLocals = ({ route }) => {
 
-  const { data, color, logo, setShowTools } = route.params;
+  const { data, color, logo } = route.params;
   const navigation = useNavigation();
-
-  //Para evitar de não aparecer o topo quando for navegado para a página atual;
-  useEffect(() => {
-    setShowTools(true);
-  }, [route.params]);    
 
   return (
     <Container>

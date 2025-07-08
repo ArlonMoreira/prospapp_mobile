@@ -32,7 +32,7 @@ const RegisterLocal = ({ route }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  const { success, errors, loadingRegister, errorMessage } = useSelector(state => state.pointLocals);
+  const { successRegister, errors, loadingRegister, errorMessage } = useSelector(state => state.pointLocals);
 
   const [ editPage, setEditPage ] = useState(false);
 
@@ -41,30 +41,16 @@ const RegisterLocal = ({ route }) => {
   const [ id, setId ] = useState(null);
   const [ name, setName ] = useState('');  
   const [ iden, setIden ] = useState(null);
-  const [ hour, setHour ] = useState('00');
-  const [ minute, setMinute ] = useState('00');
   const [ limitRadius, setLimitRadius ] = useState('100');
 
-  const [ hourOptions, setHourOptions ] = useState([]);
-  const [ minuteOptions, setMinuteOptions ] = useState([]);
-
   useEffect(() => {
-    const hours = Array.from({ length: 24 }, (_, i) => String(i || 0).padStart(2, '0'));
-    setHourOptions(hours);
-
-    const minutes = Array.from({ length: 60 }, (_, i) => String(i || 0).padStart(2, '0'));
-    setMinuteOptions(minutes);
-
     dispatch(resetForm());
-
   }, []);
 
   const handleAddLocal = () => {  
     const data = {
       name: name,
       identification_number: iden && parseInt(iden.replace(/\D/g, '')),
-      workload_hour: hour,
-      workload_minutes: minute,
       company: companyId,
       latitude: markerCoord.latitude,
       longitude: markerCoord.longitude,
@@ -80,8 +66,10 @@ const RegisterLocal = ({ route }) => {
   };
 
   useEffect(() => {
-    if(success) navigation.navigate('ListLocals');
-  }, [success]);  
+    if(successRegister) {
+      navigation.navigate('ListLocals');
+    }
+  }, [successRegister]);  
 
   //Obter localização geográfico do gráfico de locais de ponto
 
@@ -154,8 +142,6 @@ const RegisterLocal = ({ route }) => {
       local.id && setId(local.id);
       local.name && setName(local.name);
       local.identification_number && setIden(local.identification_number.toString());
-      local.workload_hour && setHour(local.workload_hour.toString().padStart(2, '0'));
-      local.workload_minutes && setMinute(local.workload_minutes.toString().padStart(2, '0'));
       local.limit_radius && setLimitRadius(local.limit_radius.toString());
       if(local.latitude && local.latitude){
         setMarkerCoord({
@@ -214,43 +200,6 @@ const RegisterLocal = ({ route }) => {
           }
         </Errors>
         <InputForm label='CNPJ do Local/Empresa' mask={'cnpj'} value={iden} setValue={setIden} color={color} pointerColor={color}/>                  
-        <Instruction style={{ marginTop: 30}}>Selecione a carga horária especificada para esse local de registro de ponto.</Instruction>        
-        <SelectContainer>
-          <View style={{width: '44%'}}>
-            <LabelSelect style={{ color }}>Hora</LabelSelect>
-            <Select style={{marginTop: 0}}>
-              <Picker
-                selectedValue={hour}
-                style={{
-                  backgroundColor: 'transparent', // deixa o Picker sem cor
-                  width: '100%',
-                  height: '100%'
-                }}
-                onValueChange={(value) => setHour(value)}>
-                {
-                  hourOptions.map((option) => <Picker.Item key={option} value={option} label={option}/>)
-                }
-              </Picker>
-            </Select>
-          </View>
-          <View style={{width: '44%'}}>
-            <LabelSelect style={{ color }}>Minuto</LabelSelect>
-            <Select style={{marginTop: 0}}>
-              <Picker
-                selectedValue={minute}
-                style={{
-                  backgroundColor: 'transparent', // deixa o Picker sem cor
-                  width: '100%',
-                  height: '100%'
-                }}
-                onValueChange={(value) => setMinute(value)}>
-                {
-                  minuteOptions.map((option) => <Picker.Item key={option} value={option} label={option}/>)
-                }
-              </Picker>
-            </Select>
-          </View>
-        </SelectContainer> 
         <Instruction style={{ marginTop: 30}}>Defina o raio limite para marcação de ponto (em metros). Este valor representa o perímetro de tolerância para registros. Colaboradores fora desse raio não poderão realizar a marcação de ponto.</Instruction>        
         <InputForm label='Raio (Metros)' value={limitRadius} setValue={setLimitRadius} color={color} pointerColor={color} keyboardType='numeric'/>        
         <Instruction style={{ marginTop: 30}}>Abaixo, selecione a localização da empresa, clique e segure sobre a localização. Esse local é obrigatório, será utilizado no "Check-in" identificando se o colaborador está de fato no local de registro de ponto.</Instruction>        

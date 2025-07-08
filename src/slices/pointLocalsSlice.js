@@ -10,6 +10,7 @@ const initialState = {
     successRemove: false,
     errorMessage: null,
     loadingRemove: false,
+    successRegister: false,
     success: false,
     errors: []
 };
@@ -21,7 +22,7 @@ export const list = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointLocalsList({
             companyId,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NzMyMjg3LCJpYXQiOjE3NDkzMDAyODcsImp0aSI6IjlhNWIzZjY0M2MwMjQ3NDQ5ZDZhZTMwNTA1MmJiMDVmIiwidXNlcl9pZCI6MX0.7BHbRN7fejYHa6ydyZjpK_6103Y6vKmWs5dHO4uiMp0"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUyNDQyMTYwLCJpYXQiOjE3NTIwMTAxNjAsImp0aSI6ImQ3ZTc3N2I3ZDQxODRlZjM4YmM3YTBkMmQ4ZjY3MjRhIiwidXNlcl9pZCI6MX0.4BYgdnVDzL15ziREM0Z--MYaqYQOIrCT_supqZLM4i4"
         });
 
         if(response.success){
@@ -39,7 +40,7 @@ export const register = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointLocalRegister({
             data,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NzMyMjg3LCJpYXQiOjE3NDkzMDAyODcsImp0aSI6IjlhNWIzZjY0M2MwMjQ3NDQ5ZDZhZTMwNTA1MmJiMDVmIiwidXNlcl9pZCI6MX0.7BHbRN7fejYHa6ydyZjpK_6103Y6vKmWs5dHO4uiMp0"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUyNDQyMTYwLCJpYXQiOjE3NTIwMTAxNjAsImp0aSI6ImQ3ZTc3N2I3ZDQxODRlZjM4YmM3YTBkMmQ4ZjY3MjRhIiwidXNlcl9pZCI6MX0.4BYgdnVDzL15ziREM0Z--MYaqYQOIrCT_supqZLM4i4"
         });
         
         if(response.success){
@@ -57,7 +58,7 @@ export const change = createAsyncThunk(
         const response = await useRequest().pointLocalEdit({
             data,
             localId,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NzMyMjg3LCJpYXQiOjE3NDkzMDAyODcsImp0aSI6IjlhNWIzZjY0M2MwMjQ3NDQ5ZDZhZTMwNTA1MmJiMDVmIiwidXNlcl9pZCI6MX0.7BHbRN7fejYHa6ydyZjpK_6103Y6vKmWs5dHO4uiMp0"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUyNDQyMTYwLCJpYXQiOjE3NTIwMTAxNjAsImp0aSI6ImQ3ZTc3N2I3ZDQxODRlZjM4YmM3YTBkMmQ4ZjY3MjRhIiwidXNlcl9pZCI6MX0.4BYgdnVDzL15ziREM0Z--MYaqYQOIrCT_supqZLM4i4"
         });
         
         if(response.success){
@@ -74,9 +75,9 @@ export const remove = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointLocalRemove({
             localId,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NzMyMjg3LCJpYXQiOjE3NDkzMDAyODcsImp0aSI6IjlhNWIzZjY0M2MwMjQ3NDQ5ZDZhZTMwNTA1MmJiMDVmIiwidXNlcl9pZCI6MX0.7BHbRN7fejYHa6ydyZjpK_6103Y6vKmWs5dHO4uiMp0"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUyNDQyMTYwLCJpYXQiOjE3NTIwMTAxNjAsImp0aSI6ImQ3ZTc3N2I3ZDQxODRlZjM4YmM3YTBkMmQ4ZjY3MjRhIiwidXNlcl9pZCI6MX0.4BYgdnVDzL15ziREM0Z--MYaqYQOIrCT_supqZLM4i4"
         });
-        console.log(response)
+
         if(response.success){
             return response;
         } else {
@@ -96,6 +97,7 @@ export const pointLocalsSlice = createSlice({
             state.loadingRemove = false;
             state.successRemove = false;
             state.errorMessage = null;
+            state.successRegister = false;
             state.success = false
             state.errors = []
         },
@@ -139,12 +141,12 @@ export const pointLocalsSlice = createSlice({
             //Aguardando carregamento alteração de local
             .addCase(change.pending, (state) => {
                 state.loadingRegister = true;
-                state.success = false;
+                state.successRegister = false;
             })   
             //Sucesso ao editar local
             .addCase(change.fulfilled, (state, action) => {
                 state.loadingRegister = false;
-                state.success = true;
+                state.successRegister = true;
                 const index = state.data.findIndex(obj => obj.id === action.payload.data.id);
                 if(index > -1){
                     state.data[index] = action.payload.data;
@@ -153,7 +155,7 @@ export const pointLocalsSlice = createSlice({
             })
             //Falha ao editar local
             .addCase(change.rejected, (state, action) => {
-                state.success = false;
+                state.successRegister = false;
                 state.loadingRegister = false;
                 state.errors = action.payload.data;
                 state.errorMessage = action.payload.message;

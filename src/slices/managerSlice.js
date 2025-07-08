@@ -14,7 +14,7 @@ export const listUsersManager = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().listUsersManager({
             companyId,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NzMyMjg3LCJpYXQiOjE3NDkzMDAyODcsImp0aSI6IjlhNWIzZjY0M2MwMjQ3NDQ5ZDZhZTMwNTA1MmJiMDVmIiwidXNlcl9pZCI6MX0.7BHbRN7fejYHa6ydyZjpK_6103Y6vKmWs5dHO4uiMp0"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUyNDQyMTYwLCJpYXQiOjE3NTIwMTAxNjAsImp0aSI6ImQ3ZTc3N2I3ZDQxODRlZjM4YmM3YTBkMmQ4ZjY3MjRhIiwidXNlcl9pZCI6MX0.4BYgdnVDzL15ziREM0Z--MYaqYQOIrCT_supqZLM4i4"
         });
 
         if(response.success){
@@ -34,7 +34,7 @@ export const updateUsersManager = createAsyncThunk(
             companyId,
             userId,
             data,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5NzMyMjg3LCJpYXQiOjE3NDkzMDAyODcsImp0aSI6IjlhNWIzZjY0M2MwMjQ3NDQ5ZDZhZTMwNTA1MmJiMDVmIiwidXNlcl9pZCI6MX0.7BHbRN7fejYHa6ydyZjpK_6103Y6vKmWs5dHO4uiMp0"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUyNDQyMTYwLCJpYXQiOjE3NTIwMTAxNjAsImp0aSI6ImQ3ZTc3N2I3ZDQxODRlZjM4YmM3YTBkMmQ4ZjY3MjRhIiwidXNlcl9pZCI6MX0.4BYgdnVDzL15ziREM0Z--MYaqYQOIrCT_supqZLM4i4"
         });
 
         if(response.success){

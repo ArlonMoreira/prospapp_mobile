@@ -138,7 +138,6 @@ const ElectronicPoint = () => {
   }, [locals, currentRouteName]); //Quando atualizar o dado vai renavegar pra página que estiver selecionada
 
   //Scroll
-  const [showTools, setShowTools] = useState(true);
   const scrollOffsetY = useRef(0);
   const debounceTimeout = useRef(null);
   const nameRef = useRef(null);
@@ -152,22 +151,7 @@ const ElectronicPoint = () => {
       clearTimeout(debounceTimeout.current);
     }
 
-    if (!isAtTop) {
-      setShowTools(false);
-    }
-
-    debounceTimeout.current = setTimeout(() => {
-      if (isAtTop) {
-        setShowTools(true);
-      }
-    }, 100); // ajusta o delay conforme necessidade
-
   };
-
-  //Focar no primeiro input ao scroolar pro topo
-  useEffect(() => {
-    if(showTools) nameRef.current?.focus();
-  }, [showTools]);
 
   //Gerar relatório
   const [ showModalReport, setShowModalReport ] = useState(false);
@@ -538,61 +522,57 @@ const ElectronicPoint = () => {
             />      
             <Header themeColor={primaryColor}/>
             <Body>
-                {
-                  showTools && (
-                    <>
-                      <TitleAreaPage>
-                        <TitlePage style={{color: primaryColor}}>Locais de Ponto</TitlePage>
-                      </TitleAreaPage>
-                      {
-                        !keyboardVisible && (
-                          <ToolsArea>
+                <>
+                  <TitleAreaPage>
+                    <TitlePage style={{color: primaryColor}}>Locais de Ponto</TitlePage>
+                  </TitleAreaPage>
+                  {
+                    !keyboardVisible && (
+                      <ToolsArea>
+                        <BoxAction
+                          color={currentRouteName == 'ListLocals' ? '#f0f2f5': primaryColor}
+                          backgroundColor={currentRouteName !== 'ListLocals' ? '#f0f2f5': primaryColor}
+                          iconName={'alarm-sharp'}
+                          action={() => navigation.navigate('ListLocals')}
+                          title={'Registar ponto'}
+                        />                         
+                        {
+                          staffPerfil && (
+                          <>
+                            <BoxAction 
+                              color={primaryColor}
+                              iconName={'download'}
+                              action={() => setShowModalReport(true)}
+                              title={'Baixa relatório'}
+                            ></BoxAction>
                             <BoxAction
-                              color={currentRouteName == 'ListLocals' ? '#f0f2f5': primaryColor}
-                              backgroundColor={currentRouteName !== 'ListLocals' ? '#f0f2f5': primaryColor}
-                              iconName={'alarm-sharp'}
-                              action={() => navigation.navigate('ListLocals')}
-                              title={'Registar ponto'}
+                              color={currentRouteName == 'RegisterLocal' ? '#f0f2f5': primaryColor}
+                              backgroundColor={currentRouteName !== 'RegisterLocal' ? '#f0f2f5': primaryColor}
+                              iconName={'add-circle'}
+                              title={'Adicionar Local'}
+                              action={() => navigation.navigate('RegisterLocal', { color: primaryColor })}
+                            />
+                            <BoxAction
+                              color={(currentRouteName == 'EditLocals' || currentRouteName == 'EditLocal') ? '#f0f2f5': primaryColor}
+                              backgroundColor={(currentRouteName !== 'EditLocals' && currentRouteName !== 'EditLocal') ? '#f0f2f5': primaryColor}
+                              iconName={'pencil-sharp'}
+                              action={() => navigation.navigate('EditLocals')}
+                              title={'Editar Local'}
+                            />
+                            <BoxAction
+                              color={currentRouteName == 'RemoveLocals' ? '#f0f2f5': primaryColor}
+                              backgroundColor={currentRouteName !== 'RemoveLocals' ? '#f0f2f5': primaryColor}
+                              iconName={'close-circle'}
+                              action={() => navigation.navigate('RemoveLocals')}
+                              title={'Remover Local'}
                             />                         
-                            {
-                              staffPerfil && (
-                              <>
-                                <BoxAction 
-                                  color={primaryColor}
-                                  iconName={'download'}
-                                  action={() => setShowModalReport(true)}
-                                  title={'Baixa relatório'}
-                                ></BoxAction>
-                                <BoxAction
-                                  color={currentRouteName == 'RegisterLocal' ? '#f0f2f5': primaryColor}
-                                  backgroundColor={currentRouteName !== 'RegisterLocal' ? '#f0f2f5': primaryColor}
-                                  iconName={'add-circle'}
-                                  title={'Adicionar Local'}
-                                  action={() => navigation.navigate('RegisterLocal', { color: primaryColor })}
-                                />
-                                <BoxAction
-                                  color={(currentRouteName == 'EditLocals' || currentRouteName == 'EditLocal') ? '#f0f2f5': primaryColor}
-                                  backgroundColor={(currentRouteName !== 'EditLocals' && currentRouteName !== 'EditLocal') ? '#f0f2f5': primaryColor}
-                                  iconName={'pencil-sharp'}
-                                  action={() => navigation.navigate('EditLocals')}
-                                  title={'Editar Local'}
-                                />
-                                <BoxAction
-                                  color={currentRouteName == 'RemoveLocals' ? '#f0f2f5': primaryColor}
-                                  backgroundColor={currentRouteName !== 'RemoveLocals' ? '#f0f2f5': primaryColor}
-                                  iconName={'close-circle'}
-                                  action={() => navigation.navigate('RemoveLocals')}
-                                  title={'Remover Local'}
-                                />                         
-                              </>
-                              )
-                            }                                     
-                          </ToolsArea>
-                        )
-                      }                    
-                    </>
-                  )
-                }
+                          </>
+                          )
+                        }                                     
+                      </ToolsArea>
+                    )
+                  }                    
+                </>
                 <Stack.Navigator>
                   <Stack.Screen
                     name="ListLocals"
@@ -600,8 +580,7 @@ const ElectronicPoint = () => {
                     initialParams={{
                       data: locals,
                       color: primaryColor,
-                      logo: logo,
-                      setShowTools
+                      logo: logo
                     }}
                     options={{
                       headerShown: false,
@@ -612,8 +591,7 @@ const ElectronicPoint = () => {
                     component={EditLocals}
                     initialParams={{
                       data: locals,
-                      color: primaryColor,
-                      setShowTools
+                      color: primaryColor
                     }}          
                     options={{
                       headerShown: false,
@@ -651,8 +629,7 @@ const ElectronicPoint = () => {
                     initialParams={{
                       data: locals,
                       color: primaryColor,
-                      actionItem: handleRemoveLocal,
-                      setShowTools
+                      actionItem: handleRemoveLocal
                     }}               
                     options={{
                       headerShown: false,
