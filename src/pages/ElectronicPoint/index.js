@@ -519,7 +519,8 @@ const ElectronicPoint = () => {
             <StatusBar 
               translucent
               backgroundColor="transparent"
-            />      
+              barStyle="dark-content"
+            />    
             <Header themeColor={primaryColor}/>
             <Body>
                 <>

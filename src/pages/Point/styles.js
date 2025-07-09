@@ -2,7 +2,6 @@ import styled from 'styled-components/native';
 import { Image } from 'react-native';
 
 export const PageArea = styled.View`
-    margin-top: 5px;
     padding-inline: 15px;
     width: 100%;
     flex: 1;

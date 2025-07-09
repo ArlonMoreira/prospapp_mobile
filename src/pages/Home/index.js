@@ -64,8 +64,9 @@ const Home = () => {
     return (
         <Container style={{backgroundColor: primaryColor}}>
             <StatusBar 
-            translucent
-            backgroundColor="transparent"
+                translucent
+                backgroundColor="transparent"
+                barStyle="dark-content"
             />        
             <Header>
                 {

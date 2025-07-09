@@ -18,6 +18,22 @@ const useUtil = () => {
         });
 
     },
+    formatDate: (date) => {
+      return date.toLocaleDateString('pt-BR'); // Ex: 07/05/2025
+    },
+    formatTime: (date) => {
+      return date.toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      })      
+    },
+    formatHour: (datetime) => {
+      return new Date(datetime).toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    }    
   }
 }
 

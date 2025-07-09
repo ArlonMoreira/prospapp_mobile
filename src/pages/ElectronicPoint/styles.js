@@ -10,8 +10,7 @@ export const Container = styled.View`
 export const SelectContainer = styled.View`
     width: 100%;
     flex-direction: row;
-    gap: 20px;
-    margin-left: 10px;
+    gap: 2%;
 `;
 
 export const LabelSelect = styled.Text`

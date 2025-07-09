@@ -106,6 +106,7 @@ export const registerPointSlice = createSlice({
         builder
             .addCase(register.fulfilled, (state, action) => {
                 state.loading = false;
+                state.errorMessage = null;
                 state.open_point = action.payload.data;
                 // Substitui se encontrar pelo id, senão adiciona
                 const newPoint = action.payload.data;
