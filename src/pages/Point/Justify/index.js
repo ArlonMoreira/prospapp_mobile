@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, TextInput } from 'react-native';
+import { Text, View, TextInput, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 //Redux
 import { justify, resetForm } from '../../../slices/registerPointSlice';
@@ -88,205 +88,212 @@ const Justify = ({ route }) => {
         barStyle="dark-content"
       />
       <Header themeColor={color}/>
-      <PageArea>       
-        <ScrollArea
-          scrollEventThrottle={16}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0} // ajuste se necessário
+      >
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
         >
-          <TitleArea style={{height: 100}}>
-            <Instruction>Registrar ponto no local:</Instruction>
-            <Text style={{fontFamily: 'montserrat-semibold', color: '#64748b'}}>{local ? local.name : '-'}</Text>
-          </TitleArea>          
-          <View style={{ alignItems: 'center' }}>
-            <Text style={{ fontFamily: 'montserrat-bold', fontSize: 44, color }}>
-              {formatDate(now)}
-            </Text>
-          </View>           
-          <Instruction style={{ marginTop: 20, marginBottom: 10}}>Horário de entrada.</Instruction>
-          <SelectContainer>
-            <View style={{ width: '49%' }}>
-              <LabelSelect style={{ color }}>Hora</LabelSelect>
-              <Select style={{ marginTop: 0, paddingHorizontal: 10 }}>
-                <RNPickerSelect
-                  onValueChange={(value) => setHourStart(value)}
-                  value={hourStart}
-                  placeholder={{ label: 'Selecione a hora', value: null }}
-                  items={hourOptions.map((option) => ({
-                    label: option,
-                    value: option
-                  }))}
-                  style={{
-                    inputIOS: {
-                      fontSize: 16,
-                      paddingHorizontal: 10,
-                      paddingVertical: 0,
-                      borderWidth: 1,
-                      borderColor: '#ccc',
-                      borderRadius: 4,
-                      color: '#000',
-                      backgroundColor: 'transparent',
-                    },
-                    inputAndroid: {
-                      fontSize: 16,
-                      paddingHorizontal: 10,
-                      paddingVertical: 0,
-                      borderWidth: 1,
-                      borderColor: '#ccc',
-                      borderRadius: 4,
-                      color: '#000',
-                      backgroundColor: 'transparent',
-                    }
-                  }}
-                />
-              </Select>
-            </View>
-            <View style={{ width: '49%' }}>
-              <LabelSelect style={{ color }}>Minuto</LabelSelect>
-              <Select style={{ marginTop: 0, paddingHorizontal: 10 }}>
-                <RNPickerSelect
-                  onValueChange={(value) => setMinuteStart(value)}
-                  value={minuteStart}
-                  placeholder={{ label: 'Selecione o minuto', value: null }}
-                  items={minuteOptions.map((option) => ({
-                    label: option,
-                    value: option
-                  }))}
-                  style={{
-                    inputIOS: {
-                      fontSize: 16,
-                      paddingHorizontal: 10,
-                      paddingVertical: 0,
-                      borderWidth: 1,
-                      borderColor: '#ccc',
-                      borderRadius: 4,
-                      color: '#000',
-                      backgroundColor: 'transparent',
-                    },
-                    inputAndroid: {
-                      fontSize: 16,
-                      paddingHorizontal: 10,
-                      paddingVertical: 0,
-                      borderWidth: 1,
-                      borderColor: '#ccc',
-                      borderRadius: 4,
-                      color: '#000',
-                      backgroundColor: 'transparent',
-                    }
-                  }}
-                />
-              </Select>
-            </View>
-          </SelectContainer>
-          <Errors>
-            { errosJustify.entry_datetime && errosJustify.entry_datetime.map((error, i) => <Error key={i}>{ error }</Error>) }
-          </Errors>          
-          <Instruction style={{ marginTop: 20, marginBottom: 10}}>Horário de saída.</Instruction>
-          <SelectContainer>
-            <View style={{ width: '49%' }}>
-              <LabelSelect style={{ color }}>Hora</LabelSelect>
-              <Select style={{ marginTop: 0, paddingHorizontal: 10 }}>
-                <RNPickerSelect
-                  onValueChange={(value) => setHourEnd(value)}
-                  value={hourEnd}
-                  placeholder={{ label: 'Selecione a hora', value: null }}
-                  items={hourOptions.map((option) => ({
-                    label: option,
-                    value: option
-                  }))}
-                  style={{
-                    inputIOS: {
-                      fontSize: 16,
-                      paddingHorizontal: 10,
-                      paddingVertical: 0,
-                      borderWidth: 1,
-                      borderColor: '#ccc',
-                      borderRadius: 4,
-                      color: '#000',
-                      backgroundColor: 'transparent',
-                    },
-                    inputAndroid: {
-                      fontSize: 16,
-                      paddingHorizontal: 10,
-                      paddingVertical: 0,
-                      borderWidth: 1,
-                      borderColor: '#ccc',
-                      borderRadius: 4,
-                      color: '#000',
-                      backgroundColor: 'transparent',
-                    }
-                  }}
-                />
-              </Select>
-            </View>
-            <View style={{ width: '49%' }}>
-              <LabelSelect style={{ color }}>Minuto</LabelSelect>
-              <Select style={{ marginTop: 0, paddingHorizontal: 10 }}>
-                <RNPickerSelect
-                  onValueChange={(value) => setMinuteEnd(value)}
-                  value={minuteEnd}
-                  placeholder={{ label: 'Selecione o minuto', value: null }}
-                  items={minuteOptions.map((option) => ({
-                    label: option,
-                    value: option
-                  }))}
-                  style={{
-                    inputIOS: {
-                      fontSize: 16,
-                      paddingHorizontal: 10,
-                      paddingVertical: 0,
-                      borderWidth: 1,
-                      borderColor: '#ccc',
-                      borderRadius: 4,
-                      color: '#000',
-                      backgroundColor: 'transparent',
-                    },
-                    inputAndroid: {
-                      fontSize: 16,
-                      paddingHorizontal: 10,
-                      paddingVertical: 0,
-                      borderWidth: 1,
-                      borderColor: '#ccc',
-                      borderRadius: 4,
-                      color: '#000',
-                      backgroundColor: 'transparent',
-                    }
-                  }}
-                />
-              </Select>
-            </View>
-          </SelectContainer>
-          <Errors>
-            { errosJustify.exit_datetime && errosJustify.exit_datetime.map((error, i) => <Error key={i} style={{color: 'rgb(191, 159, 18)'}}>{ error }</Error>) }
-          </Errors>            
-          <Instruction style={{ marginTop: 30 }}>Justificativa (máx. 125 caracteres)</Instruction>
-          <TextInput
-            style={{
-              height: 100,
-              borderColor: '#ccc',
-              borderWidth: 1,
-              borderRadius: 8,
-              padding: 10,
-              textAlignVertical: 'top',
-              fontFamily: 'montserrat-regular',
-              fontSize: 14,
-              color: '#000',
-              backgroundColor: '#fff',
-              marginTop: 10,
-            }}
-            placeholder="Digite sua justificativa aqui..."
-            maxLength={125}
-            multiline
-            numberOfLines={4}
-            value={justification}
-            onChangeText={setJustification}
-          />
-          <Errors>
-            { errosJustify.justify_description && errosJustify.justify_description.map((error, i) => <Error key={i} style={{color: 'rgb(191, 159, 18)'}}>{ error }</Error>) }
-          </Errors>  
-          <View style={{marginTop: 30, width: '100%', paddingLeft: 10, marginBottom: 20}}>
-            <ButtonLg loading={loadingJustify} disabled={loadingJustify} action={() => handleRegister()} title={'Registrar'} color={color} fontColor='#fff' largeWidth={330}/>  
-          </View>                   
-        </ScrollArea>                             
-      </PageArea>     
+          <PageArea>
+            <TitleArea style={{height: 100}}>
+              <Instruction>Registrar ponto no local:</Instruction>
+              <Text style={{fontFamily: 'montserrat-semibold', color: '#64748b'}}>{local ? local.name : '-'}</Text>
+            </TitleArea>          
+            <View style={{ alignItems: 'center' }}>
+              <Text style={{ fontFamily: 'montserrat-bold', fontSize: 44, color }}>
+                {formatDate(now)}
+              </Text>
+            </View>           
+            <Instruction style={{ marginTop: 20, marginBottom: 10}}>Horário de entrada.</Instruction>
+            <SelectContainer>
+              <View style={{ width: '49%' }}>
+                <LabelSelect style={{ color }}>Hora</LabelSelect>
+                <Select style={{ marginTop: 0, paddingHorizontal: 10 }}>
+                  <RNPickerSelect
+                    onValueChange={(value) => setHourStart(value)}
+                    value={hourStart}
+                    placeholder={{ label: 'Selecione a hora', value: null }}
+                    items={hourOptions.map((option) => ({
+                      label: option,
+                      value: option
+                    }))}
+                    style={{
+                      inputIOS: {
+                        fontSize: 16,
+                        paddingHorizontal: 10,
+                        paddingVertical: 0,
+                        borderWidth: 1,
+                        borderColor: '#ccc',
+                        borderRadius: 4,
+                        color: '#000',
+                        backgroundColor: 'transparent',
+                      },
+                      inputAndroid: {
+                        fontSize: 16,
+                        paddingHorizontal: 10,
+                        paddingVertical: 0,
+                        borderWidth: 1,
+                        borderColor: '#ccc',
+                        borderRadius: 4,
+                        color: '#000',
+                        backgroundColor: 'transparent',
+                      }
+                    }}
+                  />
+                </Select>
+              </View>
+              <View style={{ width: '49%' }}>
+                <LabelSelect style={{ color }}>Minuto</LabelSelect>
+                <Select style={{ marginTop: 0, paddingHorizontal: 10 }}>
+                  <RNPickerSelect
+                    onValueChange={(value) => setMinuteStart(value)}
+                    value={minuteStart}
+                    placeholder={{ label: 'Selecione o minuto', value: null }}
+                    items={minuteOptions.map((option) => ({
+                      label: option,
+                      value: option
+                    }))}
+                    style={{
+                      inputIOS: {
+                        fontSize: 16,
+                        paddingHorizontal: 10,
+                        paddingVertical: 0,
+                        borderWidth: 1,
+                        borderColor: '#ccc',
+                        borderRadius: 4,
+                        color: '#000',
+                        backgroundColor: 'transparent',
+                      },
+                      inputAndroid: {
+                        fontSize: 16,
+                        paddingHorizontal: 10,
+                        paddingVertical: 0,
+                        borderWidth: 1,
+                        borderColor: '#ccc',
+                        borderRadius: 4,
+                        color: '#000',
+                        backgroundColor: 'transparent',
+                      }
+                    }}
+                  />
+                </Select>
+              </View>
+            </SelectContainer>
+            <Errors>
+              { errosJustify.entry_datetime && errosJustify.entry_datetime.map((error, i) => <Error key={i}>{ error }</Error>) }
+            </Errors>          
+            <Instruction style={{ marginTop: 20, marginBottom: 10}}>Horário de saída.</Instruction>
+            <SelectContainer>
+              <View style={{ width: '49%' }}>
+                <LabelSelect style={{ color }}>Hora</LabelSelect>
+                <Select style={{ marginTop: 0, paddingHorizontal: 10 }}>
+                  <RNPickerSelect
+                    onValueChange={(value) => setHourEnd(value)}
+                    value={hourEnd}
+                    placeholder={{ label: 'Selecione a hora', value: null }}
+                    items={hourOptions.map((option) => ({
+                      label: option,
+                      value: option
+                    }))}
+                    style={{
+                      inputIOS: {
+                        fontSize: 16,
+                        paddingHorizontal: 10,
+                        paddingVertical: 0,
+                        borderWidth: 1,
+                        borderColor: '#ccc',
+                        borderRadius: 4,
+                        color: '#000',
+                        backgroundColor: 'transparent',
+                      },
+                      inputAndroid: {
+                        fontSize: 16,
+                        paddingHorizontal: 10,
+                        paddingVertical: 0,
+                        borderWidth: 1,
+                        borderColor: '#ccc',
+                        borderRadius: 4,
+                        color: '#000',
+                        backgroundColor: 'transparent',
+                      }
+                    }}
+                  />
+                </Select>
+              </View>
+              <View style={{ width: '49%' }}>
+                <LabelSelect style={{ color }}>Minuto</LabelSelect>
+                <Select style={{ marginTop: 0, paddingHorizontal: 10 }}>
+                  <RNPickerSelect
+                    onValueChange={(value) => setMinuteEnd(value)}
+                    value={minuteEnd}
+                    placeholder={{ label: 'Selecione o minuto', value: null }}
+                    items={minuteOptions.map((option) => ({
+                      label: option,
+                      value: option
+                    }))}
+                    style={{
+                      inputIOS: {
+                        fontSize: 16,
+                        paddingHorizontal: 10,
+                        paddingVertical: 0,
+                        borderWidth: 1,
+                        borderColor: '#ccc',
+                        borderRadius: 4,
+                        color: '#000',
+                        backgroundColor: 'transparent',
+                      },
+                      inputAndroid: {
+                        fontSize: 16,
+                        paddingHorizontal: 10,
+                        paddingVertical: 0,
+                        borderWidth: 1,
+                        borderColor: '#ccc',
+                        borderRadius: 4,
+                        color: '#000',
+                        backgroundColor: 'transparent',
+                      }
+                    }}
+                  />
+                </Select>
+              </View>
+            </SelectContainer>
+            <Errors>
+              { errosJustify.exit_datetime && errosJustify.exit_datetime.map((error, i) => <Error key={i} style={{color: 'rgb(191, 159, 18)'}}>{ error }</Error>) }
+            </Errors>            
+            <Instruction style={{ marginTop: 30 }}>Justificativa (máx. 125 caracteres)</Instruction>
+            <TextInput
+              style={{
+                height: 100,
+                borderColor: '#ccc',
+                borderWidth: 1,
+                borderRadius: 8,
+                padding: 10,
+                textAlignVertical: 'top',
+                fontFamily: 'montserrat-regular',
+                fontSize: 14,
+                color: '#000',
+                backgroundColor: '#fff',
+                marginTop: 10,
+              }}
+              placeholder="Digite sua justificativa aqui..."
+              maxLength={125}
+              multiline
+              numberOfLines={4}
+              value={justification}
+              onChangeText={setJustification}
+            />
+            <Errors>
+              { errosJustify.justify_description && errosJustify.justify_description.map((error, i) => <Error key={i} style={{color: 'rgb(191, 159, 18)'}}>{ error }</Error>) }
+            </Errors>  
+            <View style={{marginTop: 30, width: '100%', paddingLeft: 10, marginBottom: 20}}>
+              <ButtonLg loading={loadingJustify} disabled={loadingJustify} action={() => handleRegister()} title={'Registrar'} color={color} fontColor='#fff' largeWidth={330}/>  
+            </View> 
+          </PageArea>
+        </ScrollView>
+      </KeyboardAvoidingView>  
     </Container>
   )
 };

@@ -59,7 +59,7 @@ export const ButtonJustify = styled.TouchableOpacity`
     align-items: center;
     flex-direction: row;
     border-radius: 0px 50px 50px 0px;
-    background: #ccc;
+    background: rgb(191, 159, 18);
     padding-left: 20px;
 `;
 
@@ -79,6 +79,7 @@ export const Cell = styled.Text`
     flex: 1;
     text-align: center;
     color: #334155;
+    font-size: 12px;
 `;
 
 export const Row = styled.View`
