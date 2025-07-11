@@ -517,10 +517,9 @@ const ElectronicPoint = () => {
               </TouchableWithoutFeedback>
             </Modal>            
             <StatusBar 
-              translucent
-              backgroundColor="transparent"
-              barStyle="dark-content"
-            />    
+              backgroundColor="#FFFFFF" // fundo branco
+              barStyle="dark-content"   // texto e ícones pretos
+            />
             <Header themeColor={primaryColor}/>
             <Body>
                 <>

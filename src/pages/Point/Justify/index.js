@@ -83,9 +83,8 @@ const Justify = ({ route }) => {
   return (
     <Container>
       <StatusBar 
-        translucent
-        backgroundColor="transparent"
-        barStyle="dark-content"
+        backgroundColor="#FFFFFF" // fundo branco
+        barStyle="dark-content"   // texto e ícones pretos
       />
       <Header themeColor={color}/>
       <KeyboardAvoidingView
@@ -98,12 +97,13 @@ const Justify = ({ route }) => {
           keyboardShouldPersistTaps="handled"
         >
           <PageArea>
-            <TitleArea style={{height: 100}}>
+            <TitleArea style={{maxHeight: 100, borderBottomWidth: 1, borderColor: '#ddd', marginBottom: 20}}>
               <Instruction>Registrar ponto no local:</Instruction>
               <Text style={{fontFamily: 'montserrat-semibold', color: '#64748b'}}>{local ? local.name : '-'}</Text>
             </TitleArea>          
-            <View style={{ alignItems: 'center' }}>
-              <Text style={{ fontFamily: 'montserrat-bold', fontSize: 44, color }}>
+            <View style={{ alignItems: 'center', marginBottom: 20 }}>
+              <Instruction>Data</Instruction>
+              <Text style={{ fontFamily: 'montserrat-bold', fontSize: 14, color: '#64748b' }}>
                 {formatDate(now)}
               </Text>
             </View>           
