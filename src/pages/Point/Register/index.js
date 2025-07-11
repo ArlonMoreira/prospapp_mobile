@@ -145,7 +145,7 @@ const Register = ({ route }) => {
       />
       <Header themeColor={color}/>      
       <PageArea>
-        <TitleArea>
+        <TitleArea style={{height: 100}}>
           <Instruction>Registrar ponto no local:</Instruction>
           <Text style={{fontFamily: 'montserrat-semibold', color: '#64748b'}}>{local ? local.name : '-'}</Text>
         </TitleArea>  

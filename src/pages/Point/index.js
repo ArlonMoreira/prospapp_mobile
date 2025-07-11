@@ -1,106 +1,66 @@
-import React, { useEffect, useState } from 'react'
-//Redux
-import { list, resetErrorMessage } from '../../slices/registerPointSlice';
-//Hooks
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-//Pages
+import { list } from '../../slices/registerPointSlice';
+// Navegação
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+// Páginas e componentes
 import Register from './Register';
 import Justify from './Justify';
-//Components
 import LoadingPage from '../../components/LoadingPage';
 import Alert from '../../components/Alert';
-//Navigation
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+// Hook customizado
+import useReduxAlert from '../../hooks/useReduxAlert';
 
 const Stack = createNativeStackNavigator();
 
 const Point = ({ route }) => {
-
   const dispatch = useDispatch();
-  const { loading, errorMessage } = useSelector(state => state.registerPoint);
+  const { loading, errorMessage, errorMessageJustify } = useSelector(state => state.registerPoint);
 
-  const [ color, setColor ] = useState(null);
-  const [ local, setLocal ] = useState(null);
-  const [ logo, setLogo ] = useState(null);
+  const [color, setColor] = useState(null);
+  const [local, setLocal] = useState(null);
+  const [logo, setLogo] = useState(null);
 
   useEffect(() => {
     setColor(route.params.color);
     setLocal(route.params.data);
     setLogo(route.params.logo);
-
   }, []);
 
   useEffect(() => {
-    if(local) dispatch(list(local.id));
+    if (local) dispatch(list(local.id));
   }, [local]);
 
-  //Alert mensagem
-  const [showAlertError, setShowAlertError] = useState(false);
-
-  //Apresentar o alert caso tiver mensagem de erro.
-  useEffect(()=>{
-    if(errorMessage){
-      setShowAlertError(true);
-    } else {
-      setShowAlertError(false);
-    }
-
-  }, [errorMessage, setShowAlertError]);
-
-  //Fechar a mensagem de erro automaticamente.
-  useEffect(()=>{
-    if(!showAlertError){ //Resetar o estado de errorMessage caso não tiver mais visível o alerta.
-      dispatch(resetErrorMessage());
-    } else { //Caso estiver aberto a mensagem de erro, 1 segundo depois será fechada sozinha.
-      const timeoutClearMessage = setTimeout(()=>{
-        dispatch(resetErrorMessage());
-      }, 6000);
-
-      return () => {
-        clearTimeout(timeoutClearMessage);
-      }
-
-    }
-
-  }, [showAlertError]);    
+  // Usando o hook customizado
+  const [showAlertError, setShowAlertError] = useReduxAlert(errorMessage);
+  const [showAlertErrorJustify, setShowAlertErrorJustify] = useReduxAlert(errorMessageJustify);
 
   return (
     <>
       {
         loading ? <LoadingPage backgroundColor={color} logo={logo}/> : (
           <>
-            {
-              showAlertError && <Alert message={errorMessage} setShow={setShowAlertError}/>
-            }  
+            {showAlertError && <Alert message={errorMessage} setShow={setShowAlertError} />}
+            {showAlertErrorJustify && <Alert message={errorMessageJustify} setShow={setShowAlertErrorJustify} />}
             <Stack.Navigator>
               <Stack.Screen
                 name="Register"
                 component={Register}
-                initialParams={{
-                  local,
-                  color
-                }}
-                options={{
-                  headerShown: false,
-                }}               
+                initialParams={{ local, color }}
+                options={{ headerShown: false }}
               />
               <Stack.Screen
                 name="Justify"
                 component={Justify}
-                initialParams={{
-                  local,
-                  color
-                }}
-                options={{
-                  headerShown: false,
-                }}               
-              />              
-            </Stack.Navigator>                        
-          </>      
+                initialParams={{ local, color }}
+                options={{ headerShown: false }}
+              />
+            </Stack.Navigator>
+          </>
         )
       }
-    </>   
-  )
+    </>
+  );
 }
 
 export default Point;

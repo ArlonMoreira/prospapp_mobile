@@ -354,6 +354,19 @@ const useRequest = () => {
                 }                
             }); 
         },
+        pointJustify: ({ data, token }) => {
+            return request({
+                endpoint: 'point/justify/',
+                params: {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }                
+            }); 
+        },        
         pointList: ({ localId, token }) => {
             return request({
                 endpoint: `point/current/${localId}/`,

@@ -6,9 +6,13 @@ import useRequest from "../hooks/useRequest";
 
 const initialState = {
     loading: false,
+    loadingJustify: false,
     loadingRemove: false,
     successRemove: false,
     errorMessage: null,
+    errorMessageJustify: null,
+    errosJustify: [],
+    successJustify: false,
     open_point: {},
     all_points_today: []
 };
@@ -87,6 +91,23 @@ export const removePointToday = createAsyncThunk(
     }
 );
 
+export const justify = createAsyncThunk(
+    'registerPoint/justify',
+    async(data, {getState, rejectWithValue}) => {
+        const userAuth = await getState().auth.userAuth;
+        const response = await useRequest().pointJustify({
+            data,
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUyNDQyMTYwLCJpYXQiOjE3NTIwMTAxNjAsImp0aSI6ImQ3ZTc3N2I3ZDQxODRlZjM4YmM3YTBkMmQ4ZjY3MjRhIiwidXNlcl9pZCI6MX0.4BYgdnVDzL15ziREM0Z--MYaqYQOIrCT_supqZLM4i4"
+        });
+
+        if(response.success){
+            return response;
+        } else {
+            return rejectWithValue(response);
+        }        
+    }
+); 
+
 export const registerPointSlice = createSlice({
     name: 'registerPoint',
     initialState,
@@ -94,16 +115,38 @@ export const registerPointSlice = createSlice({
         resetForm: (state) => {
             state.successRemove = false;
             state.errorMessage = null;
+            state.successJustify = false;
+            state.errorMessageJustify = null;
+            state.errosJustify = [];
         },
         startLoading: (state) => {
             state.loading = true;
         },
         resetErrorMessage: (state) => {
             state.errorMessage = null;
+            state.errorMessageJustify = null;
         }
     },    
     extraReducers: (builder) => {
         builder
+            .addCase(justify.pending, (state) => {
+                state.loadingJustify = true;
+                state.successJustify = false;
+                state.errosJustify = [];
+            })
+            .addCase(justify.fulfilled, (state, action) => {
+                state.loadingJustify = false;
+                state.errorMessageJustify = null;
+                state.successJustify = true;
+                state.all_points_today.push(action.payload.data);
+                state.errosJustify = [];
+            })      
+            .addCase(justify.rejected, (state, action) => {
+                state.loadingJustify = false;
+                state.successJustify = false;
+                state.errorMessageJustify = action.payload.message;
+                state.errosJustify = action.payload.data;
+            })                    
             .addCase(register.fulfilled, (state, action) => {
                 state.loading = false;
                 state.errorMessage = null;
