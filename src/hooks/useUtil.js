@@ -19,7 +19,12 @@ const useUtil = () => {
 
     },
     formatDate: (date) => {
-      return date.toLocaleDateString('pt-BR'); // Ex: 07/05/2025
+      if (!date) return ''; // Se for null ou undefined
+      const d = new Date(date); // Garante que seja Date
+      const dia = String(d.getDate()).padStart(2, '0');
+      const mes = String(d.getMonth() + 1).padStart(2, '0'); // Janeiro = 0
+      const ano = d.getFullYear();
+      return `${dia}/${mes}/${ano}`;
     },
     formatTime: (date) => {
       return date.toLocaleTimeString('pt-BR', {

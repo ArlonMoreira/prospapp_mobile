@@ -56,6 +56,10 @@ const Register = ({ route }) => {
     const interval = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(interval);
   }, []);  
+
+  useState(() => {
+    console.log(formatDate(now))
+  }, [now])
   
   //Registrar ponto
   const handleRegisterPoint = async () => {

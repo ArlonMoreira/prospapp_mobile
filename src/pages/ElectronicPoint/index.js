@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Modal, TouchableWithoutFeedback, View } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import RNPickerSelect from 'react-native-picker-select';
 //Hooks
 import { useSelector, useDispatch } from 'react-redux';
 import useKeyboardStatus from '../../hooks/useKeyboardStatus';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
 import useCurrentDate from '../../hooks/useCurrentDate';
+import useUtil from '../../hooks/useUtil';
 //Pages
 import ListLocals from './ListLocals';
 import EditLocals from './EditLocals';
@@ -52,6 +53,8 @@ const Stack = createNativeStackNavigator();
 
 const ElectronicPoint = () => {
 
+  const { formatDate } = useUtil();
+
   const { currentDate, currentHour } = useCurrentDate();  
 
   const keyboardVisible = useKeyboardStatus();
@@ -66,7 +69,7 @@ const ElectronicPoint = () => {
   useEffect(()=>{
     if(userData){
 
-      if(userData.is_staff) setStaffPerfil(true);
+      if(userData.role == 'Gestor') setStaffPerfil(true);
 
       if(userData.companys_joined.length){
         setPrimaryColor(userData.companys_joined[0].primary_color);
@@ -174,17 +177,26 @@ const ElectronicPoint = () => {
 
   useEffect(() => {
     if(users && users.length > 0){
-      setUserOptions(users.map(obj => 
-        (
-          {
-            'value': obj.user_id,
-            'label': obj.full_name
-          }
-        )
-      ));
+      if(staffPerfil){
+        setUserOptions(users.map(obj => 
+          (
+            {
+              'value': obj.user_id,
+              'label': obj.full_name
+            }
+          )
+        ));
+      } else {
+        const option = users.filter(option => option.email === userData.email)[0];
+        setUserOptions([{
+          'value': option.user_id,
+          'label': option.full_name      
+        }]);
+      }
+
     }
 
-  }, [users]);
+  }, [users, staffPerfil]);
 
   useEffect(() => {
     if(usersOptions.length > 0){
@@ -231,10 +243,13 @@ const ElectronicPoint = () => {
   const printToFile = (data) => {
 
     const user = usersOptions.length > 0 && usersOptions.filter(user => user.value == userSelected)[0].label;
-    
+
     const total_hours = Object.values(data).reduce((total, points) => {
       return total + points.reduce((sum, point) => {
-        return sum + point.hours_worked;
+        if (point.is_justify === false && typeof point.hours_worked === 'number') {
+          return sum + point.hours_worked;
+        }
+        return sum;
       }, 0);
     }, 0);
 
@@ -358,19 +373,20 @@ const ElectronicPoint = () => {
                             <th>Entrada</th>
                             <th>Saída</th>
                             <th>Horas trabalhadas</th>
+                            <th style="max-width: 100px">Justificativa</th>
                           </tr>
                         </thead>
                         <tbody>
                           ${
                             data[key].map(object => {
-                              const formattedDate = new Date(object.date).toLocaleDateString('pt-BR');
                               return `
-                                <tr>
-                                  <td>${ formattedDate }</td>
+                                <tr style="opacity: ${!object.is_justify ? 1: .5}">
+                                  <td>${ formatDate(object.date) }</td>
                                   <td>${ object.dayOfWeek }</td>
                                   <td>${ object.entry_datetime }</td>
                                   <td>${ object.exit_datetime ? object.exit_datetime : '-' }</td>
-                                  <td>${ object.hours_worked ? object.hours_worked : 0 }</td>
+                                  <td>${ object.is_justify ? '-' : object.hours_worked ? object.hours_worked : 0 }</td>
+                                  <td>${ object.justify_description ? object.justify_description: '-' }</td>
                                 </tr>
                               `;
                             }).join('')
@@ -384,7 +400,7 @@ const ElectronicPoint = () => {
         </body>
       
       </html>    
-    `
+    `;
 
     return {
       html
@@ -437,57 +453,110 @@ const ElectronicPoint = () => {
                     <ModalResume>Selecione o usuário e o período que deseja gerar o relatório.</ModalResume>
                     <View style={{width: '100%', marginTop: 20}}>
                       <LabelSelect style={{ color: primaryColor }}>Usuário</LabelSelect>
-                      <Select>
-                        <Picker
-                          selectedValue={userSelected}
+                      <Select style={{ marginTop: 0, paddingHorizontal: 10 }}>
+                        <RNPickerSelect
+                          onValueChange={(value) => setUserSlelected(value)}
+                          value={userSelected}
+                          items={usersOptions.map((option) => ({
+                            label: option.label,
+                            value: option.value
+                          }))}
                           style={{
-                            backgroundColor: 'transparent', // deixa o Picker sem cor
-                            width: '100%',
-                            height: '100%'
+                            inputIOS: {
+                              fontSize: 16,
+                              paddingHorizontal: 10,
+                              paddingVertical: 0,
+                              borderWidth: 1,
+                              borderColor: '#ccc',
+                              borderRadius: 4,
+                              color: '#000',
+                              backgroundColor: 'transparent',
+                            },
+                            inputAndroid: {
+                              fontSize: 16,
+                              paddingHorizontal: 10,
+                              paddingVertical: 0,
+                              borderWidth: 1,
+                              borderColor: '#ccc',
+                              borderRadius: 4,
+                              color: '#000',
+                              backgroundColor: 'transparent',
+                            }
                           }}
-                          onValueChange={(itemValue) => setUserSlelected(itemValue)}
-                        >
-                          {
-                            usersOptions.map((option, i) => <Picker.Item key={i} value={option.value} label={option.label}/>)
-                          }
-                        </Picker>                      
+                        />                     
                       </Select>                       
                     </View>
-                    <SelectContainer style={{ width: '100%', marginTop: 20 }}>
-                      <View style={{width: '44%'}}>
+                    <SelectContainer style={{ marginTop: 10 }}>
+                      <View style={{ width: '49%' }}>
                         <LabelSelect style={{ color: primaryColor }}>Ano</LabelSelect>
-                        <Select>
-                          <Picker
-                            selectedValue={yearSelected}
+                        <Select style={{ marginTop: 0, paddingHorizontal: 10 }}>
+                          <RNPickerSelect
+                            onValueChange={(value) => setYearSelected(value)}
+                            value={yearSelected}
+                            placeholder={{ label: 'Selecione o ano', value: null }}
+                            items={yearsOptions.map((option) => ({
+                              label: option,
+                              value: option
+                            }))}
                             style={{
-                              backgroundColor: 'transparent', // deixa o Picker sem cor
-                              width: '100%',
-                              height: '100%'
+                              inputIOS: {
+                                fontSize: 16,
+                                paddingHorizontal: 10,
+                                paddingVertical: 0,
+                                borderWidth: 1,
+                                borderColor: '#ccc',
+                                borderRadius: 4,
+                                color: '#000',
+                                backgroundColor: 'transparent',
+                              },
+                              inputAndroid: {
+                                fontSize: 16,
+                                paddingHorizontal: 10,
+                                paddingVertical: 0,
+                                borderWidth: 1,
+                                borderColor: '#ccc',
+                                borderRadius: 4,
+                                color: '#000',
+                                backgroundColor: 'transparent',
+                              }
                             }}
-                            onValueChange={(itemValue) => setYearSelected(itemValue)}
-                          >
-                            {
-                              yearsOptions.map((option) => <Picker.Item key={option} value={option} label={option}/>)
-                            }
-                          </Picker>                      
+                          />
                         </Select>
                       </View>                      
-                      <View style={{width: '44%'}}>
+                      <View style={{ width: '49%' }}>
                         <LabelSelect style={{ color: primaryColor }}>Mês</LabelSelect>
-                        <Select>
-                          <Picker
-                            selectedValue={monthSelected}
+                        <Select style={{ marginTop: 0, paddingHorizontal: 10 }}>
+                          <RNPickerSelect
+                            onValueChange={(value) => setMonthSelected(value)}
+                            value={monthSelected}
+                            placeholder={{ label: 'Selecione o mês', value: null }}
+                            items={monthsOptiopns.map((option) => ({
+                              label: option,
+                              value: option
+                            }))}
                             style={{
-                              backgroundColor: 'transparent', // deixa o Picker sem cor
-                              width: '100%',
-                              height: '100%'
+                              inputIOS: {
+                                fontSize: 16,
+                                paddingHorizontal: 10,
+                                paddingVertical: 0,
+                                borderWidth: 1,
+                                borderColor: '#ccc',
+                                borderRadius: 4,
+                                color: '#000',
+                                backgroundColor: 'transparent',
+                              },
+                              inputAndroid: {
+                                fontSize: 16,
+                                paddingHorizontal: 10,
+                                paddingVertical: 0,
+                                borderWidth: 1,
+                                borderColor: '#ccc',
+                                borderRadius: 4,
+                                color: '#000',
+                                backgroundColor: 'transparent',
+                              }
                             }}
-                            onValueChange={(itemValue) => setMonthSelected(itemValue)}
-                          >
-                            {
-                              monthsOptiopns.map((option) => <Picker.Item key={option} value={option} label={option}/>)
-                            }
-                          </Picker>                      
+                          />
                         </Select>
                       </View>
                     </SelectContainer>
@@ -535,16 +604,16 @@ const ElectronicPoint = () => {
                           iconName={'alarm-sharp'}
                           action={() => navigation.navigate('ListLocals')}
                           title={'Registar ponto'}
-                        />                         
+                        />   
+                        <BoxAction 
+                          color={primaryColor}
+                          iconName={'download'}
+                          action={() => setShowModalReport(true)}
+                          title={'Baixa relatório'}
+                        ></BoxAction>                                              
                         {
                           staffPerfil && (
                           <>
-                            <BoxAction 
-                              color={primaryColor}
-                              iconName={'download'}
-                              action={() => setShowModalReport(true)}
-                              title={'Baixa relatório'}
-                            ></BoxAction>
                             <BoxAction
                               color={currentRouteName == 'RegisterLocal' ? '#f0f2f5': primaryColor}
                               backgroundColor={currentRouteName !== 'RegisterLocal' ? '#f0f2f5': primaryColor}
