@@ -1,5 +1,4 @@
 import styled from 'styled-components/native';
-import { View, TouchableOpacity } from 'react-native';
 
 export const Container = styled.View`
     background: #fff;
@@ -40,9 +39,13 @@ export const StudentNameArea = styled.View`
     justify-content: center;
 `;
 
-export const StudentName = styled.Text`
-    font-size: 14px;
-    font-family: 'montserrat-regular';     
+export const StudentName = styled.Text.attrs({
+  numberOfLines: 1,
+  ellipsizeMode: 'tail'
+})`
+  font-size: 12px;
+  font-family: 'montserrat-regular';
+  width: 300px;
 `;
 
 export const StudentToolsArea = styled.View`

@@ -169,7 +169,7 @@ const Call = ({ route }) => {
   const [ showModalCall, setShowModalCall ] = useState(false);
   const [ studentSelected, setStudentSelected ] = useState(null);
   const [ students, setStudents ] = useState([]);
-  const [ disabledSumitCall, setDisabledSubmitCall ] = useState(true);
+  //const [ disabledSumitCall, setDisabledSubmitCall ] = useState(true);
 
   //Selecionar o objeto de estudantes
   useEffect(()=>{
@@ -192,16 +192,16 @@ const Call = ({ route }) => {
   }, [success]);
 
   //Bloquear botão de chamada caso todos os estudantes não tiverem marcado presença
-  useEffect(()=>{
-    const filled = students.filter((student) => student.present == null).length;
+  // useEffect(()=>{
+  //   const filled = students.filter((student) => student.present == null).length;
 
-    setDisabledSubmitCall(true);
+  //   setDisabledSubmitCall(true);
 
-    if(filled == 0 && students.length !== 0){
-      setDisabledSubmitCall(false);
-    }
+  //   if(filled == 0 && students.length !== 0){
+  //     setDisabledSubmitCall(false);
+  //   }
 
-  }, [students]);  
+  // }, [students]);  
 
   //Seleciona o estudante e abre o modal para selecionar a presença
   const handleCall = (student) => {
@@ -222,9 +222,9 @@ const Call = ({ route }) => {
   //Registrar chamada
   const handleCallRegister = () => {
     const data = [
-      ...students.map((student) => ({student: student.id, present: student.present, date: student.date}))
+      ...students.map((student) => ({student: student.id, present: student.present == null? false: student.present, date: student.date}))
     ]
-
+    
     dispatch(call(data));
 
   };
@@ -525,20 +525,6 @@ const Call = ({ route }) => {
       html
     };
 
-    // try {
-
-    //   const { uri } = await Print.printToFileAsync({ html });
-    //   console.log('TESTEEE', uri)
-    //   await shareAsync(uri, { 
-    //     UTI: '.pdf',
-    //     mimeType: 'application/pdf'
-    //   });
-
-    // } catch (error) {
-    //   console.error("Erro ao compartilhar:", error);
-
-    // }
-
   }; 
 
   //Caso for gerado com sucesso, irá fechar o modal e reiniciar os estados;
@@ -571,7 +557,7 @@ const Call = ({ route }) => {
     setStudents([]);
 
     //Desabilitar o botão assim que entra na ágina
-    setDisabledSubmitCall(true);
+    //setDisabledSubmitCall(true);
 
     //Obter data atual
     const currentTime = new Date();
@@ -605,13 +591,12 @@ const Call = ({ route }) => {
     navigation.navigate(currentRouteName, 
       { 
         screen: currentRouteName, params: {
-          students,
-          disabled: disabledSumitCall
+          students
         }
       }
     );
 
-  }, [students, disabledSumitCall, currentRouteName]);
+  }, [students, currentRouteName]);
 
   //Alteração dos dados de estudantes
   const [ showModalEditStudent, setShowModalEditStudent ] = useState(false);
@@ -908,7 +893,6 @@ const Call = ({ route }) => {
                   color={currentRouteName == 'CallRegister' ? '#f0f2f5': primaryColor}
                   iconName={'notifications'}
                   title={'Registrar chamada'}
-                  disabled={disabledSumitCall}
                   action={() => navigation.navigate('CallRegister')}
                   backgroundColor={currentRouteName == 'CallRegister' ? primaryColor: '#f0f2f5'}
                 />
@@ -934,7 +918,6 @@ const Call = ({ route }) => {
                   initialParams={{ 
                     students,
                     color: primaryColor,
-                    disabled: disabledSumitCall,
                     actionItem: handleCall, 
                     action: handleCallRegister
                   }}

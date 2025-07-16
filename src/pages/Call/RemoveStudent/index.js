@@ -2,18 +2,9 @@ import React, { useMemo } from 'react'
 //Hooks
 import useUtil from '../../../hooks/useUtil';
 //Styles
-import {
-  Container,
-  InstructionArea,
-  Instruction,
-  ContainerItem,
-  StudentCard,
-  StudentNameArea,
-  StudentName
-} from '../CallRegister/styles'
-
+import { InstructionArea, Instruction } from '../../ElectronicCall/ListClass/styles';
+import { Container, ContainerItem, StudentCard, StudentNameArea, StudentName } from '../CallRegister/styles'
 import { Ionicons } from '@expo/vector-icons';
-
 import { IconArea } from './styles';
 
 const RemoveStudent = ({ route }) => {
@@ -27,7 +18,7 @@ const RemoveStudent = ({ route }) => {
 
   return (
     <Container>
-      <InstructionArea>
+      <InstructionArea style={{height: 50}}>
         <Instruction>Selecione um aluno para remover:</Instruction>
       </InstructionArea>
       <ContainerItem>

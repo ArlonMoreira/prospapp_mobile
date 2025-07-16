@@ -2,21 +2,10 @@ import React, { useMemo } from 'react'
 //Hooks
 import useUtil from '../../../hooks/useUtil';
 //Styles
-import {
-  Container,
-  InstructionArea,
-  Instruction,
-  ContainerItem,
-  StudentCard,
-  StudentNameArea,
-  StudentName
-} from '../CallRegister/styles';
-
+import { InstructionArea, Instruction } from '../../ElectronicCall/ListClass/styles';
+import { Container, ContainerItem, StudentCard, StudentNameArea, StudentName } from '../CallRegister/styles';
 import { Ionicons } from '@expo/vector-icons';
-
-import {
-  IconArea
-} from './styles';
+import { IconArea } from './styles';
 
 const EditStudent = ({ route }) => {
 
@@ -29,7 +18,7 @@ const EditStudent = ({ route }) => {
 
   return (
     <Container>
-      <InstructionArea>
+      <InstructionArea style={{height: 50}}>
         <Instruction>Selecione um aluno para realizar alterações:</Instruction>
       </InstructionArea>
       <ContainerItem>
