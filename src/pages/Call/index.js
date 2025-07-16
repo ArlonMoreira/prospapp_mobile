@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Modal, TouchableWithoutFeedback, View, Text, Platform } from 'react-native';
+import RNPickerSelect from 'react-native-picker-select';
 //Hooks
 import useCurrentDate from '../../hooks/useCurrentDate';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
@@ -48,6 +49,7 @@ import {
 } from './styles'
 import { SimpleLineIcons, FontAwesome } from '@expo/vector-icons';
 import { Error, Errors } from '../Register/styles';
+import { SelectContainer, LabelSelect } from '../ElectronicPoint/styles';
 //PDF
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
@@ -169,7 +171,6 @@ const Call = ({ route }) => {
   const [ showModalCall, setShowModalCall ] = useState(false);
   const [ studentSelected, setStudentSelected ] = useState(null);
   const [ students, setStudents ] = useState([]);
-  //const [ disabledSumitCall, setDisabledSubmitCall ] = useState(true);
 
   //Selecionar o objeto de estudantes
   useEffect(()=>{
@@ -190,18 +191,6 @@ const Call = ({ route }) => {
     setStudents(updateStudents);
 
   }, [success]);
-
-  //Bloquear botão de chamada caso todos os estudantes não tiverem marcado presença
-  // useEffect(()=>{
-  //   const filled = students.filter((student) => student.present == null).length;
-
-  //   setDisabledSubmitCall(true);
-
-  //   if(filled == 0 && students.length !== 0){
-  //     setDisabledSubmitCall(false);
-  //   }
-
-  // }, [students]);  
 
   //Seleciona o estudante e abre o modal para selecionar a presença
   const handleCall = (student) => {
@@ -265,7 +254,7 @@ const Call = ({ route }) => {
       year: yearSelected,
       month: monthSelected
     };
-  
+    
     dispatch(generated(data));
 
   };
@@ -556,9 +545,6 @@ const Call = ({ route }) => {
     //Limpar estudante assim que abre a página
     setStudents([]);
 
-    //Desabilitar o botão assim que entra na ágina
-    //setDisabledSubmitCall(true);
-
     //Obter data atual
     const currentTime = new Date();
 
@@ -709,36 +695,80 @@ const Call = ({ route }) => {
                   <ModalContent>
                     <ModalTitle style={{color: primaryColor}}>Gerar relatório</ModalTitle>
                     <ModalResume>Selecione o período que desejar para gerar o relatório de presença.</ModalResume>
-                    <Select>
-                      <Picker
-                        selectedValue={yearSelected}
-                        style={{
-                          backgroundColor: 'transparent', // deixa o Picker sem cor
-                          width: '100%',
-                          height: '100%'
-                        }}
-                        onValueChange={(itemValue) => setYearSelected(itemValue)}
-                      >
-                        {
-                          yearsOptions.map((option) => <Picker.Item key={option} value={option} label={option}/>)
-                        }
-                      </Picker>                      
-                    </Select>
-                    <Select>
-                      <Picker
-                        selectedValue={monthSelected}
-                        style={{
-                          backgroundColor: 'transparent', // deixa o Picker sem cor
-                          width: '100%',
-                          height: '100%'
-                        }}
-                        onValueChange={(itemValue) => setMonthSelected(itemValue)}
-                      >
-                        {
-                          monthsOptiopns.map((option) => <Picker.Item key={option} value={option} label={option}/>)
-                        }
-                      </Picker>                      
-                    </Select>
+                    <SelectContainer>
+                      <View style={{ width: '49%' }}>
+                        <LabelSelect style={{ color: primaryColor }}>Ano</LabelSelect>
+                        <Select style={{ marginTop: 0, paddingHorizontal: 10 }}>
+                          <RNPickerSelect
+                            onValueChange={(value) => setYearSelected(value)}
+                            value={yearSelected}
+                            placeholder={{ label: 'Selecione o ano', value: null }}
+                            items={yearsOptions.map((option) => ({
+                              label: option,
+                              value: option
+                            }))}
+                            style={{
+                              inputIOS: {
+                                fontSize: 16,
+                                paddingHorizontal: 10,
+                                paddingVertical: 0,
+                                borderWidth: 1,
+                                borderColor: '#ccc',
+                                borderRadius: 4,
+                                color: '#000',
+                                backgroundColor: 'transparent',
+                              },
+                              inputAndroid: {
+                                fontSize: 16,
+                                paddingHorizontal: 10,
+                                paddingVertical: 0,
+                                borderWidth: 1,
+                                borderColor: '#ccc',
+                                borderRadius: 4,
+                                color: '#000',
+                                backgroundColor: 'transparent',
+                              }
+                            }}
+                          />
+                        </Select>
+                      </View>
+                      <View style={{ width: '49%' }}>
+                        <LabelSelect style={{ color: primaryColor }}>Mês</LabelSelect>
+                        <Select style={{ marginTop: 0, paddingHorizontal: 10 }}>
+                          <RNPickerSelect
+                            onValueChange={(value) => setMonthSelected(value)}
+                            value={monthSelected}
+                            placeholder={{ label: 'Selecione o mês', value: null }}
+                            items={monthsOptiopns.map((option) => ({
+                              label: option,
+                              value: option
+                            }))}
+                            style={{
+                              inputIOS: {
+                                fontSize: 16,
+                                paddingHorizontal: 10,
+                                paddingVertical: 0,
+                                borderWidth: 1,
+                                borderColor: '#ccc',
+                                borderRadius: 4,
+                                color: '#000',
+                                backgroundColor: 'transparent',
+                              },
+                              inputAndroid: {
+                                fontSize: 16,
+                                paddingHorizontal: 10,
+                                paddingVertical: 0,
+                                borderWidth: 1,
+                                borderColor: '#ccc',
+                                borderRadius: 4,
+                                color: '#000',
+                                backgroundColor: 'transparent',
+                              }
+                            }}
+                          />
+                        </Select>
+                      </View>
+                    </SelectContainer>
                     <View style={{marginTop: 20}}>
                       <ButtonLg title='Salvar e compartilhar' loading={loadingReport} color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleReportGenerated}/>
                     </View>                                                           
