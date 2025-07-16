@@ -77,12 +77,14 @@ const ElectronicCall = () => {
   const [ disabledSubmit, setDisabledSubmit ] = useState(true);
 
   const handleSubmit = () => {
-    const data = {
-      company,
-      name
-    };
+    if(company){
+      const data = {
+        company,
+        name
+      };
 
-    dispatch(register(data));
+      dispatch(register(data));
+    }
     
   };
 
@@ -110,6 +112,7 @@ const ElectronicCall = () => {
   useEffect(()=>{ //Limpar o formulário caso ocorrer o cadastro com sucesso.
     if(success){
       setName('');
+      dispatch(list(company));      
     }
   }, [success]);
 

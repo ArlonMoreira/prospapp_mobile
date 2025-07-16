@@ -1,20 +1,11 @@
-import React, { useEffect, useMemo } from 'react'
+import {  useMemo } from 'react'
 import useUtil from '../../../hooks/useUtil';
+//components
+import Widget from '../../../components/Widget';
 //Hooks
 import { useNavigation } from '@react-navigation/native';
 //Styles
-import { 
-    Container,
-    ScrollArea,
-    ClassCard,
-    TextArea,
-    NameClass,
-    IconArea,
-    IconText,
-    InstructionArea,
-    Instruction
-} from './styles'
-import { Ionicons } from '@expo/vector-icons';
+import { Container, ScrollArea, InstructionArea, Instruction } from './styles';
 
 const ListClass = ({ route }) => {
     
@@ -24,7 +15,7 @@ const ListClass = ({ route }) => {
     const { ordenarObjectAsc } = useUtil();
 
     const classesOrder = useMemo(() => {
-      return classes && classes.length > 0? ordenarObjectAsc([...classes], 'name'): [];
+        return classes && classes.length > 0? ordenarObjectAsc([...classes], 'name'): [];
     }, [classes]);
     
     return (
@@ -35,15 +26,7 @@ const ListClass = ({ route }) => {
             <ScrollArea>
             {
                 classesOrder && classesOrder.length > 0 && classesOrder.map((item, i) => (
-                    <ClassCard key={item.id} onPress={() => navigation.navigate('Call', {classId: item.id, className: item.name})}>
-                        <TextArea>
-                            <NameClass style={{color}}>{item.name}</NameClass>
-                        </TextArea>
-                        <IconArea>
-                            <IconText style={{color}}>Chamada</IconText>
-                            <Ionicons name='enter-outline' size={28} color={color}/>
-                        </IconArea>
-                    </ClassCard> 
+                    <Widget item={item} key={i} color={color} action={() => navigation.navigate('Call', {classId: item.id, className: item.name})}></Widget>
                 ))
             }
             </ScrollArea>

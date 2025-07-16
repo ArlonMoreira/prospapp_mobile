@@ -122,7 +122,7 @@ export const classSlice = createSlice({
                 state.errorRegister = true;
             })
             //Aguardando grupos
-            .addCase(list.pending, (state, action) => {
+            .addCase(list.pending, (state) => {
                 state.loadingList = true;
             })
             //Listar grupos
@@ -131,7 +131,7 @@ export const classSlice = createSlice({
                 state.loadingList = false;
             })
             //Falha ao lista grupos
-            .addCase(list.rejected, (state, action) => {
+            .addCase(list.rejected, (state) => {
                 state.loadingList = false;
             })
             //Aguardando alteração

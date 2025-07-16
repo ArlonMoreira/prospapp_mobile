@@ -19,5 +19,5 @@ export const Title = styled.Text`
     text-align: center;
     line-height: 10px;
     margin-top: 5px;
-    max-width: 50px;
+    max-width: 55px;
 `;

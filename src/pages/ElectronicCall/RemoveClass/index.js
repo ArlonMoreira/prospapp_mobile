@@ -1,21 +1,9 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import useUtil from '../../../hooks/useUtil';
+//Components
+import Widget from '../../../components/Widget';
 //Styles
-import { 
-  Container,
-  ScrollArea,
-  ClassCard,
-  NameClass,
-  InstructionArea,
-  Instruction
-} from '../ListClass/styles';
-
-import { Ionicons } from '@expo/vector-icons';
-
-import { 
-  TextArea,
-  IconArea
-} from './styles';
+import { Container, ScrollArea, InstructionArea, Instruction } from '../ListClass/styles';
 
 const RemoveClass = ({ route }) => {
 
@@ -33,15 +21,8 @@ const RemoveClass = ({ route }) => {
       </InstructionArea>
       <ScrollArea>
         {
-          classesOrder && classesOrder.length > 0 && classesOrder.map((item) => (
-            <ClassCard key={item.id} onPress={() => actionItem(item)}>
-              <TextArea>
-                <NameClass style={{color}}>{item.name}</NameClass>
-              </TextArea>
-              <IconArea>
-                <Ionicons name='close-circle-outline' size={32} color={'#cecece'}/>
-              </IconArea>              
-            </ClassCard>
+          classesOrder && classesOrder.length > 0 && classesOrder.map((item, i) => (
+            <Widget action={() => actionItem(item)} key={i} icon='close-circle-outline' iconSize={32} color={color} item={item}/>
           ))
         }
       </ScrollArea>       

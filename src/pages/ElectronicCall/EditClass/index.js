@@ -1,21 +1,9 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import useUtil from '../../../hooks/useUtil';
+//Components
+import Widget from '../../../components/Widget';
 //Styles
-import { 
-  Container,
-  ScrollArea,
-  ClassCard,
-  NameClass,
-  InstructionArea,
-  Instruction
-} from '../ListClass/styles';
-
-import { Ionicons } from '@expo/vector-icons';
-
-import { 
-  TextArea,
-  IconArea
-} from './styles';
+import { Container, ScrollArea, InstructionArea, Instruction } from '../ListClass/styles';
 
 const EditClass = ({ route }) => {
 
@@ -34,14 +22,7 @@ const EditClass = ({ route }) => {
       <ScrollArea>
         {
           classesOrder && classesOrder.length > 0 && classesOrder.map((item, i) => (
-            <ClassCard key={item.id} onPress={() => actionItem(item)}>
-              <TextArea>
-                <NameClass style={{color}}>{item.name}</NameClass>
-              </TextArea>   
-              <IconArea>
-                <Ionicons name='pencil-sharp' size={26} color={'#cecece'}/>
-              </IconArea>
-            </ClassCard>
+            <Widget action={() => actionItem(item)} key={i} icon='pencil-sharp' iconSize={26} color={color} item={item}/>
           ))
         }
       </ScrollArea>
