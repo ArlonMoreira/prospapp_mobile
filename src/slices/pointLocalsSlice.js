@@ -22,7 +22,7 @@ export const list = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointLocalsList({
             companyId,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzMTk3ODEyLCJpYXQiOjE3NTI3NjU4MTIsImp0aSI6ImQyMDBjN2FhMTI4MTQzYzNiNWVlY2E5NWI0MWY5YTkyIiwidXNlcl9pZCI6MX0.o_IXSLRfpRheUGxIHeLSXXdxBWf4qXN3WZ3xzo-5uCQ"
         });
 
         if(response.success){
@@ -40,7 +40,7 @@ export const register = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointLocalRegister({
             data,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzMTk3ODEyLCJpYXQiOjE3NTI3NjU4MTIsImp0aSI6ImQyMDBjN2FhMTI4MTQzYzNiNWVlY2E5NWI0MWY5YTkyIiwidXNlcl9pZCI6MX0.o_IXSLRfpRheUGxIHeLSXXdxBWf4qXN3WZ3xzo-5uCQ"
         });
         
         if(response.success){
@@ -58,7 +58,7 @@ export const change = createAsyncThunk(
         const response = await useRequest().pointLocalEdit({
             data,
             localId,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzMTk3ODEyLCJpYXQiOjE3NTI3NjU4MTIsImp0aSI6ImQyMDBjN2FhMTI4MTQzYzNiNWVlY2E5NWI0MWY5YTkyIiwidXNlcl9pZCI6MX0.o_IXSLRfpRheUGxIHeLSXXdxBWf4qXN3WZ3xzo-5uCQ"
         });
         
         if(response.success){
@@ -75,7 +75,7 @@ export const remove = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointLocalRemove({
             localId,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzMTk3ODEyLCJpYXQiOjE3NTI3NjU4MTIsImp0aSI6ImQyMDBjN2FhMTI4MTQzYzNiNWVlY2E5NWI0MWY5YTkyIiwidXNlcl9pZCI6MX0.o_IXSLRfpRheUGxIHeLSXXdxBWf4qXN3WZ3xzo-5uCQ"
         });
 
         if(response.success){

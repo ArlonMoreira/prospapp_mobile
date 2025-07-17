@@ -17,7 +17,6 @@ export const LabelsArea = styled.View`
     margin-left: 10px;
 `;
 
-
 export const Label = styled.Text`
     color: #000;
     font-size: 14px;

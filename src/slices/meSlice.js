@@ -15,7 +15,7 @@ export const me = createAsyncThunk(
     'auth/me',
     async(_, { getState, rejectWithValue }) => {
         const userAuth = await getState().auth.userAuth;
-        const response = await useRequest().me(userAuth.token);
+        const response = await useRequest().me("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzMTk3ODEyLCJpYXQiOjE3NTI3NjU4MTIsImp0aSI6ImQyMDBjN2FhMTI4MTQzYzNiNWVlY2E5NWI0MWY5YTkyIiwidXNlcl9pZCI6MX0.o_IXSLRfpRheUGxIHeLSXXdxBWf4qXN3WZ3xzo-5uCQ");
 
         if(response.success){
             return response;
@@ -32,7 +32,7 @@ export const change = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().change({
             data,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzMTk3ODEyLCJpYXQiOjE3NTI3NjU4MTIsImp0aSI6ImQyMDBjN2FhMTI4MTQzYzNiNWVlY2E5NWI0MWY5YTkyIiwidXNlcl9pZCI6MX0.o_IXSLRfpRheUGxIHeLSXXdxBWf4qXN3WZ3xzo-5uCQ"
         });
 
         if(response.success){

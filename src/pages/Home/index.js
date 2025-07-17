@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import { StyleSheet } from 'react-native';
+//Components
+import WidgetPrimary from '../../components/WidgetPrimary';
 //Navigation
 import { useNavigation } from '@react-navigation/native';
 //Redux
 import { useSelector } from 'react-redux';
 //Styles
 import { StatusBar } from 'expo-status-bar';
+import { LinearGradient } from 'expo-linear-gradient';
 import {
     Container,
     Header,
@@ -62,12 +66,7 @@ const Home = () => {
     }, [userData]);
 
     return (
-        <Container style={{backgroundColor: primaryColor}}>
-            <StatusBar 
-                translucent
-                backgroundColor="transparent"
-                barStyle="dark-content"
-            />        
+        <LinearGradient colors={['#008C81', '#0C6661']} style={styles.background}>       
             <Header>
                 {
                     logo && (
@@ -93,23 +92,33 @@ const Home = () => {
                     <Title>Escolha o módulo que deseja acessar</Title>
                 </TitleArea>
                 <ScrollArea>
-                    <ModuleContainer onPress={() => navigation.navigate('ElectronicPoint')}>
-                        <ImageContent source={require('../../public/ponto_eletronico.png')}/>
-                        <TextArea>
-                            <TitleModule style={{color: primaryColor}}>Ponto Eletrônico</TitleModule>
-                        </TextArea>
-                    </ModuleContainer>
-                    <ModuleContainer onPress={() => navigation.navigate('ElectronicCall')}>
-                        <ImageContent source={require('../../public/call.jpeg')}/>
-                        <TextArea>
-                            <TitleModule style={{color: primaryColor}}>Chamada Eletrônica</TitleModule>
-                        </TextArea>
-                    </ModuleContainer>                    
+                    <WidgetPrimary
+                        icon='finger-print-outline'
+                        iconSize={40}                        
+                        title='Ponto Eletrônico'
+                        text='Acesse para realizar o registro do ponto. Escolha o local de ponto, na qual é possível registrar em uma ou mais locais.'
+                        action={() => navigation.navigate('ElectronicPoint')}
+                    >
+                    </WidgetPrimary>
+                    <WidgetPrimary
+                        icon='hand-right-outline'
+                        iconSize={40}
+                        title='Chamada Eletrônica'
+                        text='Acesse para realizar a chamada. Escolha a turma e cadastre os alunos, registrando a presença de cada um dos alunos.'
+                        action={() => navigation.navigate('ElectronicCall')}
+                    >
+                    </WidgetPrimary>                  
                 </ScrollArea>
             </Body>
-        </Container>
+        </LinearGradient>
     )
 
 };
+
+const styles = StyleSheet.create({
+  background:{
+    flex: 1
+  }
+});
 
 export default Home;
