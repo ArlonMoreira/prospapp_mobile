@@ -1,6 +1,3 @@
-import React, { useEffect } from 'react';
-//Redux
-import { resetForm } from '../../../slices/pointLocalsSlice';
 //Hooks
 import { useNavigation } from '@react-navigation/native';
 //Components
@@ -22,7 +19,7 @@ const ListLocals = ({ route }) => {
     <Container>
       <InstructionArea>
         <Instruction>Abaixo estão listados todos os locais/empresas para registro de ponto. Escolha um local para registro de ponto.</Instruction>
-      </InstructionArea>            
+      </InstructionArea>                
       <ScrollArea>     
       {
         data && Array.isArray(data) && data.length > 0 && data.map((item, i) => (

@@ -11,7 +11,7 @@ const WidgetPrimary = ({ title='', text='', action, color='#fff', icon="enter-ou
             <LabelsArea>
                 <Label>{title}</Label>
                 <InfoArea>
-                    <Text style={{ fontSize: 11, color: '#fff' }}>{text}</Text>
+                    <Text style={{ fontSize: 11, color: '#fff', textAlign: 'justify' }}>{text}</Text>
                 </InfoArea>                 
             </LabelsArea>
             <IconArea>
