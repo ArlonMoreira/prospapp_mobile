@@ -6,7 +6,7 @@ export const Container = styled.View`
 `;
 
 export const IconArea = styled.View`
-    width: 20%;
+    width: 10%;
     height: 40px;
     flex-direction: row;
     align-items: center;

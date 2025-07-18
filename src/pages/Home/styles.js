@@ -24,7 +24,7 @@ export const Logo = styled(Image).attrs({
     height: 65px;
 `;
 
-export const PerfilArea = styled.View`
+export const PerfilArea = styled.TouchableOpacity`
     flex-direction: row;
 `;
 

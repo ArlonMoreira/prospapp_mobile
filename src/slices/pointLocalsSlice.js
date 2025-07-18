@@ -11,7 +11,6 @@ const initialState = {
     errorMessage: null,
     loadingRemove: false,
     successRegister: false,
-    success: false,
     errors: []
 };
 
@@ -98,7 +97,6 @@ export const pointLocalsSlice = createSlice({
             state.successRemove = false;
             state.errorMessage = null;
             state.successRegister = false;
-            state.success = false
             state.errors = []
         },
         resetErrorMessage: (state) => {
@@ -123,17 +121,17 @@ export const pointLocalsSlice = createSlice({
             //Aguardando o carregamento do cadastro de local
             .addCase(register.pending, (state) => {
                 state.loadingRegister = true;
-                state.success = false;
+                state.successRegister = false;
             })
             //Sucesso ao cadastrar local
             .addCase(register.fulfilled, (state, action) => {
                 state.loadingRegister = false;
-                state.success = true;
+                state.successRegister = true;
                 state.data.push(action.payload.data);
             })
             //Falha ao cadastrar local
             .addCase(register.rejected, (state, action) => {
-                state.success = false;
+                state.successRegister = false;
                 state.loadingRegister = false;
                 state.errors = action.payload.data;
                 state.errorMessage = action.payload.message;

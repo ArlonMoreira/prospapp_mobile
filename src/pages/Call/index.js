@@ -859,7 +859,7 @@ const Call = ({ route }) => {
               backgroundColor="transparent"
             />      
             <Header themeColor={primaryColor}></Header>
-            <Body>
+            <Body style={{ marginBottom: 30 }}>
               <TitleAreaPage>
                 <TitlePage style={{color: primaryColor}}>Chamada</TitlePage>
               </TitleAreaPage>

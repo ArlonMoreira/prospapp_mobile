@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 //Components
 import WidgetPrimary from '../../components/WidgetPrimary';
+import Footer from '../../components/Footer';
 //Navigation
 import { useNavigation } from '@react-navigation/native';
 //Redux
 import { useSelector } from 'react-redux';
+import { View } from 'react-native';
 //Styles
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -73,7 +75,7 @@ const Home = () => {
                         <Logo source={{uri: logo}}/>
                     )
                 }
-                <PerfilArea>
+                <PerfilArea onPress={() => navigation.navigate('Perfil')}>
                     <PerfilLabel>
                         <NameArea style={{color: primaryColor}}>{namePerfil}</NameArea>
                         <RoleArea>
@@ -110,6 +112,8 @@ const Home = () => {
                     </WidgetPrimary>                  
                 </ScrollArea>
             </Body>
+            <Footer></Footer>
+            <View style={{ marginBottom: 20 }}></View>
         </LinearGradient>
     )
 

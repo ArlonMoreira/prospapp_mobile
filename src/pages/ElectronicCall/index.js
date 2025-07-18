@@ -331,7 +331,7 @@ const ElectronicCall = () => {
               </TouchableWithoutFeedback>
             </Modal>
             <Header themeColor={primaryColor}/>
-            <Body>
+            <Body style={{ marginBottom: 30 }}>
               <TitleAreaPage>
                 <TitlePage style={{color: primaryColor}}>Turmas</TitlePage>
               </TitleAreaPage>

@@ -5,13 +5,18 @@ import DropDownPicker from 'react-native-dropdown-picker';
 export default function Select({zIndex, zIndexInverse, label, color, options, setSelected, valueSelected }) {
   const [open, setOpen] = useState(false);
   const [value, setValue ] = useState(null);
-  const [items, setItems] = useState(options);
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
-    if(!valueSelected) {
-      setValue(options[0].value);
-    } else {
-      setValue(valueSelected);
+    if(options && options.length > 0 && Array.isArray(options)){
+      setItems(options);
+
+      if(!valueSelected) {
+        setValue(options[0].value);
+      } else {
+        setValue(valueSelected);
+      }
+      
     }
 
   }, [options])
@@ -23,19 +28,23 @@ export default function Select({zIndex, zIndexInverse, label, color, options, se
   return (
     <View style={styles.container}>
       <Text style={{...styles.title, color}}>{label}</Text>
-      <DropDownPicker
-        open={open}
-        value={value}
-        items={items}
-        setOpen={setOpen}
-        setValue={setValue}
-        setItems={setItems}
-        placeholder="Selecione..."
-        style={{...styles.dropdown, borderColor: color}}
-        dropDownContainerStyle={{...styles.dropdownContainer, borderColor: color}}
-        zIndex={zIndex}
-        zIndexInverse={zIndexInverse}
-      />
+      {
+        items.length > 0 && (
+          <DropDownPicker
+            open={open}
+            value={value}
+            items={items}
+            setOpen={setOpen}
+            setValue={setValue}
+            setItems={setItems}
+            placeholder="Selecione..."
+            style={{...styles.dropdown, borderColor: color}}
+            dropDownContainerStyle={{...styles.dropdownContainer, borderColor: color}}
+            zIndex={zIndex}
+            zIndexInverse={zIndexInverse}
+          />
+        )
+      }
     </View>
   );
 }
