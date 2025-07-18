@@ -109,7 +109,7 @@ const Justify = ({ route }) => {
                   label={'Hora'}
                   color={ color }
                   options={ hourOptions }
-                  setSelected={ setHourOptions }
+                  setSelected={ setHourStart }
                   zIndex={100}
                 />
               </View>
@@ -164,6 +164,7 @@ const Justify = ({ route }) => {
                 color: '#000',
                 backgroundColor: '#fff',
                 marginTop: 10,
+                marginBottom: 20
               }}
               placeholder="Digite sua justificativa aqui..."
               maxLength={125}

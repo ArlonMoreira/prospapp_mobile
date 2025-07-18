@@ -231,7 +231,7 @@ const RegisterLocal = ({ route }) => {
           </MapView>
         </MapArea>
         <View style={{marginTop: 30, width: '100%', paddingLeft: 10, marginBottom: 20}}>
-          <ButtonLg loading={loadingRegister} disabled={loadingRegister} action={() => handleAddLocal()} title={editPage ? 'Alterar': 'Adicionar'} color={color} fontColor='#fff' largeWidth={330}/>  
+          <ButtonLg loading={loadingRegister} disabled={loadingRegister} action={() => handleAddLocal()} title={editPage ? 'Alterar': 'Adicionar'} color={color} fontColor='#fff' largeWidth={365}/>  
         </View>         
       </ScrollArea>
     </Container>
