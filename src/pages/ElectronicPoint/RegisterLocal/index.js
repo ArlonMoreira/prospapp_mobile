@@ -67,7 +67,6 @@ const RegisterLocal = ({ route }) => {
 
   useEffect(() => {
     if(successRegister) {
-      console.log('TESTE')
       navigation.navigate('ListLocals');
     }
   }, [successRegister]);  

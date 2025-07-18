@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { KeyboardAvoidingView, Platform, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, View } from 'react-native';
 //Redux
 import { reset, resetForm, resetErrorMessage } from '../../slices/resetPasswordSlice';
 import { resetRecoverPassword } from '../../slices/authSlice';
@@ -101,44 +101,46 @@ const GeneratedPassword = () => {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : -50}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
     >
-      <LinearGradient
-        colors={['#008C81', '#0C6661']}
-        style={{ flex: 1, paddingLeft: 8, paddingRight: 8 }}
-      >
-        {showAlertError && <Alert message={errorMessage} setShow={setShowAlertError} />}
-        <View style={{ flex: 1, paddingTop: 20 }}>
-            <View style={{ flex: 1, justifyContent: 'center' }}>
-              <TitleArea>
-                  <Title>Recuperar senha</Title>
-                  <Instruction>Por favor, escolha uma nova senha.</Instruction>
-              </TitleArea>
-              <View style={{width: '100%'}}>
-                <InputForm element={inputPasswordRef} label='Senha' value={password} setValue={setPassword} secureTextEntry={true}/>          
-                <Errors>
-                  {
-                    errors.password && errors.password.map((error, i) => <Error key={i}>{error}</Error>)
-                  }
-                </Errors>          
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <LinearGradient
+          colors={['#008C81', '#0C6661']}
+          style={{ flex: 1, paddingLeft: 8, paddingRight: 8 }}
+        >
+          {showAlertError && <Alert message={errorMessage} setShow={setShowAlertError} />}
+          <View style={{ flex: 1, paddingTop: 20 }}>
+              <View style={{ flex: 1, justifyContent: 'center' }}>
+                <TitleArea>
+                    <Title>Recuperar senha</Title>
+                    <Instruction>Por favor, escolha uma nova senha.</Instruction>
+                </TitleArea>
+                <View style={{width: '100%'}}>
+                  <InputForm element={inputPasswordRef} label='Senha' value={password} setValue={setPassword} secureTextEntry={true}/>          
+                  <Errors>
+                    {
+                      errors.password && errors.password.map((error, i) => <Error key={i}>{error}</Error>)
+                    }
+                  </Errors>          
+                </View>
+                <View style={{width: '100%'}}>
+                  <InputForm label='Confirmar senha' value={confirm_password} setValue={setConfirmPassword} secureTextEntry={true}/>
+                  <Errors>
+                    {
+                      errors.confirm_password && errors.confirm_password.map((error, i) => <Error key={i}>{error}</Error>)
+                    }
+                  </Errors>          
+                </View>
+                <ButtonSendArea style={{alignItems: 'center', justifyContent: 'center'}}>
+                  <ButtonLg title='Confirmar' action={() => handleChangePassword()} largeWidth={350} loading={loading} disabled={loading}/>
+                </ButtonSendArea>       
               </View>
-              <View style={{width: '100%'}}>
-                <InputForm label='Confirmar senha' value={confirm_password} setValue={setConfirmPassword} secureTextEntry={true}/>
-                <Errors>
-                  {
-                    errors.confirm_password && errors.confirm_password.map((error, i) => <Error key={i}>{error}</Error>)
-                  }
-                </Errors>          
-              </View>
-              <ButtonSendArea style={{alignItems: 'center', justifyContent: 'center'}}>
-                <ButtonLg title='Confirmar' action={() => handleChangePassword()} largeWidth={350} loading={loading} disabled={loading}/>
-              </ButtonSendArea>       
-            </View>
-            {!keyboardOpen && <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}><Footer /></View>}
-          </View>            
+              {!keyboardOpen && <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}><Footer /></View>}
+            </View>            
         </LinearGradient>
-      </KeyboardAvoidingView>   
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>   
   )
 }
 

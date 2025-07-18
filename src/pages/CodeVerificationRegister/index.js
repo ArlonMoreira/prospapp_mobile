@@ -139,13 +139,13 @@ const CodeVerificationRegister = ({ route }) => {
             dispatch(resetErrorMessage());
 
         } else { //Caso estiver aberto a mensagem de erro, 1 segundo depois será fechada sozinha.
-        const timeoutClearMessage = setTimeout(()=>{
-            dispatch(resetErrorMessage());
-        }, 6000);
+            const timeoutClearMessage = setTimeout(()=>{
+                dispatch(resetErrorMessage());
+            }, 6000);
 
-        return () => {
-            clearTimeout(timeoutClearMessage);
-        }
+            return () => {
+                clearTimeout(timeoutClearMessage);
+            }
 
         }
 

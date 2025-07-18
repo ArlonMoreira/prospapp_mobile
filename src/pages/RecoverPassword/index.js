@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { KeyboardAvoidingView, Platform, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react'
+import { KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, View } from 'react-native';
 //Redux
 import { refresh, resetErrorMessage, resetState } from '../../slices/codeRefresh';
 //Hooks
@@ -35,7 +35,7 @@ const RecoverPassword = () => {
 
   useEffect(() => {
     dispatch(resetState());
-    input.current?.focus();
+    //input.current?.focus();
   }, []);
 
   const handleGeneratedCode = () => {
@@ -90,48 +90,50 @@ const RecoverPassword = () => {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : -50}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
     >
-      <LinearGradient
-        colors={['#008C81', '#0C6661']}
-        style={{ flex: 1, paddingLeft: 8, paddingRight: 16 }}
-      >
-        {showAlertError && <Alert message={errorMessage} setShow={setShowAlertError} />}
-  
-        <View style={{ flex: 1, paddingTop: 20 }}>
-          {!keyboardOpen && (
-            <View style={{ position: 'absolute', top: 20, left: 0, right: 0 }}>
-              <Header />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <LinearGradient
+          colors={['#008C81', '#0C6661']}
+          style={{ flex: 1, paddingLeft: 8, paddingRight: 16 }}
+        >
+          {showAlertError && <Alert message={errorMessage} setShow={setShowAlertError} />}
+    
+          <View style={{ flex: 1, paddingTop: 20 }}>
+            {!keyboardOpen && (
+              <View style={{ position: 'absolute', top: 20, left: 0, right: 0 }}>
+                <Header />
+              </View>
+            )}
+    
+            <View style={{ flex: 1, justifyContent: 'center' }}>
+              <TitleArea>
+                <Title>Recuperar senha</Title>
+                <Instruction>
+                  Por favor, insira seu e-mail para recuperação. Um código de verificação será encaminhado para o endereço de e-mail cadastrado.
+                </Instruction>
+              </TitleArea>
+              <InputForm element={input} label="E-mail" value={email} setValue={setEmail} />
+              <ButtonSendArea style={{ alignItems: 'center', justifyContent: 'center' }}>
+                <ButtonLg
+                  title="Gerar código"
+                  action={handleGeneratedCode}
+                  loading={loading}
+                  disabled={loading}
+                  largeWidth={340}
+                />
+              </ButtonSendArea>
             </View>
-          )}
-  
-          <View style={{ flex: 1, justifyContent: 'center' }}>
-            <TitleArea>
-              <Title>Recuperar senha</Title>
-              <Instruction>
-                Por favor, insira seu e-mail para recuperação. Um código de verificação será encaminhado para o endereço de e-mail cadastrado.
-              </Instruction>
-            </TitleArea>
-            <InputForm element={input} label="E-mail" value={email} setValue={setEmail} />
-            <ButtonSendArea style={{ alignItems: 'center', justifyContent: 'center' }}>
-              <ButtonLg
-                title="Gerar código"
-                action={handleGeneratedCode}
-                loading={loading}
-                disabled={loading}
-                largeWidth={340}
-              />
-            </ButtonSendArea>
+    
+            {!keyboardOpen && (
+              <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+                <Footer />
+              </View>
+            )}
           </View>
-  
-          {!keyboardOpen && (
-            <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-              <Footer />
-            </View>
-          )}
-        </View>
-      </LinearGradient>
+        </LinearGradient>
+      </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 
