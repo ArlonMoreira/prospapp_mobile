@@ -1,4 +1,4 @@
-import { Text, View, TextInput, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { Text, View, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
 //Redux
 import { justify, resetForm } from '../../../slices/registerPointSlice';
 //Hooks
@@ -88,97 +88,99 @@ const Justify = ({ route }) => {
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0} // ajuste se necessário
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
       >
-        <PageArea>
-          <TitleArea style={{maxHeight: 100, borderBottomWidth: 1, borderColor: '#ddd', marginBottom: 20}}>
-            <Instruction>Registrar ponto no local:</Instruction>
-            <Text style={{fontFamily: 'montserrat-semibold', color: '#64748b'}}>{local ? local.name : '-'}</Text>
-          </TitleArea>          
-          <View style={{ alignItems: 'center', marginBottom: 20 }}>
-            <Instruction>Data</Instruction>
-            <Text style={{ fontFamily: 'montserrat-bold', fontSize: 14, color: '#64748b' }}>
-              {formatDate(now)}
-            </Text>
-          </View>           
-          <Instruction style={{ marginTop: 20, marginBottom: 10}}>Horário de entrada.</Instruction>
-          <SelectContainer>
-            <View style={{ width: '49%' }}>
-              <Select 
-                label={'Hora'}
-                color={ color }
-                options={ hourOptions }
-                setSelected={ setHourOptions }
-                zIndex={100}
-              />
-            </View>
-            <View style={{ width: '49%' }}>
-              <Select 
-                label={'Minuto'}
-                color={ color }
-                options={ minuteOptions }
-                setSelected={ setMinuteStart }
-                zIndex={100}
-              />
-            </View>
-          </SelectContainer>
-          <Errors>
-            { errosJustify.entry_datetime && errosJustify.entry_datetime.map((error, i) => <Error key={i}>{ error }</Error>) }
-          </Errors>          
-          <Instruction style={{ marginTop: 20, marginBottom: 10}}>Horário de saída.</Instruction>
-          <SelectContainer>
-            <View style={{ width: '49%' }}>
-              <Select 
-                label={'Hora'}
-                color={ color }
-                options={ hourOptions }
-                setSelected={ setHourEnd }
-                zIndex={90}
-              />
-            </View>
-            <View style={{ width: '49%' }}>
-              <Select 
-                label={'Minuto'}
-                color={ color }
-                options={ minuteOptions }
-                setSelected={ setMinuteEnd }
-                zIndex={90}
-              />
-            </View>
-          </SelectContainer>
-          <Errors>
-            { errosJustify.exit_datetime && errosJustify.exit_datetime.map((error, i) => <Error key={i} style={{color: 'rgb(191, 159, 18)'}}>{ error }</Error>) }
-          </Errors>            
-          <Instruction style={{ marginTop: 30 }}>Justificativa (máx. 125 caracteres)</Instruction>
-          <TextInput
-            style={{
-              height: 100,
-              borderColor: '#ccc',
-              borderWidth: 1,
-              borderRadius: 8,
-              padding: 10,
-              textAlignVertical: 'top',
-              fontFamily: 'montserrat-regular',
-              fontSize: 14,
-              color: '#000',
-              backgroundColor: '#fff',
-              marginTop: 10,
-            }}
-            placeholder="Digite sua justificativa aqui..."
-            maxLength={125}
-            multiline
-            numberOfLines={4}
-            value={justification}
-            onChangeText={setJustification}
-          />
-          <Errors>
-            { errosJustify.justify_description && errosJustify.justify_description.map((error, i) => <Error key={i} style={{color: 'rgb(191, 159, 18)'}}>{ error }</Error>) }
-          </Errors>  
-          <View style={{marginTop: 30, width: '100%', paddingLeft: 10, marginBottom: 20}}>
-            <ButtonLg loading={loadingJustify} disabled={loadingJustify} action={() => handleRegister()} title={'Registrar'} color={color} fontColor='#fff' largeWidth={330}/>  
-          </View> 
-        </PageArea> 
-      </KeyboardAvoidingView>  
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <PageArea>
+            <TitleArea style={{maxHeight: 100, borderBottomWidth: 1, borderColor: '#ddd', marginBottom: 20}}>
+              <Instruction>Registrar ponto no local:</Instruction>
+              <Text style={{fontFamily: 'montserrat-semibold', color: '#64748b'}}>{local ? local.name : '-'}</Text>
+            </TitleArea>          
+            <View style={{ alignItems: 'center', marginBottom: 20 }}>
+              <Instruction>Data</Instruction>
+              <Text style={{ fontFamily: 'montserrat-bold', fontSize: 14, color: '#64748b' }}>
+                {formatDate(now)}
+              </Text>
+            </View>           
+            <Instruction style={{ marginTop: 20, marginBottom: 10}}>Horário de entrada.</Instruction>
+            <SelectContainer>
+              <View style={{ width: '49%' }}>
+                <Select 
+                  label={'Hora'}
+                  color={ color }
+                  options={ hourOptions }
+                  setSelected={ setHourOptions }
+                  zIndex={100}
+                />
+              </View>
+              <View style={{ width: '49%' }}>
+                <Select 
+                  label={'Minuto'}
+                  color={ color }
+                  options={ minuteOptions }
+                  setSelected={ setMinuteStart }
+                  zIndex={100}
+                />
+              </View>
+            </SelectContainer>
+            <Errors>
+              { errosJustify.entry_datetime && errosJustify.entry_datetime.map((error, i) => <Error key={i}>{ error }</Error>) }
+            </Errors>          
+            <Instruction style={{ marginTop: 20, marginBottom: 10}}>Horário de saída.</Instruction>
+            <SelectContainer>
+              <View style={{ width: '49%' }}>
+                <Select 
+                  label={'Hora'}
+                  color={ color }
+                  options={ hourOptions }
+                  setSelected={ setHourEnd }
+                  zIndex={90}
+                />
+              </View>
+              <View style={{ width: '49%' }}>
+                <Select 
+                  label={'Minuto'}
+                  color={ color }
+                  options={ minuteOptions }
+                  setSelected={ setMinuteEnd }
+                  zIndex={90}
+                />
+              </View>
+            </SelectContainer>
+            <Errors>
+              { errosJustify.exit_datetime && errosJustify.exit_datetime.map((error, i) => <Error key={i} style={{color: 'rgb(191, 159, 18)'}}>{ error }</Error>) }
+            </Errors>            
+            <Instruction style={{ marginTop: 30 }}>Justificativa (máx. 125 caracteres)</Instruction>
+            <TextInput
+              style={{
+                height: 100,
+                borderColor: '#ccc',
+                borderWidth: 1,
+                borderRadius: 8,
+                padding: 10,
+                textAlignVertical: 'top',
+                fontFamily: 'montserrat-regular',
+                fontSize: 14,
+                color: '#000',
+                backgroundColor: '#fff',
+                marginTop: 10,
+              }}
+              placeholder="Digite sua justificativa aqui..."
+              maxLength={125}
+              multiline
+              numberOfLines={4}
+              value={justification}
+              onChangeText={setJustification}
+            />
+            <Errors>
+              { errosJustify.justify_description && errosJustify.justify_description.map((error, i) => <Error key={i} style={{color: 'rgb(191, 159, 18)'}}>{ error }</Error>) }
+            </Errors>  
+            <View style={{marginTop: 30, width: '100%', paddingLeft: 10, marginBottom: 20}}>
+              <ButtonLg loading={loadingJustify} disabled={loadingJustify} action={() => handleRegister()} title={'Registrar'} color={color} fontColor='#fff' largeWidth={365}/>  
+            </View> 
+          </PageArea>           
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </Container>
   )
 };

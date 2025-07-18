@@ -8,17 +8,11 @@ const useRequest = () => {
         // Remove barras duplicadas
         const cleanURL = `${URL.replace(/\/$/, '')}/${endpoint.replace(/^\//, '')}`;
 
-        console.log('#########');
-        console.log('URL:', cleanURL);
-        console.log('Params:', params);
-
         try {
             const response = await fetch(cleanURL, {
                 ...params,
                 redirect: 'manual' // Evita perda de header em redirect no iOS
             });
-
-            console.log('Response:', response);
 
             const result = await response.json();
 

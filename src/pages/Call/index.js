@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Modal, TouchableWithoutFeedback, View, Text, Platform } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 //Hooks
 import useCurrentDate from '../../hooks/useCurrentDate';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
@@ -682,7 +683,7 @@ const Call = ({ route }) => {
           <Container>
             {(showModal || showModalCall || showModalReport || showModalEditStudent || showModalRemoveStudent || showModalSelectDate) && <Fade/>}
             {
-              showModalSelectDate && (
+              Platform.OS === 'android' && showModalSelectDate && (
                 <RNDateTimePicker
                   value={date}
                   mode='date'
@@ -691,7 +692,31 @@ const Call = ({ route }) => {
                   onChange={closedSelectDateModal}
                 />
               )
-            }          
+            }   
+            {
+              Platform.OS === 'ios' && (
+                <Modal visible={showModalSelectDate} transparent={true} animationType="slide">
+                  <TouchableWithoutFeedback onPress={() => setShowModalSelectDate(false)}>
+                    <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: '#00000077' }}>
+                      <TouchableWithoutFeedback>
+                        <View style={{ backgroundColor: '#fff', padding: 20, borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
+                          <DateTimePicker
+                            value={date}
+                            mode="date"
+                            display="spinner"
+                            textColor={primaryColor}
+                            onChange={(event, selectedDate) => {
+                              const currentDate = selectedDate || date;
+                              setDate(currentDate);
+                            }}
+                          />
+                        </View>
+                      </TouchableWithoutFeedback>
+                    </View>
+                  </TouchableWithoutFeedback>
+                </Modal>
+              )
+            }      
             <Modal
               transparent={true}
               animationType='slide'
