@@ -31,7 +31,7 @@ const ManagerProfile = ({ route }) => {
             </TitleArea>
             {
                 !loadingManager ? (
-                    <View style={{paddingInline: 10}}>
+                    <View style={{paddingInline: 10, marginBottom: 20}}>
                     {
                         data && data.length > 0 && data.map((user, i) => (
                             <CardUser key={i} onPress={() => action(user)}>
