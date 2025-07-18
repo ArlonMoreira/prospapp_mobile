@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Modal, TouchableWithoutFeedback, View, Text, Platform } from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
 //Hooks
 import useCurrentDate from '../../hooks/useCurrentDate';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
@@ -10,16 +9,16 @@ import Fade from '../../components/Fade';
 import InputForm from '../../components/InputForm';
 import ButtonLg from '../../components/ButtonLg';
 import LoadingPage from '../../components/LoadingPage';
-import { Picker } from '@react-native-picker/picker';
 import BoxAction from '../../components/BoxAction';
 import CallRegister from './CallRegister';
 import EditStudent from './EditStudent';
 import RemoveStudent from './RemoveStudent';
 import RNDateTimePicker from "@react-native-community/datetimepicker";
+import Select from '../../components/Select';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
 import { register, list, call, change, remove, resetRegisterForm, resetChangeForm } from '../../slices/studentSlice';
-import { generated, resetReportState, stopLoading } from '../../slices/reportSlice';
+import { generated, resetReportState } from '../../slices/reportSlice';
 //Context
 import { LoadingContext } from '../../contexts/LoadingContext';
 //Navigation
@@ -42,7 +41,6 @@ import {
   RadioIcon,
   RadioLabel,
   RadioText,
-  Select,
   DateArea,
   IconAreaDate,
   TextDateArea
@@ -238,7 +236,7 @@ const Call = ({ route }) => {
   const [ yearsOptions, setYearOptions ] = useState([]);
   const [ yearSelected, setYearSelected ] = useState(null);
   //Meses a serem filtrados
-  const [ monthsOptiopns ] = useState(['12', '11', '10', '09', '08', '07', '06', '05', '04', '03', '02', '01']);
+  const [ monthsOptions, setMonthsOptions ] = useState([]);
   const [ monthSelected, setMonthSelected ] = useState(null);
 
   const closeModalReport = () => {
@@ -549,14 +547,24 @@ const Call = ({ route }) => {
     const currentTime = new Date();
 
     //Criar uma lista com todos os anos incluindo o ano atual
-    const year = currentTime.getFullYear();
-    setYearOptions(Array.from({ length: 3 }, (_, i) => year - i));
+    const year = Array.from({ length: 3 }, (_, i) => currentTime.getFullYear() - i);
+    const yearOptions = year.map(op => { return { label: op.toString(), value: op.toString() } });
+    setYearOptions(yearOptions);
     setYearSelected(year);
 
-    //Selecionar o mês atual
-    const month = (currentTime.getMonth() + 1).toString().padStart(2, '0');
-    setMonthSelected(month);
-    
+    // Criar uma lista com os 12 meses do ano no formato '01' a '12'
+    const currentMonth = (currentTime.getMonth() + 1).toString().padStart(2, '0'); // '01' a '12'
+
+    const months = Array.from({ length: 12 }, (_, i) => (i + 1).toString().padStart(2, '0'));
+
+    const monthOptions = months.map(m => ({
+      label: m,
+      value: m
+    }));
+
+    setMonthsOptions(monthOptions);
+    setMonthSelected(currentMonth); // Seleciona o mês atual por padrão 
+
   }, [dispatch]);
 
   const currentRouteName = useNavigationState((state) => {
@@ -697,76 +705,23 @@ const Call = ({ route }) => {
                     <ModalResume>Selecione o período que desejar para gerar o relatório de presença.</ModalResume>
                     <SelectContainer>
                       <View style={{ width: '49%' }}>
-                        <LabelSelect style={{ color: primaryColor }}>Ano</LabelSelect>
-                        <Select style={{ marginTop: 0, paddingHorizontal: 10 }}>
-                          <RNPickerSelect
-                            onValueChange={(value) => setYearSelected(value)}
-                            value={yearSelected}
-                            placeholder={{ label: 'Selecione o ano', value: null }}
-                            items={yearsOptions.map((option) => ({
-                              label: option,
-                              value: option
-                            }))}
-                            style={{
-                              inputIOS: {
-                                fontSize: 16,
-                                paddingHorizontal: 10,
-                                paddingVertical: 0,
-                                borderWidth: 1,
-                                borderColor: '#ccc',
-                                borderRadius: 4,
-                                color: '#000',
-                                backgroundColor: 'transparent',
-                              },
-                              inputAndroid: {
-                                fontSize: 16,
-                                paddingHorizontal: 10,
-                                paddingVertical: 0,
-                                borderWidth: 1,
-                                borderColor: '#ccc',
-                                borderRadius: 4,
-                                color: '#000',
-                                backgroundColor: 'transparent',
-                              }
-                            }}
-                          />
-                        </Select>
-                      </View>
+                        <Select 
+                          label={'Ano'}
+                          color={ primaryColor }
+                          options={ yearsOptions }
+                          setSelected={ setYearSelected }
+                          zIndex={50}
+                        />
+                      </View>                      
                       <View style={{ width: '49%' }}>
-                        <LabelSelect style={{ color: primaryColor }}>Mês</LabelSelect>
-                        <Select style={{ marginTop: 0, paddingHorizontal: 10 }}>
-                          <RNPickerSelect
-                            onValueChange={(value) => setMonthSelected(value)}
-                            value={monthSelected}
-                            placeholder={{ label: 'Selecione o mês', value: null }}
-                            items={monthsOptiopns.map((option) => ({
-                              label: option,
-                              value: option
-                            }))}
-                            style={{
-                              inputIOS: {
-                                fontSize: 16,
-                                paddingHorizontal: 10,
-                                paddingVertical: 0,
-                                borderWidth: 1,
-                                borderColor: '#ccc',
-                                borderRadius: 4,
-                                color: '#000',
-                                backgroundColor: 'transparent',
-                              },
-                              inputAndroid: {
-                                fontSize: 16,
-                                paddingHorizontal: 10,
-                                paddingVertical: 0,
-                                borderWidth: 1,
-                                borderColor: '#ccc',
-                                borderRadius: 4,
-                                color: '#000',
-                                backgroundColor: 'transparent',
-                              }
-                            }}
-                          />
-                        </Select>
+                        <Select 
+                          label={'Mês'}
+                          color={ primaryColor }
+                          options={ monthsOptions }
+                          setSelected={ setMonthSelected }
+                          valueSelected={ monthSelected }
+                          zIndex={50}
+                        />                        
                       </View>
                     </SelectContainer>
                     <View style={{marginTop: 20}}>
