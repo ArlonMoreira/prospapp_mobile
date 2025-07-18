@@ -4,25 +4,36 @@ const URL = process.env.EXPO_PUBLIC_API_URL;
 
 const useRequest = () => {
 
-    const request = async({endpoint, params}) => {
+    const request = async ({ endpoint, params }) => {
+        // Remove barras duplicadas
+        const cleanURL = `${URL.replace(/\/$/, '')}/${endpoint.replace(/^\//, '')}`;
+
+        console.log('#########');
+        console.log('URL:', cleanURL);
+        console.log('Params:', params);
+
         try {
-            const response = await fetch(`${URL}/${endpoint}`, params);
+            const response = await fetch(cleanURL, {
+                ...params,
+                redirect: 'manual' // Evita perda de header em redirect no iOS
+            });
+
+            console.log('Response:', response);
+
             const result = await response.json();
 
-            const request = {
+            return {
                 success: response.ok,
                 ...result
             };
 
-            return request;
-
-        } catch(error){
+        } catch (error) {
+            console.log('Fetch error:', error);
             return {
                 success: false,
                 message: 'Falha de comunicação com o servidor.'
             };
         }
-
     };
 
     return {
@@ -281,16 +292,18 @@ const useRequest = () => {
                 }                
             });             
         },
-        reportCall: ({classId, year, month, token}) => {
+        reportCall: ({ classId, year, month, token }) => {
             return request({
-                endpoint: `call/call/report/${classId}/${year}/${month}`,
+                endpoint: `call/call/report/${classId}/${year}/${month}/`,
                 params: {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                        Authorization: `Bearer ${token.trim()}`, // Remove espaços indesejados
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json'
                     }
-                }                
-            });             
+                }
+            });
         },
         pointLocalsList: ({ companyId, token }) => {
             return request({
