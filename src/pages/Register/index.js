@@ -127,7 +127,7 @@ const Register = () => {
       {
         showAlertError && <Alert message={errorMessage} setShow={setShowAlertError}/>
       }
-      <Header/>
+      <Header handlePerfil={false}/>
       <KeyboardAvoidingView behavior={Platform.OS === 'os' ? 'padding': 'height'} style={{flex: 1}} keyboardVerticalOffset={0}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 
@@ -192,7 +192,7 @@ const Register = () => {
                 }
               </Errors>
             </ItemFormArea>
-            <SubmitButton>
+            <SubmitButton style={{marginBottom: 20}}>
               <ButtonLg title="cadastrar" action={handleSubmit} loading={loading} disabled={loading}></ButtonLg>
             </SubmitButton>
           </FormArea>

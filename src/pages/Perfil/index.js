@@ -228,7 +228,7 @@ const Perfil = () => {
         translucent
         backgroundColor="transparent"
       />          
-      <Header themeColor={primaryColor} handleLogout={handleLogout}/>
+      <Header themeColor={primaryColor} handleLogout={handleLogout} handlePerfil={false}/>
       {
         showModal && <Fade/>
       }

@@ -12,17 +12,8 @@ import InputForm from '../../../components/InputForm';
 import ButtonLg from '../../../components/ButtonLg';
 import Alert from '../../../components/Alert';
 //Styles
-import { 
-  Container,
-  Instruction,
-  ScrollArea
-} from '../../ElectronicCall/ListClass/styles';
-import { 
-  SelectContainer,
-  LabelSelect,
-  MapArea
-} from './styles';
-import { Select } from '../../Call/styles';
+import { Container, Instruction, InstructionArea, ScrollArea } from '../../ElectronicCall/ListClass/styles';
+import { MapArea } from './styles';
 import { MapSearchArea, MapButtonSearch } from './styles';
 import { Errors, Error } from '../../Register/styles';
 import { Octicons } from '@expo/vector-icons';
@@ -192,7 +183,10 @@ const RegisterLocal = ({ route }) => {
       > 
         {
           showAlertError && <Alert message={errorMessage} setShow={setShowAlertError}/>
-        }             
+        }
+        <InstructionArea>
+          <Instruction>Abaixo informe os dados de identificação do local de ponto.</Instruction>
+        </InstructionArea>                        
         <InputForm element={nameRef} label='Nome do Local/Empresa' value={name} setValue={setName} color={color} pointerColor={color}/>
         <Errors>
           {
@@ -230,7 +224,7 @@ const RegisterLocal = ({ route }) => {
           </MapView>
         </MapArea>
         <View style={{marginTop: 30, width: '100%', paddingLeft: 10, marginBottom: 20}}>
-          <ButtonLg loading={loadingRegister} disabled={loadingRegister} action={() => handleAddLocal()} title={editPage ? 'Alterar': 'Adicionar'} color={color} fontColor='#fff' largeWidth={365}/>  
+          <ButtonLg loading={loadingRegister} disabled={loadingRegister} action={() => handleAddLocal()} title={editPage ? 'Alterar': 'Adicionar'} color={color} fontColor='#fff' largeWidth={325}/>  
         </View>         
       </ScrollArea>
     </Container>

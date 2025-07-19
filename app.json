@@ -18,21 +18,26 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "UIStatusBarStyle": "UIStatusBarStyleLightContent"
-      }
+        "UIStatusBarStyle": "UIStatusBarStyleLightContent",
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "bundleIdentifier": "asmoreira"
     },
     "android": {
-      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"],
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },    
+      },
       "package": "com.arlonmoreira.prospapp_mobile.beta",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyB92jbq5OXmoTSOHyYpj4bA1_bOrUUZZwg"
         }
-      }      
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"

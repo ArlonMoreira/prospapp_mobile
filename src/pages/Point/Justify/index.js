@@ -177,7 +177,7 @@ const Justify = ({ route }) => {
               { errosJustify.justify_description && errosJustify.justify_description.map((error, i) => <Error key={i} style={{color: 'rgb(191, 159, 18)'}}>{ error }</Error>) }
             </Errors>  
             <View style={{marginTop: 30, width: '100%', paddingLeft: 10, marginBottom: 20}}>
-              <ButtonLg loading={loadingJustify} disabled={loadingJustify} action={() => handleRegister()} title={'Registrar'} color={color} fontColor='#fff' largeWidth={365}/>  
+              <ButtonLg loading={loadingJustify} disabled={loadingJustify} action={() => handleRegister()} title={'Registrar'} color={color} fontColor='#fff' largeWidth={330}/>  
             </View> 
           </PageArea>           
         </TouchableWithoutFeedback>

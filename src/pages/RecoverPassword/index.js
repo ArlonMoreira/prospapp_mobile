@@ -103,7 +103,7 @@ const RecoverPassword = () => {
           <View style={{ flex: 1, paddingTop: 20 }}>
             {!keyboardOpen && (
               <View style={{ position: 'absolute', top: 20, left: 0, right: 0 }}>
-                <Header />
+                <Header handlePerfil={false}/>
               </View>
             )}
     
