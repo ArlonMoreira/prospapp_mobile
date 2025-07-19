@@ -1,10 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
-import { ActivityIndicator, View } from 'react-native';
+import * as Application from 'expo-application';
 import { NavigationContainer } from '@react-navigation/native';
 //Components
 import LoadingPage from './src/components/LoadingPage';
+import { View, ActivityIndicator, Text } from 'react-native';
 //Hooks
 import { useFonts } from 'expo-font';
+import { useForceUpdate } from './src/hooks/useForceUpdate';
 //Routes
 import Routes from './src/routes';
 //Redux
@@ -12,6 +14,8 @@ import { Provider } from 'react-redux';
 import { store } from './store';
 //Context
 import { LoadingProvider } from './src/contexts/LoadingContext';
+
+const URL = process.env.EXPO_PUBLIC_API_URL;
 
 export default function App() {
 
@@ -27,11 +31,15 @@ export default function App() {
     'montserrat-thin': require('./assets/fonts/Montserrat-Thin.ttf'),
   });
 
-  if(!fontsLoaded){
+  const { loading } = useForceUpdate({
+    apiUrl: `${URL}/app/version/`
+  });  
+
+  if(!fontsLoaded || loading){
     return (
       <LoadingPage backgroundColor={'#046b5b'}/>
     )
-  }  
+  }
 
   return (
     <Provider store={store}>
