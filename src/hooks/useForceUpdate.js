@@ -61,7 +61,7 @@ export const useForceUpdate = ({ apiUrl }) => {
     };
 
     checkUpdate();
-  }, [apiUrl, playStoreUrl, appStoreUrl]);
+  }, [apiUrl]);
 
   return { loading };
 };
