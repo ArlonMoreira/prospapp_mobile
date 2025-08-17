@@ -57,7 +57,7 @@ const Header = ({ themeColor='#65747d', handleLogout, handlePerfil=true }) => {
       } 
       {
         handlePerfil && (
-          <PerfilArea onPress={() => navigation.navigate('Perfil')} style={{marginBottom: 10}}>
+          <PerfilArea onPress={() => navigation.navigate('Perfil')}>
               <PhotoContainer>
                   {
                       photoPerfil && <Photo source={{uri: photoPerfil}}/>

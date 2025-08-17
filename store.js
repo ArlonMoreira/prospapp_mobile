@@ -5,6 +5,7 @@ import registerReducer  from './src/slices/registerSlice';
 import companysReducer from "./src/slices/companysSlice";
 import meReducer from './src/slices/meSlice';
 import classReducer from './src/slices/classSlice';
+import classUsersReducer from './src/slices/classUsersSlice';
 import studentReducer from './src/slices/studentSlice';
 import reportReducer from './src/slices/reportSlice';
 import reportPointReducer from './src/slices/reportPointSlice';
@@ -30,6 +31,7 @@ export const store = configureStore({
         code: codeReducer,
         codeRefresh: codeRefreshReducer,
         pointLocals: pointLocalsReducer,
-        registerPoint: registerPointReducer
+        registerPoint: registerPointReducer,
+        classUsers: classUsersReducer
     }
 });

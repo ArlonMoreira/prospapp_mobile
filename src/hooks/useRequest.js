@@ -13,7 +13,7 @@ const useRequest = () => {
                 ...params,
                 redirect: 'manual' // Evita perda de header em redirect no iOS
             });
-
+            
             const result = await response.json();
 
             return {
@@ -179,7 +179,7 @@ const useRequest = () => {
         },            
         classRegister: ({data, token}) => {
             return request({
-                endpoint: 'call/class/register/',
+                endpoint: 'call/class/relate/register/',
                 params: {
                     method: 'POST',
                     headers: {
@@ -192,7 +192,7 @@ const useRequest = () => {
         },
         classList: ({company, token}) => {
             return request({
-                endpoint: `call/class/list/${company}/`,
+                endpoint: `call/class/relate/list/${company}/`,
                 params: {
                     method: 'GET',
                     headers: {
@@ -200,6 +200,18 @@ const useRequest = () => {
                     }
                 }                
             });             
+        },
+        classUsersList: ({ company, classId, token }) => {
+            return request({
+                endpoint: `call/class/relate/users/${company}/${classId}/`,
+                params: {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }                
+            });
+                        
         },
         classChange: ({classId, data, token}) => {
             return request({

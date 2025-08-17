@@ -68,7 +68,7 @@ const Home = () => {
     }, [userData]);
 
     return (
-        <LinearGradient colors={['#008C81', '#0C6661']} style={styles.background}>       
+        <LinearGradient colors={['#008C81', '#0C6661']} style={styles.background}>
             <Header>
                 {
                     logo && (

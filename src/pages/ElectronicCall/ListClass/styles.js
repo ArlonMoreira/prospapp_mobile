@@ -8,8 +8,9 @@ export const Container = styled.View`
 export const InstructionArea = styled.View`
     margin-top: 0px;
     align-items: start;
-    height: 82px;
-    padding-top: 25px;
+    justify-content: start;
+    padding-top: 10px;
+    min-height: 80px;
 `;
 
 export const Instruction = styled.Text`

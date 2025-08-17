@@ -3,7 +3,6 @@ import { View } from 'react-native';
 
 export const Container = styled.View`
     flex: 1;
-    padding-top: 20px;
     background: #fff;
 `;
 

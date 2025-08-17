@@ -2,19 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-export default function Select({zIndex, zIndexInverse, label, color, options, setSelected, valueSelected }) {
+export default function Select({zIndex, zIndexInverse, label, color, options, setSelected, valueSelected, multiple=false }) {
   const [open, setOpen] = useState(false);
-  const [value, setValue ] = useState(null);
+  const [value, setValue ] = useState([]);
   const [items, setItems] = useState([]);
 
   useEffect(() => {
     if(options && options.length > 0 && Array.isArray(options)){
       setItems(options);
 
-      if(!valueSelected) {
-        setValue(options[0].value);
+      if (!valueSelected) {
+        setValue(multiple ? [options[0].value] : options[0].value);
       } else {
-        setValue(valueSelected);
+        if (multiple) {
+          setValue(Array.isArray(valueSelected) ? valueSelected : [valueSelected]);
+        } else {
+          setValue(Array.isArray(valueSelected) ? valueSelected[0] : valueSelected);
+        }
       }
       
     }
@@ -30,18 +34,21 @@ export default function Select({zIndex, zIndexInverse, label, color, options, se
       <Text style={{...styles.title, color}}>{label}</Text>
       {
         items.length > 0 && (
-          <DropDownPicker
+          <DropDownPicker   
+            multiple={multiple} // habilita múltipla seleção
+            min={1}          // mínimo de seleções               
             open={open}
             value={value}
             items={items}
             setOpen={setOpen}
             setValue={setValue}
             setItems={setItems}
-            placeholder="Selecione..."
+            placeholder=""
             style={{...styles.dropdown, borderColor: color}}
             dropDownContainerStyle={{...styles.dropdownContainer, borderColor: color}}
             zIndex={zIndex}
             zIndexInverse={zIndexInverse}
+            mode="BADGE"         
           />
         )
       }

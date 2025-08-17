@@ -45,11 +45,9 @@ export default function App() {
     <Provider store={store}>
       <LoadingProvider>
         <NavigationContainer>
-          <StatusBar 
-            translucent
-            backgroundColor="transparent"
-            style="light"
-            barStyle="light-content"
+          <StatusBar
+            backgroundColor="#FFFFFF"
+            barStyle="dark-content"
           />
           <Routes/>
         </NavigationContainer>
@@ -60,3 +58,12 @@ export default function App() {
 
 
 // eas build --platform android --profile preview
+
+// eas build --platform ios
+// eas submit -p ios
+
+// eas init
+
+// certificado mobileprofision https://developer.apple.com/account/resources/profiles/list
+
+// npx expo start --go

@@ -18,7 +18,7 @@ export const generated = createAsyncThunk(
             classId: data.classId,
             year: data.year,
             month: data.month,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1Nzc4MjE4LCJpYXQiOjE3NTUzNDYyMTgsImp0aSI6ImU4OGI3MzAxODM4MTQwZDdhNzNlM2JkMzI3NTM3NzI3IiwidXNlcl9pZCI6MX0.sFsk-xEdeHqE1kaGYwwmTUoP9PtR6gqkaHTAs-iopqc"
         });
 
         if(response.success){

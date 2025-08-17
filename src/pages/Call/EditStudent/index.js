@@ -19,7 +19,7 @@ const EditStudent = ({ route }) => {
   return (
     <Container>
       <InstructionArea style={{height: 50}}>
-        <Instruction>Selecione um aluno para realizar alterações:</Instruction>
+        <Instruction>Selecione um aluno para realizar alterações.</Instruction>
       </InstructionArea>
       <ContainerItem>
         {

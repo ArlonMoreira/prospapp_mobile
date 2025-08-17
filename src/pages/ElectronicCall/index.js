@@ -12,6 +12,7 @@ import LoadingPage from '../../components/LoadingPage';
 import ListClass from './ListClass';
 import EditClass from './EditClass';
 import RemoveClass from './RemoveClass';
+import RelateUser from './RelateUser';
 //Hooks
 import { useNavigation } from '@react-navigation/native';
 //Context
@@ -260,7 +261,7 @@ const ElectronicCall = () => {
     <>
       {
         loading ? <LoadingPage backgroundColor={primaryColor} logo={logo}/> : (
-          <Container>
+          <Container style={{ paddingTop: 20 }}>
             {showAlertError && <Alert message='Falha ao cadastrar turma' setShow={setShowAlertError}/>}
             {(showModal || showModalChange || showModalRemove) && <Fade/>}
             <Modal
@@ -282,10 +283,6 @@ const ElectronicCall = () => {
                 </ModalView>
               </TouchableWithoutFeedback>
             </Modal>
-            <StatusBar 
-              translucent
-              backgroundColor="transparent"
-            />
             <Modal
               transparent={true}
               animationType='slide'
@@ -345,16 +342,23 @@ const ElectronicCall = () => {
                 <BoxAction
                   color={currentRouteName == 'ListClass' ? '#f0f2f5': primaryColor}
                   backgroundColor={currentRouteName != 'ListClass' ? '#f0f2f5': primaryColor}
-                  iconName={'people-sharp'}
+                  iconName={'megaphone'}
                   action={() => navigation.navigate('ListClass')}
                   title={'Realizar Chamada'}
-                />                
+                />     
+                <BoxAction
+                  color={currentRouteName == 'RelateUser' ? '#f0f2f5': primaryColor}
+                  backgroundColor={currentRouteName != 'RelateUser' ? '#f0f2f5': primaryColor}
+                  iconName={'people-sharp'}
+                  action={() => navigation.navigate('RelateUser')}
+                  title={'Vincular usuário'}
+                />                           
                 <BoxAction
                   color={currentRouteName == 'EditClass' ? '#f0f2f5': primaryColor}
                   backgroundColor={currentRouteName != 'EditClass' ? '#f0f2f5': primaryColor}
                   iconName={'pencil-sharp'}
                   action={() => navigation.navigate('EditClass')}
-                  title={'Adicionar Turma'}
+                  title={'Editar Turma'}
                 />
                 <BoxAction
                   color={currentRouteName == 'RemoveClass' ? '#f0f2f5': primaryColor}
@@ -376,6 +380,19 @@ const ElectronicCall = () => {
                     headerShown: false,
                   }}                  
                 />
+                <Stack.Screen
+                  name="RelateUser"
+                  component={RelateUser}
+                  initialParams={{
+                    logo,
+                    company,
+                    classes: data,
+                    color: primaryColor
+                  }}
+                  options={{
+                    headerShown: false,
+                  }}                  
+                />                
                 <Stack.Screen
                   name="EditClass"
                   component={EditClass}

@@ -6,7 +6,7 @@
       "**/*"
     ],
     "newArchEnabled": true,
-    "version": "1.2.0",
+    "version": "1.2.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -19,11 +19,13 @@
       "supportsTablet": true,
       "infoPlist": {
         "UIStatusBarStyle": "UIStatusBarStyleLightContent",
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSLocationWhenInUseUsageDescription": "Este app precisa da sua localização para mostrar dados personalizados.",
+        "NSLocationAlwaysUsageDescription": "Este app precisa da sua localização mesmo em segundo plano."
       },
-      "bundleIdentifier": "asmoreira"
+      "bundleIdentifier": "com.prospere.prospereapp"
     },
-    "android": {
+    "android": {    
       "permissions": [
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION"
@@ -47,9 +49,9 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "9ae15988-f9f0-4807-b033-4ba0b96aea34"
+        "projectId": "063e7eff-be2e-4692-9fa9-13aa105bc783"
       }
     },
-    "owner": "asmoreira"
+    "owner": "arlonmoreira"
   }
 }
