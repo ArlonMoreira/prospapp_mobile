@@ -10,7 +10,7 @@ export const InstructionArea = styled.View`
     align-items: start;
     justify-content: start;
     padding-top: 10px;
-    min-height: 80px;
+    min-height: 46px;
 `;
 
 export const Instruction = styled.Text`
