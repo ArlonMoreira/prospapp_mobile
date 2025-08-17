@@ -213,6 +213,20 @@ const useRequest = () => {
             });
                         
         },
+        classUsersAddUser: ({ data, token }) => {
+            return request({
+                endpoint: `call/class/relate/addusers/`,
+                params: {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }                
+            });
+                        
+        },        
         classChange: ({classId, data, token}) => {
             return request({
                 endpoint: `call/class/change/${classId}/`,

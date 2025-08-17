@@ -7,13 +7,17 @@ import {
 } from './styles';
 import { FontAwesome } from '@expo/vector-icons';
 
-const SearchArea = ({color}) => {
+const SearchArea = ({ color, onChangeText }) => {
   return (
     <SearchContainer>
-      <Search style={{borderColor: color}}/>
       <SearchIconArea>
         <FontAwesome name="search" size={28} color={color} />
-      </SearchIconArea>
+      </SearchIconArea>      
+      <Search 
+        style={{ borderColor: color }}
+        cursorColor={ color }
+        onChangeText={onChangeText}   // <- passa o texto digitado
+      />
     </SearchContainer>
   )
 }

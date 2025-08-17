@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
 //Hooks
 import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
 import useUtil from '../../../hooks/useUtil';
 //Redux
-import { list, resetState } from '../../../slices/classUsersSlice';
+import { list, resetState, addUser } from '../../../slices/classUsersSlice';
 //Components
 import Header from '../../../components/Header';
 import MultiSelectList from '../../../components/MultiSelectList';
 import LoadingPage from '../../../components/LoadingPage';
+import SearchArea from '../../../components/SearchArea';
 //Styles
-import { StatusBar } from 'react-native';
 import { Container } from '../../ElectronicCall/styles';
 import { PageArea, TitleArea } from '../../Point/styles';
 import { InstructionArea } from '../../ElectronicCall/ListClass/styles';
@@ -18,6 +18,9 @@ import { Instruction } from '../../ElectronicCall/ListClass/styles';
 import { TitleAreaPage, TitlePage } from '../../ElectronicCall/styles';
 
 const AddUser = ({ route }) => {
+
+  const [ usersData, setUsersData ] = useState([]);
+  const [ searchQuery, setSearchQuery ] = useState("");
 
   const { ordenarObjectAsc } = useUtil();
   const dispatch = useDispatch();
@@ -58,10 +61,43 @@ const AddUser = ({ route }) => {
 
   }, [currentData, currentCompany]);
 
+  //Selecionar usuário.
+  const handleAddUser = (id) => {
+    if(currentData && currentData?.id){
+      const data = {
+        classOfStudent: currentData.id,
+        user: id
+      };
+
+      dispatch(addUser(data));
+
+    }
+  };
+
+  // Normaliza string (remove acento, lowercase)
+  const normalize = (str) => 
+    str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+
+  // Aplica busca sempre que users OU searchQuery mudar
   useEffect(() => {
-    console.log(loadingList);
-    
-  }, [loadingList]);
+    if (!searchQuery) {
+      setUsersData(users); // sem busca → mostra todos
+    } else {
+      const query = normalize(searchQuery);
+      const filtered = users.filter((user) =>
+        normalize(user.user__full_name).includes(query)
+      );
+      setUsersData(filtered);
+    }
+  }, [users, searchQuery]);
+
+  // Atualiza o texto da busca
+  const handleSearchText = (text) => {
+    setSearchQuery(text);
+  };
 
   return (
     <>
@@ -77,27 +113,31 @@ const AddUser = ({ route }) => {
                 <Instruction>Turma:</Instruction>
                 {
                   currentData?.name && (
-                    <Text style={{fontFamily: 'montserrat-semibold', color: '#64748b'}}>{ currentData.name }</Text>
+                    <Text
+                      style={{fontFamily: 'montserrat-semibold', color: '#64748b'}}
+                      ellipsizeMode="tail"
+                      numberOfLines={1}                    
+                    >{ currentData.name }</Text>
                   )
                 }
               </TitleArea>
-              <InstructionArea>
+              <SearchArea color={ currentColor } onChangeText={handleSearchText}/>
+              <InstructionArea style={{ minHeight: 60 }}>
                 <Instruction>Selecione um ou mais colaboradores para integrar a esta turma. Poderão realizar chamadas e edita-la.</Instruction>
               </InstructionArea>
-              <View style={{ marginTop: 10 }}>
-                <Text style={{ color: currentColor, fontFamily: 'montserrat-medium' }}>Usuários</Text>
-              </View>
               {
                 users.length > 0 && users && (
                   <MultiSelectList 
                     color={ currentColor } 
                     data={ 
                       ordenarObjectAsc(
-                        users.map(user => { 
+                        usersData.map(user => { 
                           return { id: user.user__id, label: user.user__full_name, selected: user.selected } 
                         }), 
                       'label') 
-                  }/>
+                    }
+                    action={ handleAddUser }
+                  />
                 )
               } 
             </PageArea> 

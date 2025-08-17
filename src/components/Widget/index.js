@@ -9,7 +9,11 @@ const Widget = ({ item, action, color, icon="enter-outline", iconSize=32 }) => {
         <Container onPress={action}>
             <LabelsArea>
                 <Label style={{ fontSize: 12, opacity: 0.5 }}>Turma:</Label>
-                <Label style={{ color, fontFamily: 'montserrat-semibold' }}>{item.name}</Label>
+                <Label 
+                    style={{ color, fontFamily: 'montserrat-semibold', width: 250 }}
+                    ellipsizeMode="tail"
+                    numberOfLines={1}
+                >{item.name}</Label>
                 <InfoArea>
                     <Text style={{ opacity: 0.5, fontSize: 11 }}>Alunos matriculados:</Text>
                     <Info>
