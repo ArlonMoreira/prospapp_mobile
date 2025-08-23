@@ -1,4 +1,4 @@
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 //Hooks
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
@@ -10,12 +10,11 @@ import Header from '../../../components/Header';
 import MultiSelectList from '../../../components/MultiSelectList';
 import LoadingPage from '../../../components/LoadingPage';
 import SearchArea from '../../../components/SearchArea';
+import InstructionArea from '../../../components/IntroductionArea';
+import TitleArea from '../../../components/TitleArea';
 //Styles
 import { Container } from '../../ElectronicCall/styles';
-import { PageArea, TitleArea } from '../../Point/styles';
-import { InstructionArea } from '../../ElectronicCall/ListClass/styles';
-import { Instruction } from '../../ElectronicCall/ListClass/styles';
-import { TitleAreaPage, TitlePage } from '../../ElectronicCall/styles';
+import { PageArea } from '../../Point/styles';
 
 const AddUser = ({ route }) => {
 
@@ -106,11 +105,9 @@ const AddUser = ({ route }) => {
           <Container style={{ paddingTop: 20 }}>
             <Header themeColor={ currentColor }/>
             <PageArea>
-              <TitleAreaPage>
-                <TitlePage style={{color: currentColor}}>Vincular usuário</TitlePage>
-              </TitleAreaPage>        
-              <TitleArea style={{maxHeight: 50, borderBottomWidth: 1, borderColor: '#eee', marginBottom: 20}}>
-                <Instruction>Turma:</Instruction>
+              <TitleArea text={'Vincular usuário'} color={ currentColor }/>
+              <View style={{maxHeight: 60, borderBottomWidth: 1, borderColor: '#eee', marginBottom: 20, paddingBottom: 44}}>
+                <Text>Turma:</Text>
                 {
                   currentData?.name && (
                     <Text
@@ -120,11 +117,9 @@ const AddUser = ({ route }) => {
                     >{ currentData.name }</Text>
                   )
                 }
-              </TitleArea>
+              </View>
               <SearchArea color={ currentColor } onChangeText={handleSearchText}/>
-              <InstructionArea style={{ minHeight: 60 }}>
-                <Instruction>Selecione um ou mais colaboradores para integrar a esta turma. Poderão realizar chamadas e edita-la.</Instruction>
-              </InstructionArea>
+              <InstructionArea text={'Selecione um ou mais colaboradores para integrar a esta turma. Poderão realizar chamadas e edita-la.'}/>
               {
                 users.length > 0 && users && (
                   <MultiSelectList 
