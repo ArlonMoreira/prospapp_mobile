@@ -2,10 +2,11 @@ import { useMemo } from 'react'
 //Hooks
 import { useNavigation } from '@react-navigation/native';
 import useUtil from '../../../hooks/useUtil';
+import InstructionArea from '../../../components/IntroductionArea';
 //Components
 import Widget from '../../../components/Widget';
 //Styles
-import { Container, ScrollArea, InstructionArea, Instruction } from '../ListClass/styles';
+import { Container, ScrollArea } from '../ListClass/styles';
 
 const RelateUser = ({ route }) => {
 
@@ -19,9 +20,7 @@ const RelateUser = ({ route }) => {
 
   return (
     <Container>
-      <InstructionArea>
-        <Instruction>Defina quais usuários terão autorização para vincular-se à sua turma.</Instruction>
-      </InstructionArea>
+      <InstructionArea text={'Defina quais usuários terão autorização para vincular-se à sua turma.'}/>      
       <ScrollArea>
         {
           classesOrder && classesOrder.length > 0 && classesOrder.map((item, i) => (

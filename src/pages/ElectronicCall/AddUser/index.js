@@ -106,7 +106,7 @@ const AddUser = ({ route }) => {
             <Header themeColor={ currentColor }/>
             <PageArea>
               <TitleArea text={'Vincular usuário'} color={ currentColor }/>
-              <View style={{maxHeight: 60, borderBottomWidth: 1, borderColor: '#eee', marginBottom: 20, paddingBottom: 44}}>
+              <View style={{maxHeight: 36, marginBottom: 20, paddingBottom: 10}}>
                 <Text>Turma:</Text>
                 {
                   currentData?.name && (
@@ -119,7 +119,7 @@ const AddUser = ({ route }) => {
                 }
               </View>
               <SearchArea color={ currentColor } onChangeText={handleSearchText}/>
-              <InstructionArea text={'Selecione um ou mais colaboradores para integrar a esta turma. Poderão realizar chamadas e edita-la.'}/>
+              <InstructionArea text={'Selecione um ou mais colaboradores para integrar a esta turma.'}/>
               {
                 users.length > 0 && users && (
                   <MultiSelectList 

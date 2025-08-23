@@ -2,8 +2,9 @@ import { useMemo } from 'react'
 import useUtil from '../../../hooks/useUtil';
 //Components
 import Widget from '../../../components/Widget';
+import InstructionArea from '../../../components/IntroductionArea';
 //Styles
-import { Container, ScrollArea, InstructionArea, Instruction } from '../ListClass/styles';
+import { Container, ScrollArea } from '../ListClass/styles';
 
 const RemoveClass = ({ route }) => {
 
@@ -16,9 +17,7 @@ const RemoveClass = ({ route }) => {
 
   return (
     <Container>
-      <InstructionArea>
-        <Instruction>Selecione uma turma para remover:</Instruction>
-      </InstructionArea>
+      <InstructionArea text={'Selecione uma turma para remover.'}/>
       <ScrollArea>
         {
           classesOrder && classesOrder.length > 0 && classesOrder.map((item, i) => (

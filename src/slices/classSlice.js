@@ -6,7 +6,7 @@ import useRequest from "../hooks/useRequest";
 const initialState = {
     data: [],
     loadingRegister: false,
-    loadingList: false,
+    loadingList: true,
     loadingChange: false,
     loadingRemove: false,
     success: false,
@@ -92,6 +92,10 @@ export const classSlice = createSlice({
     name: 'class',
     initialState,
     reducers: {
+        resetState: (state) => {
+            state.data = [];
+            state.loadingList = true;
+        },
         resetErrorStatus:(state) => {
             state.errorRegister = false;
         },
@@ -177,5 +181,5 @@ export const classSlice = createSlice({
     }
 });
 
-export const { resetErrorStatus, resetChangeForm } = classSlice.actions;
+export const { resetErrorStatus, resetChangeForm, resetState } = classSlice.actions;
 export default classSlice.reducer;

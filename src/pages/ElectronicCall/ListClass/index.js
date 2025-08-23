@@ -2,10 +2,11 @@ import {  useMemo } from 'react'
 import useUtil from '../../../hooks/useUtil';
 //components
 import Widget from '../../../components/Widget';
+import InstructionArea from '../../../components/IntroductionArea';
 //Hooks
 import { useNavigation } from '@react-navigation/native';
 //Styles
-import { Container, ScrollArea, InstructionArea, Instruction } from './styles';
+import { Container, ScrollArea } from './styles';
 
 const ListClass = ({ route }) => {
     
@@ -20,9 +21,7 @@ const ListClass = ({ route }) => {
     
     return (
         <Container>
-            <InstructionArea>
-                <Instruction>Escolhar uma turma para acessar a área de chamada:</Instruction>
-            </InstructionArea>            
+            <InstructionArea text={'Escolhar uma turma para acessar a área de chamada.'}/>
             <ScrollArea>
             {
                 classesOrder && classesOrder.length > 0 && classesOrder.map((item, i) => (

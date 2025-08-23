@@ -19,9 +19,8 @@ import { useNavigation } from '@react-navigation/native';
 import { LoadingContext } from '../../contexts/LoadingContext';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { register, list, change, remove, resetChangeForm } from '../../slices/classSlice';
+import { register, list, change, remove, resetChangeForm, resetState } from '../../slices/classSlice';
 //Styles
-import { StatusBar } from 'expo-status-bar';
 import { 
   Container,
   Body,  
@@ -76,6 +75,12 @@ const ElectronicCall = () => {
   const [ name, setName ] = useState('');
 
   const [ disabledSubmit, setDisabledSubmit ] = useState(true);
+
+  useEffect(() => {
+    //Resetar todos os estados
+    dispatch(resetState());
+
+  }, []);
 
   const handleSubmit = () => {
     if(company){
