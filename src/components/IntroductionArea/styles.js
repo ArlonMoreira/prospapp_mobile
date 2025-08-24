@@ -6,16 +6,17 @@ export const Container = styled.View`
     gap: 10px;
     flex-direction: row;
     min-height: 46px;
-    background: #efefefff;
+    background: #fff3cd;
     padding: 10px;
     border-radius: 50px;
     margin-top: 16px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 `;
 
 export const Instruction = styled.Text`
     font-size: 11px;
     font-family: 'montserrat-medium';
     text-align: justify;
-    width: 276px; 
+    width: 276px;
+    color: #664d03;
 `;

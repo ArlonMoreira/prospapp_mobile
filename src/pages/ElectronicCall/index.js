@@ -8,6 +8,8 @@ import ButtonLg from '../../components/ButtonLg';
 import Alert from '../../components/Alert';
 import BoxAction from '../../components/BoxAction';
 import LoadingPage from '../../components/LoadingPage';
+import SearchArea from '../../components/SearchArea';
+import TitleArea from '../../components/TitleArea';
 //Pages
 import ListClass from './ListClass';
 import EditClass from './EditClass';
@@ -23,9 +25,7 @@ import { register, list, change, remove, resetChangeForm, resetState } from '../
 //Styles
 import { 
   Container,
-  Body,  
-  TitleAreaPage,
-  TitlePage,
+  Body,
   ToolsArea,
   ModalView,
   ModalContent,
@@ -249,18 +249,24 @@ const ElectronicCall = () => {
 
   }, [loadingRemove]);
   
+  //Busca textual
+  const [ dataFiltered, setDataFiltered ] = useState([]);
+
+  useEffect(() => setDataFiltered(data), [ data ]);  
+
   //Encaminhar parametros dinamicamnete
   useEffect(() => {
     navigation.navigate(currentRouteName, //Renavegar até a página atual
       {
         screen: currentRouteName, params: {
-          classes: data,
+          classes: dataFiltered,
           color: primaryColor
         }
       }
     );
 
-  }, [data, primaryColor, currentRouteName]); //Quando atualizar o dado vai renavegar pra página que estiver selecionada
+  }, [dataFiltered, primaryColor, currentRouteName]); //Quando atualizar o dado vai renavegar pra página que estiver selecionada
+
 
   return (
     <>
@@ -334,9 +340,8 @@ const ElectronicCall = () => {
             </Modal>
             <Header themeColor={primaryColor}/>
             <Body style={{ marginBottom: 30 }}>
-              <TitleAreaPage>
-                <TitlePage style={{color: primaryColor}}>Turmas</TitlePage>
-              </TitleAreaPage>
+              <TitleArea color={ primaryColor } text={'Turmas'}/>
+              <SearchArea color={ primaryColor } placeholder='Busque aqui pela turma desejada.' data={ data } setDataFiltered={ setDataFiltered } />
               <ToolsArea>
                 <BoxAction 
                   action={() => setShowModal(true)}
@@ -378,7 +383,7 @@ const ElectronicCall = () => {
                   name="ListClass"
                   component={ListClass}
                   initialParams={{
-                    classes: data,
+                    classes: dataFiltered,
                     color: primaryColor
                   }}
                   options={{
@@ -391,7 +396,7 @@ const ElectronicCall = () => {
                   initialParams={{
                     logo,
                     company,
-                    classes: data,
+                    classes: dataFiltered,
                     color: primaryColor
                   }}
                   options={{
@@ -402,7 +407,7 @@ const ElectronicCall = () => {
                   name="EditClass"
                   component={EditClass}
                   initialParams={{
-                    classes: data,
+                    classes: dataFiltered,
                     color: primaryColor,
                     actionItem: handleChangeClass
                   }}
@@ -414,12 +419,11 @@ const ElectronicCall = () => {
                   name="RemoveClass"
                   component={RemoveClass}
                   initialParams={{
-                    classes: data,
+                    classes: dataFiltered,
                     color: primaryColor,
                     actionItem: handleRemoveClass            
                   }}
                   options={{
-                    classes: data,
                     headerShown: false,
                   }}                  
                 />                                

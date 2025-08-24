@@ -3,11 +3,12 @@ import styled from 'styled-components/native';
 export const SearchContainer = styled.View`
     height: 55px;
     border: 0;
-    border-radius: 32px;
+    border-radius: 36px;
     flex-direction: row;
     background: #0000000d;
     align-items: center;
-    justify-content: center;    
+    justify-content: center;
+    margin-bottom: 10;
 `;
 
 export const Search = styled.TextInput`

@@ -18,9 +18,6 @@ import { PageArea } from '../../Point/styles';
 
 const AddUser = ({ route }) => {
 
-  const [ usersData, setUsersData ] = useState([]);
-  const [ searchQuery, setSearchQuery ] = useState("");
-
   const { ordenarObjectAsc } = useUtil();
   const dispatch = useDispatch();
 
@@ -73,30 +70,8 @@ const AddUser = ({ route }) => {
     }
   };
 
-  // Normaliza string (remove acento, lowercase)
-  const normalize = (str) => 
-    str
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase();
-
-  // Aplica busca sempre que users OU searchQuery mudar
-  useEffect(() => {
-    if (!searchQuery) {
-      setUsersData(users); // sem busca → mostra todos
-    } else {
-      const query = normalize(searchQuery);
-      const filtered = users.filter((user) =>
-        normalize(user.user__full_name).includes(query)
-      );
-      setUsersData(filtered);
-    }
-  }, [users, searchQuery]);
-
-  // Atualiza o texto da busca
-  const handleSearchText = (text) => {
-    setSearchQuery(text);
-  };
+  //Busca textual
+  const [ dataFiltered, setDataFiltered ] = useState([]);
 
   return (
     <>
@@ -118,15 +93,15 @@ const AddUser = ({ route }) => {
                   )
                 }
               </View>
-              <SearchArea color={ currentColor } onChangeText={handleSearchText}/>
+              <SearchArea color={ currentColor } placeholder='Busque aqui pelo usuário desejado.' setDataFiltered={ setDataFiltered } data={ users } fieldFilter={'user__full_name'}/>
               <InstructionArea text={'Selecione um ou mais colaboradores para integrar a esta turma.'}/>
               {
-                users.length > 0 && users && (
+                dataFiltered.length > 0 && dataFiltered && (
                   <MultiSelectList 
                     color={ currentColor } 
                     data={ 
                       ordenarObjectAsc(
-                        usersData.map(user => { 
+                        dataFiltered.map(user => { 
                           return { id: user.user__id, label: user.user__full_name, selected: user.selected } 
                         }), 
                       'label') 
