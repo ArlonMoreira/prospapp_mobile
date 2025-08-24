@@ -342,7 +342,7 @@ const ElectronicCall = () => {
             </Modal>
             <Header themeColor={primaryColor}/>
             <Body style={{ marginBottom: 30 }}>
-              <TitleArea color={ primaryColor } text={'Turmas'}/>
+              <TitleArea color={ primaryColor } title={'Turmas'}/>
               <SearchArea color={ primaryColor } placeholder='Busque aqui pela turma desejada.' data={ data } setDataFiltered={ setDataFiltered } />
               <ToolsArea>
                 <BoxAction 

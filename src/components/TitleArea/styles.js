@@ -14,3 +14,10 @@ export const TitlePage = styled.Text`
     font-size: 22px;
     font-family: 'montserrat-bold';
 `;
+
+export const SubTitlePage = styled.Text`
+    text-align: start;
+    font-size: 12px;
+    font-family: 'montserrat-medium';
+    color: #909090;
+`;

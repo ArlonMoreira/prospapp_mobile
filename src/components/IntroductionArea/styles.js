@@ -9,8 +9,8 @@ export const Container = styled.View`
     background: #fff3cd;
     padding: 10px;
     border-radius: 50px;
-    margin-top: 16px;
-    margin-bottom: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 `;
 
 export const Instruction = styled.Text`

@@ -21,6 +21,7 @@ const CallRegister = ({ route }) => {
 
   return (
     <Container>
+      <InstructionArea text={'Selecione o aluno para definir sua presença.'}/>
       <ContainerItem>
         {
           (studentsOrder && studentsOrder.length > 0) && studentsOrder.map((student)=>(

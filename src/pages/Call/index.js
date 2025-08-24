@@ -27,7 +27,6 @@ import { LoadingContext } from '../../contexts/LoadingContext';
 //Navigation
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 //Styles
-import { StatusBar } from 'expo-status-bar';
 import {
   Container,
   Body,
@@ -581,18 +580,6 @@ const Call = ({ route }) => {
 
   });
 
-  //Passar dinamicamente a lista de estudantes para a pagina CallRegister
-  useEffect(() => {
-    navigation.navigate(currentRouteName, 
-      { 
-        screen: currentRouteName, params: {
-          students
-        }
-      }
-    );
-
-  }, [students, currentRouteName]);
-
   //Alteração dos dados de estudantes
   const [ showModalEditStudent, setShowModalEditStudent ] = useState(false);
   const [ idEditStudent, setIdEditStudent ] = useState('');  
@@ -677,7 +664,21 @@ const Call = ({ route }) => {
   }, [date, classIdSelected]);
 
   //Busca textual
-  const [ dataFiltered, setDataFiltered ] = useState([]);  
+  const [ dataFiltered, setDataFiltered ] = useState([]);
+
+  useEffect(() => setDataFiltered(students), [ students ]);  
+
+  //Passar dinamicamente a lista de estudantes para a pagina CallRegister
+  useEffect(() => {
+    navigation.navigate(currentRouteName, 
+      { 
+        screen: currentRouteName, params: {
+          students: dataFiltered
+        }
+      }
+    );
+
+  }, [dataFiltered, currentRouteName]);  
 
   return (
     <>
@@ -805,7 +806,9 @@ const Call = ({ route }) => {
                     studentSelected && (
                       <ModalContent>
                         <ModalTitle style={{color: primaryColor}}>{studentSelected.name}</ModalTitle>
-                        <ModalResume>Defina a presença do aluno em {formatDate(studentSelected.date)}.</ModalResume>
+                        {
+                          studentSelected.date && (<ModalResume>Defina a presença do aluno em { formatDate(studentSelected.date) }.</ModalResume>)
+                        }
                         <CallOptions>
                           <Radio onPress={() => handleCallPresent({student: studentSelected, present: true})}>
                             <RadioIcon style={{borderColor: studentSelected.present == true ? '#59DE7E': '#CCC'}}>
@@ -884,7 +887,7 @@ const Call = ({ route }) => {
             </Modal>   
             <Header themeColor={primaryColor}></Header>
             <Body style={{ marginBottom: 30 }}>             
-              <TitleArea text={'Chamada'} color={ primaryColor }/>
+              <TitleArea title={'Chamada'} color={ primaryColor } subtitle={classNameSelected && classNameSelected}/>
               <DateArea>
                 <IconAreaDate style={{backgroundColor:primaryColor}} onPress={() => setShowModalSelectDate(true)}>
                   <SimpleLineIcons name='calendar' size={20} color={'#fff'}/>
@@ -892,8 +895,9 @@ const Call = ({ route }) => {
                 <TextDateArea style={{borderColor:primaryColor}}>
                   <InfoName style={{color:primaryColor}}>Data selecionada: <Text style={{fontFamily:'montserrat-semibold'}}>{date.toLocaleDateString("pt-BR")}</Text></InfoName>
                 </TextDateArea>
-              </DateArea>               
-              <ToolsArea style={{ marginBottom: 20 }}>
+              </DateArea>    
+              <SearchArea color={ primaryColor } placeholder='Busque aqui pelo aluno desejado.' setDataFiltered={ setDataFiltered } data={ students } fieldFilter='name'/>                         
+              <ToolsArea>
                 <BoxAction action={() => setShowModal(true)} color={primaryColor} iconName={'person-add'} title={'Adicionar aluno'}></BoxAction>
                 <BoxAction action={() => setShowModalReport(true)} color={primaryColor} iconName={'download'} title={'Baixa relatório'}></BoxAction>
                 <BoxAction 
@@ -918,13 +922,12 @@ const Call = ({ route }) => {
                   backgroundColor={currentRouteName == 'RemoveStudent' ? primaryColor: '#f0f2f5'}
                 />                                           
               </ToolsArea>
-              <SearchArea color={ primaryColor } placeholder='Busque aqui pelo aluno desejado.' setDataFiltered={ setDataFiltered } data={ students } fieldFilter='name'/>
               <Stack.Navigator>
                 <Stack.Screen
                   name="CallRegister"
                   component={CallRegister}
                   initialParams={{ 
-                    students,
+                    students: dataFiltered,
                     color: primaryColor,
                     actionItem: handleCall, 
                     action: handleCallRegister
@@ -937,7 +940,7 @@ const Call = ({ route }) => {
                   name="EditStudent"
                   component={EditStudent}
                   initialParams={{
-                    students,
+                    students: dataFiltered,
                     color: primaryColor,
                     actionItem: handleEditStudent
                   }}
@@ -949,7 +952,7 @@ const Call = ({ route }) => {
                   name="RemoveStudent"
                   component={RemoveStudent}
                   initialParams={{
-                    students,
+                    students: dataFiltered,
                     color: primaryColor,
                     actionItem: handleRemoveStudent
                   }}

@@ -2,7 +2,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 //Hooks
 import useRequest from "../hooks/useRequest";
-import useUtil from "../hooks/useUtil";
 
 const initialState = {
     data: [],

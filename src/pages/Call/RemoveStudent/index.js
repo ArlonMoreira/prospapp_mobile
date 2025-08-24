@@ -19,6 +19,7 @@ const RemoveStudent = ({ route }) => {
 
   return (
     <Container>
+      <InstructionArea text={'Selecione o aluno para remove-lo.'}/>            
       <ContainerItem>
         {
           (studentsOrder && studentsOrder.length > 0) && studentsOrder.map((student)=>(

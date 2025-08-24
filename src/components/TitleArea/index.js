@@ -1,11 +1,14 @@
 import React from 'react'
 //Styles
-import { Container, TitlePage } from './styles';
+import { Container, TitlePage, SubTitlePage } from './styles';
 
-const TitleArea = ({ text, color }) => {
+const TitleArea = ({ title, color, subtitle }) => {
   return (
     <Container>
-        <TitlePage style={{ color }}>{ text }</TitlePage>
+        <TitlePage style={{ color }}>{ title }</TitlePage>
+        {
+          subtitle && (<SubTitlePage> { subtitle } </SubTitlePage>)
+        }
     </Container>
   )
 }

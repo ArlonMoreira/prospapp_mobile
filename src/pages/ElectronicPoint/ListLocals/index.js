@@ -4,10 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import WidgetLocals from '../../../components/WidgetLocals';
 //Styles
 import { 
-  Container,
-  InstructionArea,
-  Instruction,
-  ScrollArea
+  Container
 } from '../../ElectronicCall/ListClass/styles';
 
 const ListLocals = ({ route }) => {
@@ -17,16 +14,16 @@ const ListLocals = ({ route }) => {
 
   return (
     <Container>
-      <InstructionArea>
+      {/* <InstructionArea>
         <Instruction>Abaixo estão listados todos os locais/empresas para registro de ponto. Escolha um local para registro de ponto.</Instruction>
-      </InstructionArea>                
-      <ScrollArea>     
+      </InstructionArea>                 */}
+      {/* <ScrollArea>     
       {
         data && Array.isArray(data) && data.length > 0 && data.map((item, i) => (
           <WidgetLocals item={item} key={i} color={color} action={() => navigation.navigate('Point', { color, data: item, logo })}></WidgetLocals>
         ))
       }
-      </ScrollArea>
+      </ScrollArea> */}
     </Container>
   )
 };

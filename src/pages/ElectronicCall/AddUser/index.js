@@ -80,19 +80,7 @@ const AddUser = ({ route }) => {
           <Container style={{ paddingTop: 20 }}>
             <Header themeColor={ currentColor }/>
             <PageArea>
-              <TitleArea text={'Vincular usuário'} color={ currentColor }/>
-              <View style={{maxHeight: 36, marginBottom: 20, paddingBottom: 10}}>
-                <Text>Turma:</Text>
-                {
-                  currentData?.name && (
-                    <Text
-                      style={{fontFamily: 'montserrat-semibold', color: '#64748b'}}
-                      ellipsizeMode="tail"
-                      numberOfLines={1}                    
-                    >{ currentData.name }</Text>
-                  )
-                }
-              </View>
+              <TitleArea title={'Vincular usuário'} color={ currentColor } subtitle={ currentData?.name && currentData.name }/>
               <SearchArea color={ currentColor } placeholder='Busque aqui pelo usuário desejado.' setDataFiltered={ setDataFiltered } data={ users } fieldFilter={'user__full_name'}/>
               <InstructionArea text={'Selecione um ou mais colaboradores para integrar a esta turma.'}/>
               {
