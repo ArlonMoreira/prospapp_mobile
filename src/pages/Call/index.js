@@ -16,9 +16,11 @@ import EditStudent from './EditStudent';
 import RemoveStudent from './RemoveStudent';
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import Select from '../../components/Select';
+import TitleArea from '../../components/TitleArea';
+import SearchArea from '../../components/SearchArea';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { register, list, call, change, remove, resetRegisterForm, resetChangeForm } from '../../slices/studentSlice';
+import { register, list, call, change, remove, resetRegisterForm, resetChangeForm, resetState } from '../../slices/studentSlice';
 import { generated, resetReportState } from '../../slices/reportSlice';
 //Context
 import { LoadingContext } from '../../contexts/LoadingContext';
@@ -29,8 +31,6 @@ import { StatusBar } from 'expo-status-bar';
 import {
   Container,
   Body,
-  TitleAreaPage,
-  TitlePage,
   InfoName,
   ToolsArea,
   ModalView,
@@ -48,7 +48,7 @@ import {
 } from './styles'
 import { SimpleLineIcons, FontAwesome } from '@expo/vector-icons';
 import { Error, Errors } from '../Register/styles';
-import { SelectContainer, LabelSelect } from '../ElectronicPoint/styles';
+import { SelectContainer } from '../ElectronicPoint/styles';
 //PDF
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
@@ -71,19 +71,19 @@ const Call = ({ route }) => {
 
   const { userData } = useSelector((state) => state.me);
   const [ primaryColor, setPrimaryColor ] = useState('#fff');
-  const [ secundaryColor, setSecundaryColor ] = useState('#fff');
   const [ nameUser, setNameUser ] = useState('');
   const [ logo, setLogo ] = useState(null);
 
   useEffect(() => {
+    dispatch(resetState());
     dispatch(resetRegisterForm()); //Limpa o formulário de cadastro de usuários toda vez que acessar a página
+  
   }, []);
   
   useEffect(()=>{
     if(userData){
       if(userData.companys_joined.length){
         setPrimaryColor(userData.companys_joined[0].primary_color);
-        setSecundaryColor(userData.companys_joined[0].secundary_color);
         setLogo(`${URL}/files/${userData.companys_joined[0].logo}`);
         setNameUser(userData.full_name);
       }
@@ -93,7 +93,7 @@ const Call = ({ route }) => {
   }, [userData]);
 
   //Register student  
-  const { success, loadingList, loadingRegister, errorRegister, errorsRegister, data, loadingCall, successChange, loadingChange, errorChange, errorsChange, loadingRemove  } = useSelector((state) => state.student);
+  const { success, loadingList, loadingRegister, errorRegister, errorsRegister, data, loadingCall, successChange, loadingChange, errorsChange, loadingRemove  } = useSelector((state) => state.student);
   
   const dispatch = useDispatch();
 
@@ -676,6 +676,9 @@ const Call = ({ route }) => {
     
   }, [date, classIdSelected]);
 
+  //Busca textual
+  const [ dataFiltered, setDataFiltered ] = useState([]);  
+
   return (
     <>
       {
@@ -878,16 +881,10 @@ const Call = ({ route }) => {
                   </ModalContent>
                 </ModalView>
               </TouchableWithoutFeedback>
-            </Modal>      
-            <StatusBar 
-              translucent
-              backgroundColor="transparent"
-            />      
+            </Modal>   
             <Header themeColor={primaryColor}></Header>
-            <Body style={{ marginBottom: 30 }}>
-              <TitleAreaPage>
-                <TitlePage style={{color: primaryColor}}>Chamada</TitlePage>
-              </TitleAreaPage>
+            <Body style={{ marginBottom: 30 }}>             
+              <TitleArea text={'Chamada'} color={ primaryColor }/>
               <DateArea>
                 <IconAreaDate style={{backgroundColor:primaryColor}} onPress={() => setShowModalSelectDate(true)}>
                   <SimpleLineIcons name='calendar' size={20} color={'#fff'}/>
@@ -895,8 +892,8 @@ const Call = ({ route }) => {
                 <TextDateArea style={{borderColor:primaryColor}}>
                   <InfoName style={{color:primaryColor}}>Data selecionada: <Text style={{fontFamily:'montserrat-semibold'}}>{date.toLocaleDateString("pt-BR")}</Text></InfoName>
                 </TextDateArea>
-              </DateArea>
-              <ToolsArea>
+              </DateArea>               
+              <ToolsArea style={{ marginBottom: 20 }}>
                 <BoxAction action={() => setShowModal(true)} color={primaryColor} iconName={'person-add'} title={'Adicionar aluno'}></BoxAction>
                 <BoxAction action={() => setShowModalReport(true)} color={primaryColor} iconName={'download'} title={'Baixa relatório'}></BoxAction>
                 <BoxAction 
@@ -921,6 +918,7 @@ const Call = ({ route }) => {
                   backgroundColor={currentRouteName == 'RemoveStudent' ? primaryColor: '#f0f2f5'}
                 />                                           
               </ToolsArea>
+              <SearchArea color={ primaryColor } placeholder='Busque aqui pelo aluno desejado.' setDataFiltered={ setDataFiltered } data={ students } fieldFilter='name'/>
               <Stack.Navigator>
                 <Stack.Screen
                   name="CallRegister"

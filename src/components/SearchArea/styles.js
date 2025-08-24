@@ -8,7 +8,7 @@ export const SearchContainer = styled.View`
     background: #0000000d;
     align-items: center;
     justify-content: center;
-    margin-bottom: 10;
+    margin-bottom: 10px;
 `;
 
 export const Search = styled.TextInput`

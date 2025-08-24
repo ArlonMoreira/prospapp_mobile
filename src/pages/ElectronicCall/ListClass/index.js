@@ -1,4 +1,4 @@
-import {  useMemo } from 'react'
+import { useMemo } from 'react'
 import useUtil from '../../../hooks/useUtil';
 //components
 import Widget from '../../../components/Widget';
@@ -6,7 +6,8 @@ import InstructionArea from '../../../components/IntroductionArea';
 //Hooks
 import { useNavigation } from '@react-navigation/native';
 //Styles
-import { Container, ScrollArea } from './styles';
+import { Container, ListArea } from './styles';
+import { FlatList } from 'react-native';
 
 const ListClass = ({ route }) => {
     
@@ -16,19 +17,28 @@ const ListClass = ({ route }) => {
     const { ordenarObjectAsc } = useUtil();
 
     const classesOrder = useMemo(() => {
-        return classes && classes.length > 0? ordenarObjectAsc([...classes], 'name'): [];
+        return classes && classes.length > 0 
+            ? ordenarObjectAsc([...classes], 'name') 
+            : [];
     }, [classes]);
     
     return (
         <Container>
-            <InstructionArea text={'Escolhar uma turma para acessar a área de chamada.'}/>
-            <ScrollArea>
-            {
-                classesOrder && classesOrder.length > 0 && classesOrder.map((item, i) => (
-                    <Widget item={item} key={i} color={color} action={() => navigation.navigate('Call', {classId: item.id, className: item.name})}></Widget>
-                ))
-            }
-            </ScrollArea>
+            <InstructionArea text={'Escolha uma turma para acessar a área de chamada.'}/>
+            <ListArea>
+                <FlatList
+                    data={classesOrder}
+                    keyExtractor={(item) => String(item.id)}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={({ item }) => (
+                        <Widget 
+                            item={item} 
+                            color={color} 
+                            action={() => navigation.navigate('Call', { classId: item.id, className: item.name })}
+                        />
+                    )}
+                />
+            </ListArea>
         </Container>
     )
 }

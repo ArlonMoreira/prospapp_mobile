@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { Modal, TouchableWithoutFeedback, View } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 //Components
 import Header from '../../components/Header';
 import Fade from '../../components/Fade';
@@ -161,13 +162,14 @@ const ElectronicCall = () => {
 
   }, [showAlertError]);
 
-  //Listar
-  useEffect(() => {
-    if(company){
-      dispatch(list(company));
-    }
+  useFocusEffect(
+    useCallback(() => {
+      if(company){
+        dispatch(list(company));
+      }
 
-  }, [dispatch, company]);
+    }, [company])
+  );
 
   //Carregar
   useEffect(() => {

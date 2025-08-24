@@ -34,6 +34,7 @@ export const ToolsArea = styled.ScrollView.attrs({
       gap: 10, // Controla o espaço entre os elementos
     },
   })`
+    margin-top: 10px;
     max-height: 90px; 
     flex: 1;
     overflow: visible;
@@ -131,8 +132,8 @@ export const IconAreaDate = styled(TouchableOpacity).attrs({
     shadowOpacity: 0.25,
     shadowRadius: 4 
 })`
-    width: 48px;
-    height: 48px;
+    width: 42px;
+    height: 42px;
     align-items: center;
     justify-content: center;
     border-radius: 50%;   
@@ -140,7 +141,7 @@ export const IconAreaDate = styled(TouchableOpacity).attrs({
 `;
 
 export const TextDateArea = styled.View`
-    width: 82%;
+    width: 85%;
     height: 42px;
     border: 1px;
     border-radius: 20px;

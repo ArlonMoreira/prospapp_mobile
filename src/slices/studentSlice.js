@@ -7,7 +7,7 @@ import useUtil from "../hooks/useUtil";
 const initialState = {
     data: [],
     loadingRegister: false,
-    loadingList: false,
+    loadingList: true,
     loadingChange: false,
     loadingRemove: false,
     success: false,
@@ -118,6 +118,10 @@ export const studentSlice = createSlice({
     name: 'student',
     initialState,
     reducers: {
+        resetState:(state) => {
+            state.loadingList = true;
+            state.data = [];
+        },
         resetRegisterForm:(state) => {
             state.success = false;
             state.errorRegister = false;
@@ -252,5 +256,5 @@ export const studentSlice = createSlice({
     }
 });
 
-export const { resetRegisterForm, resetChangeForm } = studentSlice.actions;
+export const { resetRegisterForm, resetChangeForm, resetState } = studentSlice.actions;
 export default studentSlice.reducer;

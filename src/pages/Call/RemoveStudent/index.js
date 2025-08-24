@@ -1,8 +1,9 @@
 import React, { useMemo } from 'react'
+//Components
+import InstructionArea from '../../../components/IntroductionArea';
 //Hooks
 import useUtil from '../../../hooks/useUtil';
 //Styles
-import { InstructionArea, Instruction } from '../../ElectronicCall/ListClass/styles';
 import { Container, ContainerItem, StudentCard, StudentNameArea, StudentName } from '../CallRegister/styles'
 import { Ionicons } from '@expo/vector-icons';
 import { IconArea } from './styles';
@@ -18,9 +19,6 @@ const RemoveStudent = ({ route }) => {
 
   return (
     <Container>
-      <InstructionArea style={{height: 50}}>
-        <Instruction>Selecione um aluno para remover:</Instruction>
-      </InstructionArea>
       <ContainerItem>
         {
           (studentsOrder && studentsOrder.length > 0) && studentsOrder.map((student)=>(
@@ -29,7 +27,7 @@ const RemoveStudent = ({ route }) => {
                 <StudentName style={{color}}>{student.name}</StudentName>
               </StudentNameArea>
               <IconArea>
-                <Ionicons name='close-circle-outline' size={26} color={'#cecece'}/>
+                <Ionicons name='close-circle-outline' size={36} color={'#cecece'}/>
               </IconArea>
             </StudentCard>
           ))
