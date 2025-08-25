@@ -18,7 +18,8 @@ const initialState = {
     successChange: false,
     errorChange: false,
     errorsChange: [],
-    errorMenssageChange: null    
+    errorMenssageChange: null,
+    successRemove: false,
 };
 
 export const list = createAsyncThunk(
@@ -139,6 +140,7 @@ export const studentSlice = createSlice({
             //Aguardando remoção de aluno
             .addCase(remove.pending, (state) => {
                 state.loadingRemove = true;
+                state.successRemove = false;
             })
             //Sucesso ao remover um aluno
             .addCase(remove.fulfilled, (state, action) => {
@@ -147,6 +149,7 @@ export const studentSlice = createSlice({
                 if (!action.payload.data.is_active){//Os usuários de fato não são removidos, mas inativados.
                     const newData = state.data.filter(data => data.id !== action.payload.data.id);
                     state.data = newData;
+                    state.successRemove = true;
                 }
 
             })

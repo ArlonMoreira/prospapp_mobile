@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Modal, TouchableWithoutFeedback, View, Text, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 //Hooks
@@ -60,6 +60,8 @@ const formatDate = dateStr => dateStr.split("-").reverse().join("/");
 
 const Call = ({ route }) => {
 
+  const searchRef = useRef();
+
   const navigation = useNavigation();  
 
   const { loading, setLoading } = useContext(LoadingContext);  
@@ -92,7 +94,7 @@ const Call = ({ route }) => {
   }, [userData]);
 
   //Register student  
-  const { success, loadingList, loadingRegister, errorRegister, errorsRegister, data, loadingCall, successChange, loadingChange, errorsChange, loadingRemove  } = useSelector((state) => state.student);
+  const { success, loadingList, loadingRegister, errorRegister, errorsRegister, data, loadingCall, successChange, loadingChange, errorsChange, loadingRemove, successRemove  } = useSelector((state) => state.student);
   
   const dispatch = useDispatch();
 
@@ -153,8 +155,18 @@ const Call = ({ route }) => {
       setIdentification_number('');
       closeModal();
       dispatch(resetRegisterForm());
+      searchRef.current && searchRef.current.clear(); 
+
     }
   }, [success]);
+
+
+  useEffect(() => { //Quando for remover um usuário.
+    if(successRemove){
+      searchRef.current && searchRef.current.clear();       
+    }
+
+  }, [successRemove]);
 
   useEffect(()=>{ //Desabilitar o botão de submit quando o formulário estiver vazio.
     if(name !== ''){
@@ -610,6 +622,7 @@ const Call = ({ route }) => {
   useEffect(()=>{
     if(successChange){ //Fechar o modal automaticamente quando o dado for alterado com sucesso.
       setShowModalEditStudent(false);
+      searchRef.current && searchRef.current.clear(); 
     }
 
   }, [successChange]);
@@ -896,7 +909,7 @@ const Call = ({ route }) => {
                   <InfoName style={{color:primaryColor}}>Data selecionada: <Text style={{fontFamily:'montserrat-semibold'}}>{date.toLocaleDateString("pt-BR")}</Text></InfoName>
                 </TextDateArea>
               </DateArea>    
-              <SearchArea color={ primaryColor } placeholder='Busque aqui pelo aluno desejado.' setDataFiltered={ setDataFiltered } data={ students } fieldFilter='name'/>                         
+              <SearchArea ref={ searchRef } color={ primaryColor } placeholder='Busque aqui pelo aluno desejado.' setDataFiltered={ setDataFiltered } data={ students } fieldFilter='name'/>                         
               <ToolsArea>
                 <BoxAction action={() => setShowModal(true)} color={primaryColor} iconName={'person-add'} title={'Adicionar aluno'}></BoxAction>
                 <BoxAction action={() => setShowModalReport(true)} color={primaryColor} iconName={'download'} title={'Baixa relatório'}></BoxAction>

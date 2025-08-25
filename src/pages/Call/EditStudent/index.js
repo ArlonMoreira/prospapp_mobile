@@ -29,7 +29,7 @@ const EditStudent = ({ route }) => {
               <StudentName style={{ color }}>{student.name}</StudentName>
             </StudentNameArea>
             <IconArea>
-              <Ionicons name='pencil-sharp' size={22} color={'#cecece'} />
+              <Ionicons name='pencil-sharp' size={18} color={'#cecece'} />
             </IconArea>
           </StudentCard>
         )}

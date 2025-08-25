@@ -12,6 +12,7 @@ const initialState = {
     success: false,
     errorRegister: false,
     successChange: false,
+    successRemove: false,
     errorsChange: []
 };
 
@@ -167,6 +168,7 @@ export const classSlice = createSlice({
             //Falha ao remover turma
             .addCase(remove.pending, (state) => {
                 state.loadingRemove = true;
+                state.successRemove = false;
             })
             //Sucesso ao remover turma
             .addCase(remove.fulfilled, (state, action) => {
@@ -175,6 +177,9 @@ export const classSlice = createSlice({
                 if(action.payload.data && !action.payload.data.is_active){
                     const newData = state.data.filter((data) => data.id !== action.payload.data.id);
                     state.data = newData;
+
+                    state.successRemove = true;
+
                 }
 
             })

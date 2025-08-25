@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useCallback } from 'react';
+import React, { useState, useEffect, useContext, useCallback, useRef } from 'react';
 import { Modal, TouchableWithoutFeedback, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 //Components
@@ -44,6 +44,8 @@ const URL = process.env.EXPO_PUBLIC_API_URL;
 
 const ElectronicCall = () => {
 
+  const searchRef = useRef();
+
   const { loading, setLoading } = useContext(LoadingContext);
 
   const navigation = useNavigation();  
@@ -67,7 +69,7 @@ const ElectronicCall = () => {
   }, [userData]);  
 
   //Register class
-  const { success, loadingRegister, errorRegister, data, loadingList, loadingChange, loadingRemove, successChange, errorsChange } = useSelector((state) => state.class);
+  const { success, loadingRegister, errorRegister, data, loadingList, loadingChange, loadingRemove, successChange, errorsChange, successRemove } = useSelector((state) => state.class);
   
   const dispatch = useDispatch();
 
@@ -119,9 +121,17 @@ const ElectronicCall = () => {
   useEffect(()=>{ //Limpar o formulário caso ocorrer o cadastro com sucesso.
     if(success){
       setName('');
-      dispatch(list(company));      
+      dispatch(list(company));    
+      searchRef.current && searchRef.current.clear();        
     }
   }, [success]);
+
+  useEffect(() => { //Limpar campo de busca quando remover uma classe
+    if(successRemove){
+      searchRef.current && searchRef.current.clear(); 
+    }
+
+  }, [successRemove]);
 
   useEffect(()=>{ //Desabilitar o botão de submit quando o formulário estiver vazio.
     if(name !== ''){
@@ -220,6 +230,8 @@ const ElectronicCall = () => {
   useEffect(()=>{
     if(successChange){ //Fechar o modal quando editar a turma
       setShowModalChange(false);
+      searchRef.current && searchRef.current.clear();
+
     }
 
   }, [successChange]);
@@ -308,13 +320,17 @@ const ElectronicCall = () => {
                     <ModalTitle style={{color: primaryColor}}>Alterar turma</ModalTitle>
                     <ModalResume>Alterar dados da turma, e clique no botão "Alterar/Confirmar" para estabelecer a mudança</ModalResume>
                     <InputForm label='Nome da turma' pointerColor={primaryColor} value={nameForm} setValue={setNameForm} color={primaryColor}/>
-                    <Errors>
-                    { 
-                      Object.keys(errorsChange).length > 0 && 
-                      Array.isArray(errorsChange?.name) && 
-                      errorsChange.name.map((error, i) => <Error key={i} style={{color: 'red'}}>{error}</Error>) 
-                    }                      
-                    </Errors>
+                    {
+                      errorsChange && (
+                        <Errors>
+                        { 
+                          Object.keys(errorsChange).length > 0 && 
+                          Array.isArray(errorsChange?.name) && 
+                          errorsChange.name.map((error, i) => <Error key={i} style={{color: 'red'}}>{error}</Error>) 
+                        }                      
+                        </Errors>
+                      )
+                    }
                     <View style={{marginTop: 20}}>
                       <ButtonLg title='Alterar/Confirmar' loading={loadingChange} color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={submitChangeClass}/>
                     </View>             
@@ -343,7 +359,7 @@ const ElectronicCall = () => {
             <Header themeColor={primaryColor}/>
             <Body style={{ marginBottom: 30 }}>
               <TitleArea color={ primaryColor } title={'Turmas'}/>
-              <SearchArea color={ primaryColor } placeholder='Busque aqui pela turma desejada.' data={ data } setDataFiltered={ setDataFiltered } />
+              <SearchArea ref={ searchRef } color={ primaryColor } placeholder='Busque aqui pela turma desejada.' data={ data } setDataFiltered={ setDataFiltered } />
               <ToolsArea>
                 <BoxAction 
                   action={() => setShowModal(true)}
