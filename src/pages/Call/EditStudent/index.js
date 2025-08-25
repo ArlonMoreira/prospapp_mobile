@@ -1,6 +1,6 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 //Components
-import InstructionArea from '../../../components/IntroductionArea';
+// import InstructionArea from '../../../components/IntroductionArea';
 //Hooks
 import useUtil from '../../../hooks/useUtil';
 //Styles
@@ -11,7 +11,7 @@ import { IconArea } from './styles';
 const EditStudent = ({ route }) => {
 
   const { students, color, actionItem } = route.params;
-  const { ordenarObjectAsc } = useUtil(); // Evita recriação de `useUtil`
+  const { ordenarObjectAsc } = useUtil();
 
   const studentsOrder = useMemo(() => {
     return students && students.length > 0 ? ordenarObjectAsc([...students], 'name') : [];
@@ -19,21 +19,21 @@ const EditStudent = ({ route }) => {
 
   return (
     <Container>
-      <InstructionArea text={'Selecione o aluno para edição.'}/>      
-      <ContainerItem>
-        {
-          (studentsOrder && studentsOrder.length > 0) && studentsOrder.map((student)=>(
-            <StudentCard key={student.id} onPress={() => actionItem(student)}>
-              <StudentNameArea>
-                <StudentName style={{color}}>{student.name}</StudentName>
-              </StudentNameArea>
-              <IconArea>
-                <Ionicons name='pencil-sharp' size={30} color={'#cecece'}/>
-              </IconArea>              
-            </StudentCard>
-          ))
-        }
-      </ContainerItem>
+      {/* <InstructionArea text={'Selecione o aluno para edição.'}/>       */}
+      <ContainerItem
+        data={studentsOrder}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item: student }) => (
+          <StudentCard key={student.id} onPress={() => actionItem(student)}>
+            <StudentNameArea>
+              <StudentName style={{ color }}>{student.name}</StudentName>
+            </StudentNameArea>
+            <IconArea>
+              <Ionicons name='pencil-sharp' size={22} color={'#cecece'} />
+            </IconArea>
+          </StudentCard>
+        )}
+      />
     </Container>
   )
 }

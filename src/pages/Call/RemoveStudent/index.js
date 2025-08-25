@@ -1,6 +1,6 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 //Components
-import InstructionArea from '../../../components/IntroductionArea';
+// import InstructionArea from '../../../components/IntroductionArea';
 //Hooks
 import useUtil from '../../../hooks/useUtil';
 //Styles
@@ -11,29 +11,32 @@ import { IconArea } from './styles';
 const RemoveStudent = ({ route }) => {
 
   const { students, color, actionItem } = route.params;
-  const { ordenarObjectAsc } = useUtil(); // Evita recriação de `useUtil`
+  const { ordenarObjectAsc } = useUtil();
 
   const studentsOrder = useMemo(() => {
-    return students && students.length > 0 ? ordenarObjectAsc([...students], 'name') : [];
-  }, [students]);  
+    return students && students.length > 0 
+      ? ordenarObjectAsc([...students], 'name') 
+      : [];
+
+  }, [students]);
 
   return (
     <Container>
-      <InstructionArea text={'Selecione o aluno para remove-lo.'}/>            
-      <ContainerItem>
-        {
-          (studentsOrder && studentsOrder.length > 0) && studentsOrder.map((student)=>(
-            <StudentCard key={student.id} onPress={() => actionItem(student)}>
-              <StudentNameArea>
-                <StudentName style={{color}}>{student.name}</StudentName>
-              </StudentNameArea>
-              <IconArea>
-                <Ionicons name='close-circle-outline' size={36} color={'#cecece'}/>
-              </IconArea>
-            </StudentCard>
-          ))
-        }
-      </ContainerItem>
+      {/* <InstructionArea text={'Selecione o aluno para removê-lo.'}/>             */}
+      <ContainerItem
+        data={studentsOrder}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item: student }) => (
+          <StudentCard key={student.id} onPress={() => actionItem(student)}>
+            <StudentNameArea>
+              <StudentName style={{ color }}>{student.name}</StudentName>
+            </StudentNameArea>
+            <IconArea>
+              <Ionicons name='close' size={22} color={'#cecece'} />
+            </IconArea>
+          </StudentCard>
+        )}
+      />
     </Container>
   )
 }

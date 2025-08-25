@@ -17,7 +17,7 @@ export const Instruction = styled.Text`
     font-family: 'montserrat-regular';    
 `;
 
-export const ContainerItem = styled.ScrollView`
+export const ContainerItem = styled.FlatList`
     width: 100%;
     margin-top: 10px;
 `;
@@ -27,7 +27,6 @@ export const StudentCard = styled.TouchableOpacity`
     height: 45px;
     margin-bottom: 0;
     position: relative;
-    flex: 1;
     flex-direction: row; 
     justify-content: space-between;
     border-bottom-width: 1px;

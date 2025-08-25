@@ -6,11 +6,11 @@ export const Container = styled.View`
 `;
 
 export const IconArea = styled.View`
-    width: 10%;
-    height: 40px;
-    flex-direction: row;
     align-items: center;
-    justify-content: center;  
-    gap: 5px;
-    border-radius: 40px;
+    justify-content: center;
+    min-width: 35px;
+    border-width: 2px;
+    border-color: #ccc;
+    border-radius: 50px;
+    margin: 5px;
 `;

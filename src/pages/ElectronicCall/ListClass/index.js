@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { FlatList } from 'react-native';
 import useUtil from '../../../hooks/useUtil';
 //components
 import Widget from '../../../components/Widget';
@@ -7,7 +8,6 @@ import InstructionArea from '../../../components/IntroductionArea';
 import { useNavigation } from '@react-navigation/native';
 //Styles
 import { Container, ListArea } from './styles';
-import { FlatList } from 'react-native';
 
 const ListClass = ({ route }) => {
     
