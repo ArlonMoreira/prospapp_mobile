@@ -37,12 +37,14 @@ const WidgetLocals = ({ item, color, icon="enter-outline", iconSize=32, action }
     };    
 
     return (
-        <Container onPress={action}>
+        <Container onPress={action} style={{height: item.identification_number ? 100: 90}}>
             <LabelsArea>
                 <Label style={{ color, fontFamily: 'montserrat-semibold' }}>{item.name}</Label>
-                <Label style={{ fontSize: 12, opacity: 0.5 }}>
-                    {item.identification_number ? formatCNPJ(item.identification_number) : '00.000.000/0000-00'}
-                </Label>
+                {
+                    item.identification_number && (
+                        <Label style={{ fontSize: 12, opacity: 0.5 }}>{ formatCNPJ(item.identification_number) }</Label>
+                    )
+                }
                 <InfoArea>
                     <Text style={{ opacity: 0.5, fontSize: 11 }}>Carga horária:</Text>
                     <Info>

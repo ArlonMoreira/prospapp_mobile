@@ -19,7 +19,7 @@ import ButtonLg from '../../components/ButtonLg';
 import BoxAction from '../../components/BoxAction';
 import Select from '../../components/Select';
 //Redux
-import { list, remove } from '../../slices/pointLocalsSlice';
+import { list, remove, resetState } from '../../slices/pointLocalsSlice';
 import { listUsersManager } from '../../slices/managerSlice';
 import { resetReportState, generated } from '../../slices/reportPointSlice';
 //Navigation
@@ -63,6 +63,11 @@ const ElectronicPoint = () => {
   const [ staffPerfil, setStaffPerfil ] = useState(false);
   const [ companyId, setCompanyId ] = useState();
   const [ logo, setLogo ] = useState(null);
+
+  //Limpar estados iniciais
+  useEffect(() => {
+    dispatch(resetState());
+  }, []);
   
   //Alimenta com os dados padrão da empresa e usuário.
   useEffect(()=>{

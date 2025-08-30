@@ -1,35 +1,42 @@
-import React, { useEffect } from 'react';
 //Components
 import WidgetLocals from '../../../components/WidgetLocals';
+import InstructionArea from '../../../components/IntroductionArea';
 //Hooks
+import { useMemo } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import useUtil from '../../../hooks/useUtil';
+import { FlatList } from 'react-native';
 //Styles
-import { 
-  Container,
-  InstructionArea,
-  Instruction,
-  ScrollArea
-} from '../../ElectronicCall/ListClass/styles';
+import { Container, ListArea } from '../../ElectronicCall/ListClass/styles';
 
 const EditLocals = ({ route }) => {
+  
+  const { ordenarObjectAsc } = useUtil();
+
+  //Navegar para página de login quando autenticado.
+  const navigation = useNavigation();    
 
   const { data, color } = route.params;
 
-  //Navegar para página de login quando autenticado.
-  const navigation = useNavigation();
+  const dataOrder = useMemo(() => {
+      return data && data.length > 0 
+          ? ordenarObjectAsc([...data], 'name') 
+          : [];
+  }, [data]);
 
   return (
     <Container>
-      <InstructionArea>
-        <Instruction>Alterar as informações dos locais de registro de ponto.</Instruction>
-      </InstructionArea>            
-      <ScrollArea>
-      {
-        data && Array.isArray(data) && data.length > 0 && data.map((item, i) => (
-          <WidgetLocals item={item} key={i} color={color} icon={'pencil'} iconSize={22} action={() => navigation.navigate('EditLocal', { local: item })}></WidgetLocals>
-        ))
-      }
-      </ScrollArea>
+      <InstructionArea text={'Alterar as informações dos locais de registro de ponto.'}/>
+      <ListArea>
+        <FlatList
+          data={ dataOrder }
+          keyExtractor={(item) => String(item.id)}
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item }) => (
+            <WidgetLocals item={item} key={item.id} color={color} action={() => navigation.navigate('EditLocal', { local: item })}></WidgetLocals>
+          )}
+        />
+      </ListArea>
     </Container>
   )
 };

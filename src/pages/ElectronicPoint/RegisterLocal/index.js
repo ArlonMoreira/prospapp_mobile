@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { View, TextInput, Button } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import { useEffect, useRef, useState } from 'react';
+import { View, TextInput } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 //Redux
 import { register, resetForm, change, resetErrorMessage } from '../../../slices/pointLocalsSlice';
@@ -12,8 +11,8 @@ import InputForm from '../../../components/InputForm';
 import ButtonLg from '../../../components/ButtonLg';
 import Alert from '../../../components/Alert';
 //Styles
-import { Container, Instruction, InstructionArea, ScrollArea } from '../../ElectronicCall/ListClass/styles';
-import { MapArea } from './styles';
+import { Container, Instruction, InstructionArea } from '../../ElectronicCall/ListClass/styles';
+import { MapArea, ScrollArea } from './styles';
 import { MapSearchArea, MapButtonSearch } from './styles';
 import { Errors, Error } from '../../Register/styles';
 import { Octicons } from '@expo/vector-icons';

@@ -31,3 +31,6 @@ export const MapButtonSearch = styled.TouchableOpacity`
     align-items: center;
     justify-content: center;  
 `;
+
+export const ScrollArea = styled.ScrollView`
+`;

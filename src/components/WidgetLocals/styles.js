@@ -9,12 +9,14 @@ export const Container = styled.TouchableOpacity`
     background: #f0f2f5bf;
     padding: 10px;
     flex-direction: row;
-    justify-content: space-between; 
-    height: 90px;
+    justify-content: space-between;
 `;
 
 export const LabelsArea = styled.View`
     margin-left: 10px;
+    justify-content: space-between;
+    padding-top: 5px;    
+    padding-bottom: 5px;
 `;
 
 export const Label = styled.Text`
@@ -26,7 +28,7 @@ export const Label = styled.Text`
 export const InfoArea = styled.View`
     flex-direction: row;
     margin-top: 14px;
-    gap: 10px;
+    gap: 5px;
 `;
 
 export const Info = styled.View`

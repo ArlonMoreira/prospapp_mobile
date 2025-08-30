@@ -5,7 +5,7 @@ import useRequest from "../hooks/useRequest";
 
 const initialState = {
     data: [],
-    loading: false,
+    loading: true,
     loadingRegister: false,
     successRemove: false,
     errorMessage: null,
@@ -21,7 +21,7 @@ export const list = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointLocalsList({
             companyId,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU2NDA4Nzc4LCJpYXQiOjE3NTU5NzY3NzgsImp0aSI6Ijc2YjU4MThmYzJkZDRiMzNiMDc1ZjdlYmJhNjQ1MjI4IiwidXNlcl9pZCI6MX0.R-texMKgIkgT9EF02QxEOVVB1U3X0Z1U-9yZQCrtni0"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU2OTgyMTA1LCJpYXQiOjE3NTY1NTAxMDUsImp0aSI6ImMyNjkyMTg5ZTY5MTQwYjA5ZGZiM2IyNzNlZDMxMjkwIiwidXNlcl9pZCI6MX0.ecqDjsl8DigEwrjLYcNiWv_7H_1GaTyrZF6nL67GaF8"
         });
 
         if(response.success){
@@ -39,7 +39,7 @@ export const register = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointLocalRegister({
             data,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU2NDA4Nzc4LCJpYXQiOjE3NTU5NzY3NzgsImp0aSI6Ijc2YjU4MThmYzJkZDRiMzNiMDc1ZjdlYmJhNjQ1MjI4IiwidXNlcl9pZCI6MX0.R-texMKgIkgT9EF02QxEOVVB1U3X0Z1U-9yZQCrtni0"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU2OTgyMTA1LCJpYXQiOjE3NTY1NTAxMDUsImp0aSI6ImMyNjkyMTg5ZTY5MTQwYjA5ZGZiM2IyNzNlZDMxMjkwIiwidXNlcl9pZCI6MX0.ecqDjsl8DigEwrjLYcNiWv_7H_1GaTyrZF6nL67GaF8"
         });
         
         if(response.success){
@@ -57,7 +57,7 @@ export const change = createAsyncThunk(
         const response = await useRequest().pointLocalEdit({
             data,
             localId,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU2NDA4Nzc4LCJpYXQiOjE3NTU5NzY3NzgsImp0aSI6Ijc2YjU4MThmYzJkZDRiMzNiMDc1ZjdlYmJhNjQ1MjI4IiwidXNlcl9pZCI6MX0.R-texMKgIkgT9EF02QxEOVVB1U3X0Z1U-9yZQCrtni0"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU2OTgyMTA1LCJpYXQiOjE3NTY1NTAxMDUsImp0aSI6ImMyNjkyMTg5ZTY5MTQwYjA5ZGZiM2IyNzNlZDMxMjkwIiwidXNlcl9pZCI6MX0.ecqDjsl8DigEwrjLYcNiWv_7H_1GaTyrZF6nL67GaF8"
         });
         
         if(response.success){
@@ -74,7 +74,7 @@ export const remove = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointLocalRemove({
             localId,
-            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU2NDA4Nzc4LCJpYXQiOjE3NTU5NzY3NzgsImp0aSI6Ijc2YjU4MThmYzJkZDRiMzNiMDc1ZjdlYmJhNjQ1MjI4IiwidXNlcl9pZCI6MX0.R-texMKgIkgT9EF02QxEOVVB1U3X0Z1U-9yZQCrtni0"
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU2OTgyMTA1LCJpYXQiOjE3NTY1NTAxMDUsImp0aSI6ImMyNjkyMTg5ZTY5MTQwYjA5ZGZiM2IyNzNlZDMxMjkwIiwidXNlcl9pZCI6MX0.ecqDjsl8DigEwrjLYcNiWv_7H_1GaTyrZF6nL67GaF8"
         });
 
         if(response.success){
@@ -90,6 +90,10 @@ export const pointLocalsSlice = createSlice({
     name: 'pointLocals',
     initialState,
     reducers: {
+        resetState: (state) => {
+            state.loading = true;
+            state.data = [];
+        },
         resetForm: (state) => {
             state.loading = false;
             state.loadingRegister = false;
@@ -176,5 +180,5 @@ export const pointLocalsSlice = createSlice({
     }
 });
 
-export const { resetForm, resetErrorMessage } = pointLocalsSlice.actions;
+export const { resetForm, resetErrorMessage, resetState            } = pointLocalsSlice.actions;
 export default pointLocalsSlice.reducer;
