@@ -1,4 +1,3 @@
-import React, { useState, useEffect, useRef } from 'react';
 import { Modal, TouchableWithoutFeedback, View } from 'react-native';
 //Hooks
 import { useSelector, useDispatch } from 'react-redux';
@@ -6,6 +5,7 @@ import useKeyboardStatus from '../../hooks/useKeyboardStatus';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
 import useCurrentDate from '../../hooks/useCurrentDate';
 import useUtil from '../../hooks/useUtil';
+import { useState, useEffect, useRef } from 'react';
 //Pages
 import ListLocals from './ListLocals';
 import EditLocals from './EditLocals';
@@ -18,6 +18,8 @@ import Fade from '../../components/Fade';
 import ButtonLg from '../../components/ButtonLg';
 import BoxAction from '../../components/BoxAction';
 import Select from '../../components/Select';
+import TitleArea from '../../components/TitleArea';
+import SearchArea from '../../components/SearchArea';
 //Redux
 import { list, remove, resetState } from '../../slices/pointLocalsSlice';
 import { listUsersManager } from '../../slices/managerSlice';
@@ -25,23 +27,11 @@ import { resetReportState, generated } from '../../slices/reportPointSlice';
 //Navigation
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 //Styles
-import { StatusBar } from 'expo-status-bar';
-import { 
-  Body,
-  TitleAreaPage,
-  TitlePage
-} from '../ElectronicCall/styles';
-import { 
-  ModalView,
-  ModalContent,
-  ModalTitle,
-  ModalResume
-} from '../ElectronicCall/styles';
-import { 
-  ToolsArea
-} from '../ElectronicCall/styles';
+import { Body } from '../ElectronicCall/styles';
+import { ModalView, ModalContent, ModalTitle, ModalResume } from '../ElectronicCall/styles';
+import { ToolsArea } from '../ElectronicCall/styles';
 import { Container } from './styles';
-import { LabelSelect, SelectContainer } from './styles';
+import { SelectContainer } from './styles';
 //PDF
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
@@ -51,6 +41,8 @@ const URL = process.env.EXPO_PUBLIC_API_URL;
 const Stack = createNativeStackNavigator();
 
 const ElectronicPoint = () => {
+
+  const searchRef = useRef();  
 
   const { formatDate } = useUtil();
 
@@ -132,17 +124,22 @@ const ElectronicPoint = () => {
 
   });
 
+  //Busca textual
+  const [ dataFiltered, setDataFiltered ] = useState([]);
+
+  useEffect(() => setDataFiltered(locals), [ locals ]);  
+
   //Encaminhar parametros dinamicamnete
   useEffect(() => {
     navigation.navigate(currentRouteName, //Renavegar até a página atual
       {
         screen: currentRouteName, params: {
-          data: locals
+          data: dataFiltered
         }
       }
     );
 
-  }, [locals, currentRouteName]); //Quando atualizar o dado vai renavegar pra página que estiver selecionada
+  }, [dataFiltered, currentRouteName]); //Quando atualizar o dado vai renavegar pra página que estiver selecionada
 
   //Scroll
   const scrollOffsetY = useRef(0);
@@ -519,17 +516,12 @@ const ElectronicPoint = () => {
                   </ModalContent>
                 </ModalView>
               </TouchableWithoutFeedback>
-            </Modal>            
-            <StatusBar 
-              backgroundColor="#FFFFFF" // fundo branco
-              barStyle="dark-content"   // texto e ícones pretos
-            />
+            </Modal>
             <Header themeColor={primaryColor}/>
             <Body>
                 <>
-                  <TitleAreaPage>
-                    <TitlePage style={{color: primaryColor}}>Locais de Ponto</TitlePage>
-                  </TitleAreaPage>
+                  <TitleArea color={ primaryColor } title={ 'Locais de Ponto' } />
+                  <SearchArea ref={ searchRef } color={ primaryColor } placeholder='Busque aqui pelo local desejado.' data={ locals } setDataFiltered={ setDataFiltered }/>
                   {
                     !keyboardVisible && (
                       <ToolsArea>
@@ -582,7 +574,7 @@ const ElectronicPoint = () => {
                     name="ListLocals"
                     component={ListLocals}
                     initialParams={{
-                      data: locals,
+                      data: dataFiltered,
                       color: primaryColor,
                       logo: logo
                     }}
@@ -594,7 +586,7 @@ const ElectronicPoint = () => {
                     name="EditLocals"
                     component={EditLocals}
                     initialParams={{
-                      data: locals,
+                      data: dataFiltered,
                       color: primaryColor
                     }}          
                     options={{
@@ -631,7 +623,7 @@ const ElectronicPoint = () => {
                     name="RemoveLocals"
                     component={RemoveLocals}
                     initialParams={{
-                      data: locals,
+                      data: dataFiltered,
                       color: primaryColor,
                       actionItem: handleRemoveLocal
                     }}               

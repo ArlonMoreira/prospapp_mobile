@@ -10,6 +10,7 @@ export const Container = styled.TouchableOpacity`
     padding: 10px;
     flex-direction: row;
     justify-content: space-between;
+    height: 90px;
 `;
 
 export const LabelsArea = styled.View`
