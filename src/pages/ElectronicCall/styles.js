@@ -6,6 +6,12 @@ export const Container = styled.View`
     background: #fff;
 `;
 
+export const PageArea = styled.View`
+    padding-inline: 15px;
+    width: 100%;
+    flex: 1;
+`;
+
 export const Body = styled.View`
     flex: 1;
     padding-left: 20px;

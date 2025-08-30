@@ -9,15 +9,15 @@ import {
 
 const ButtonLg = ({title, action, loading=false, disabled=false, color='#fff', fontColor='#16443E', largeWidth=292}) => {
   
-  const [styles, setStyles] = useState({ backgroundColor: color, width: largeWidth, opacity: 0 });
+  const [styles, setStyles] = useState({ backgroundColor: color, width: largeWidth, opacity: 1 });
 
   useEffect(() => {
     if (disabled) {
-      setStyles({ ...styles, backgroundColor: '#cecece', opacity: 1 });
+      setStyles({ backgroundColor: '#cecece', width: largeWidth, opacity: 1 });
     } else {
-      setStyles({ ...styles, backgroundColor: color, opacity: 1 });
+      setStyles({ backgroundColor: color, width: largeWidth, opacity: 1 });
     }
-  }, [disabled]);
+  }, [disabled, color, largeWidth]);
 
   return (
     <Container onPress={() => action()} disabled={disabled} style={styles}>

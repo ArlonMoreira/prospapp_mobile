@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Modal, TouchableWithoutFeedback, View, Text, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 //Hooks
 import useCurrentDate from '../../hooks/useCurrentDate';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
+import { useState, useEffect, useContext, useRef } from 'react';
+import useKeyboardStatus from '../../hooks/useKeyboardStatus';
 //Components
 import Header from '../../components/Header';
 import Fade from '../../components/Fade';
@@ -59,6 +60,8 @@ const URL = process.env.EXPO_PUBLIC_API_URL;
 const formatDate = dateStr => dateStr.split("-").reverse().join("/");
 
 const Call = ({ route }) => {
+
+  const keyboardVisible = useKeyboardStatus();  
 
   const searchRef = useRef();
 
@@ -901,40 +904,46 @@ const Call = ({ route }) => {
             <Header themeColor={primaryColor}></Header>
             <Body style={{ marginBottom: 30 }}>             
               <TitleArea title={'Chamada'} color={ primaryColor } subtitle={classNameSelected && classNameSelected}/>
-              <DateArea>
-                <IconAreaDate style={{backgroundColor:primaryColor}} onPress={() => setShowModalSelectDate(true)}>
-                  <SimpleLineIcons name='calendar' size={20} color={'#fff'}/>
-                </IconAreaDate>
-                <TextDateArea style={{borderColor:primaryColor}}>
-                  <InfoName style={{color:primaryColor}}>Data selecionada: <Text style={{fontFamily:'montserrat-semibold'}}>{date.toLocaleDateString("pt-BR")}</Text></InfoName>
-                </TextDateArea>
-              </DateArea>    
-              <SearchArea ref={ searchRef } color={ primaryColor } placeholder='Busque aqui pelo aluno desejado.' setDataFiltered={ setDataFiltered } data={ students } fieldFilter='name'/>                         
-              <ToolsArea>
-                <BoxAction action={() => setShowModal(true)} color={primaryColor} iconName={'person-add'} title={'Adicionar aluno'}></BoxAction>
-                <BoxAction action={() => setShowModalReport(true)} color={primaryColor} iconName={'download'} title={'Baixa relatório'}></BoxAction>
-                <BoxAction 
-                  color={currentRouteName == 'CallRegister' ? '#f0f2f5': primaryColor}
-                  iconName={'notifications'}
-                  title={'Registrar chamada'}
-                  action={() => navigation.navigate('CallRegister')}
-                  backgroundColor={currentRouteName == 'CallRegister' ? primaryColor: '#f0f2f5'}
-                />
-                <BoxAction
-                  color={currentRouteName == 'EditStudent' ? '#f0f2f5': primaryColor}
-                  iconName={'pencil-sharp'}
-                  title={'Editar aluno'}
-                  action={() => navigation.navigate('EditStudent')}
-                  backgroundColor={currentRouteName == 'EditStudent' ? primaryColor: '#f0f2f5'}
-                />
-                <BoxAction
-                  color={currentRouteName == 'RemoveStudent' ? '#f0f2f5': primaryColor}
-                  iconName={'person-remove'}
-                  title={'Remover aluno'}
-                  action={() => navigation.navigate('RemoveStudent')}
-                  backgroundColor={currentRouteName == 'RemoveStudent' ? primaryColor: '#f0f2f5'}
-                />                                           
-              </ToolsArea>
+              <SearchArea ref={ searchRef } color={ primaryColor } placeholder='Busque aqui pelo aluno desejado.' setDataFiltered={ setDataFiltered } data={ students } fieldFilter='name'/>              
+              {
+                !keyboardVisible && (
+                  <>
+                    <DateArea>
+                      <IconAreaDate style={{backgroundColor:primaryColor}} onPress={() => setShowModalSelectDate(true)}>
+                        <SimpleLineIcons name='calendar' size={20} color={'#fff'}/>
+                      </IconAreaDate>
+                      <TextDateArea style={{borderColor:primaryColor}}>
+                        <InfoName style={{color:primaryColor}}>Data selecionada: <Text style={{fontFamily:'montserrat-semibold'}}>{date.toLocaleDateString("pt-BR")}</Text></InfoName>
+                      </TextDateArea>
+                    </DateArea>    
+                    <ToolsArea>
+                      <BoxAction action={() => setShowModal(true)} color={primaryColor} iconName={'person-add'} title={'Adicionar aluno'}></BoxAction>
+                      <BoxAction action={() => setShowModalReport(true)} color={primaryColor} iconName={'download'} title={'Baixa relatório'}></BoxAction>
+                      <BoxAction 
+                        color={currentRouteName == 'CallRegister' ? '#f0f2f5': primaryColor}
+                        iconName={'notifications'}
+                        title={'Registrar chamada'}
+                        action={() => navigation.navigate('CallRegister')}
+                        backgroundColor={currentRouteName == 'CallRegister' ? primaryColor: '#f0f2f5'}
+                      />
+                      <BoxAction
+                        color={currentRouteName == 'EditStudent' ? '#f0f2f5': primaryColor}
+                        iconName={'pencil-sharp'}
+                        title={'Editar aluno'}
+                        action={() => navigation.navigate('EditStudent')}
+                        backgroundColor={currentRouteName == 'EditStudent' ? primaryColor: '#f0f2f5'}
+                      />
+                      <BoxAction
+                        color={currentRouteName == 'RemoveStudent' ? '#f0f2f5': primaryColor}
+                        iconName={'person-remove'}
+                        title={'Remover aluno'}
+                        action={() => navigation.navigate('RemoveStudent')}
+                        backgroundColor={currentRouteName == 'RemoveStudent' ? primaryColor: '#f0f2f5'}
+                      />                                           
+                    </ToolsArea>                  
+                  </>
+                )
+              }
               <Stack.Navigator>
                 <Stack.Screen
                   name="CallRegister"

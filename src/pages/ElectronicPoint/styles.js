@@ -6,6 +6,18 @@ export const Container = styled.View`
     background: #fff;
 `;
 
+export const InstructionArea = styled.View`
+    height: 62px;
+    align-items: start;
+    justify-content: flex-end;
+`;
+
+export const Instruction = styled.Text`
+    color: #606060;
+    font-size: 12px;
+    font-family: 'montserrat-medium'; 
+    text-align: justify;   
+`;
 
 export const SelectContainer = styled.View`
     width: 100%;

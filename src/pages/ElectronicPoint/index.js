@@ -542,17 +542,17 @@ const ElectronicPoint = () => {
                           staffPerfil && (
                           <>
                             <BoxAction
-                              color={currentRouteName == 'RegisterLocal' ? '#f0f2f5': primaryColor}
-                              backgroundColor={currentRouteName !== 'RegisterLocal' ? '#f0f2f5': primaryColor}
+                              color={currentRouteName == 'RegisterLocalPoint' ? '#f0f2f5': primaryColor}
+                              backgroundColor={currentRouteName !== 'RegisterLocalPoint' ? '#f0f2f5': primaryColor}
                               iconName={'add-circle'}
                               title={'Adicionar Local'}
-                              action={() => navigation.navigate('RegisterLocal', { color: primaryColor })}
+                              action={() => navigation.navigate('RegisterLocalPoint', { color: primaryColor, companyId })}
                             />
                             <BoxAction
                               color={(currentRouteName == 'EditLocals' || currentRouteName == 'EditLocal') ? '#f0f2f5': primaryColor}
                               backgroundColor={(currentRouteName !== 'EditLocals' && currentRouteName !== 'EditLocal') ? '#f0f2f5': primaryColor}
                               iconName={'pencil-sharp'}
-                              action={() => navigation.navigate('EditLocals')}
+                              // action={() => navigation.navigate('EditLocals')}
                               title={'Editar Local'}
                             />
                             <BoxAction
@@ -600,25 +600,27 @@ const ElectronicPoint = () => {
                       color: primaryColor,
                       companyId,
                       handleScroll,
-                      nameRef
+                      nameRef,
+                      searchRef
                     }}               
                     options={{
                       headerShown: false,
                     }}
                   />
-                  <Stack.Screen
+                  {/* <Stack.Screen
                     name="RegisterLocal"
                     component={RegisterLocal}
                     initialParams={{
                       color: primaryColor,
                       companyId,
                       handleScroll,
-                      nameRef
+                      nameRef,
+                      searchRef
                     }}               
                     options={{
                       headerShown: false,
                     }}
-                  />           
+                  />            */}
                   <Stack.Screen
                     name="RemoveLocals"
                     component={RemoveLocals}

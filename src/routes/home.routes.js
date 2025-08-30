@@ -6,6 +6,7 @@ import ElectronicPoint from '../pages/ElectronicPoint';
 import Call from '../pages/Call';
 import Point from '../pages/Point';
 import AddUser from '../pages/ElectronicCall/AddUser';
+import RegisterLocal from '../pages/ElectronicPoint/RegisterLocal';
 //Navigation
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -56,7 +57,14 @@ const HomeRoutes = () => {
         options={{
           headerShown: false
         }}
-      />                                   
+      />      
+      <Stack.Screen
+        name="RegisterLocalPoint"
+        component={RegisterLocal}
+        options={{
+          headerShown: false
+        }}
+      />                                     
     </Stack.Navigator>
   )
 }

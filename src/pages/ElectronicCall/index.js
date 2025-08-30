@@ -1,6 +1,4 @@
-import React, { useState, useEffect, useContext, useCallback, useRef } from 'react';
 import { Modal, TouchableWithoutFeedback, View } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
 //Components
 import Header from '../../components/Header';
 import Fade from '../../components/Fade';
@@ -17,7 +15,9 @@ import EditClass from './EditClass';
 import RemoveClass from './RemoveClass';
 import RelateUser from './RelateUser';
 //Hooks
-import { useNavigation } from '@react-navigation/native';
+import { useState, useEffect, useContext, useCallback, useRef } from 'react';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import useKeyboardStatus from '../../hooks/useKeyboardStatus';
 //Context
 import { LoadingContext } from '../../contexts/LoadingContext';
 //Redux
@@ -43,6 +43,8 @@ const Stack = createNativeStackNavigator();
 const URL = process.env.EXPO_PUBLIC_API_URL;
 
 const ElectronicCall = () => {
+
+  const keyboardVisible = useKeyboardStatus();  
 
   const searchRef = useRef();
 
@@ -360,42 +362,46 @@ const ElectronicCall = () => {
             <Body style={{ marginBottom: 30 }}>
               <TitleArea color={ primaryColor } title={'Turmas'}/>
               <SearchArea ref={ searchRef } color={ primaryColor } placeholder='Busque aqui pela turma desejada.' data={ data } setDataFiltered={ setDataFiltered } />
-              <ToolsArea>
-                <BoxAction 
-                  action={() => setShowModal(true)}
-                  color={primaryColor}
-                  iconName={'add-circle'}
-                  title={'Adicionar Turma'}
-                />
-                <BoxAction
-                  color={currentRouteName == 'ListClass' ? '#f0f2f5': primaryColor}
-                  backgroundColor={currentRouteName != 'ListClass' ? '#f0f2f5': primaryColor}
-                  iconName={'megaphone'}
-                  action={() => navigation.navigate('ListClass')}
-                  title={'Realizar Chamada'}
-                />     
-                <BoxAction
-                  color={currentRouteName == 'RelateUser' ? '#f0f2f5': primaryColor}
-                  backgroundColor={currentRouteName != 'RelateUser' ? '#f0f2f5': primaryColor}
-                  iconName={'people-sharp'}
-                  action={() => navigation.navigate('RelateUser')}
-                  title={'Vincular usuário'}
-                />                           
-                <BoxAction
-                  color={currentRouteName == 'EditClass' ? '#f0f2f5': primaryColor}
-                  backgroundColor={currentRouteName != 'EditClass' ? '#f0f2f5': primaryColor}
-                  iconName={'pencil-sharp'}
-                  action={() => navigation.navigate('EditClass')}
-                  title={'Editar Turma'}
-                />
-                <BoxAction
-                  color={currentRouteName == 'RemoveClass' ? '#f0f2f5': primaryColor}
-                  backgroundColor={currentRouteName != 'RemoveClass' ? '#f0f2f5': primaryColor}
-                  iconName={'close-circle'}
-                  action={() => navigation.navigate('RemoveClass')}
-                  title={'Remover Turma'}
-                />
-              </ToolsArea>
+              {
+                !keyboardVisible && (
+                  <ToolsArea>
+                    <BoxAction 
+                      action={() => setShowModal(true)}
+                      color={primaryColor}
+                      iconName={'add-circle'}
+                      title={'Adicionar Turma'}
+                    />
+                    <BoxAction
+                      color={currentRouteName == 'ListClass' ? '#f0f2f5': primaryColor}
+                      backgroundColor={currentRouteName != 'ListClass' ? '#f0f2f5': primaryColor}
+                      iconName={'megaphone'}
+                      action={() => navigation.navigate('ListClass')}
+                      title={'Realizar Chamada'}
+                    />     
+                    <BoxAction
+                      color={currentRouteName == 'RelateUser' ? '#f0f2f5': primaryColor}
+                      backgroundColor={currentRouteName != 'RelateUser' ? '#f0f2f5': primaryColor}
+                      iconName={'people-sharp'}
+                      action={() => navigation.navigate('RelateUser')}
+                      title={'Vincular usuário'}
+                    />                           
+                    <BoxAction
+                      color={currentRouteName == 'EditClass' ? '#f0f2f5': primaryColor}
+                      backgroundColor={currentRouteName != 'EditClass' ? '#f0f2f5': primaryColor}
+                      iconName={'pencil-sharp'}
+                      action={() => navigation.navigate('EditClass')}
+                      title={'Editar Turma'}
+                    />
+                    <BoxAction
+                      color={currentRouteName == 'RemoveClass' ? '#f0f2f5': primaryColor}
+                      backgroundColor={currentRouteName != 'RemoveClass' ? '#f0f2f5': primaryColor}
+                      iconName={'close-circle'}
+                      action={() => navigation.navigate('RemoveClass')}
+                      title={'Remover Turma'}
+                    />
+                  </ToolsArea>
+                )
+              }
               <Stack.Navigator>
                 <Stack.Screen
                   name="ListClass"
