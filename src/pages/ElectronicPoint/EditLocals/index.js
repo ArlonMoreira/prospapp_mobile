@@ -16,7 +16,7 @@ const EditLocals = ({ route }) => {
   //Navegar para página de login quando autenticado.
   const navigation = useNavigation();    
 
-  const { data, color } = route.params;
+  const { data, color, companyId, searchRef } = route.params;
 
   const dataOrder = useMemo(() => {
       return data && data.length > 0 
@@ -33,7 +33,7 @@ const EditLocals = ({ route }) => {
           keyExtractor={(item) => String(item.id)}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
-            <WidgetLocals item={item} key={item.id} color={color} action={() => navigation.navigate('EditLocal', { local: item })}></WidgetLocals>
+            <WidgetLocals item={item} key={item.id} color={color} action={() => navigation.navigate('EditLocalPoint', { local: item, color, companyId, searchRef })}></WidgetLocals>
           )}
         />
       </ListArea>

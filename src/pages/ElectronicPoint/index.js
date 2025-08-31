@@ -552,7 +552,7 @@ const ElectronicPoint = () => {
                               color={(currentRouteName == 'EditLocals' || currentRouteName == 'EditLocal') ? '#f0f2f5': primaryColor}
                               backgroundColor={(currentRouteName !== 'EditLocals' && currentRouteName !== 'EditLocal') ? '#f0f2f5': primaryColor}
                               iconName={'pencil-sharp'}
-                              // action={() => navigation.navigate('EditLocals')}
+                              action={() => navigation.navigate('EditLocals')}
                               title={'Editar Local'}
                             />
                             <BoxAction
@@ -587,13 +587,15 @@ const ElectronicPoint = () => {
                     component={EditLocals}
                     initialParams={{
                       data: dataFiltered,
-                      color: primaryColor
+                      color: primaryColor,
+                      companyId,
+                      searchRef
                     }}          
                     options={{
                       headerShown: false,
                     }}
                   />
-                  <Stack.Screen
+                  {/* <Stack.Screen
                     name="EditLocal"
                     component={RegisterLocal}
                     initialParams={{
@@ -606,7 +608,7 @@ const ElectronicPoint = () => {
                     options={{
                       headerShown: false,
                     }}
-                  />
+                  /> */}
                   {/* <Stack.Screen
                     name="RegisterLocal"
                     component={RegisterLocal}

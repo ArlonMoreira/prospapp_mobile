@@ -8,7 +8,9 @@ const initialState = {
     loading: true,
     loadingRegister: false,
     successRegister: false,
-    errosRegister: []
+    errosRegister: [],
+    loadingChange: false,
+    successChange: false
 };
 
 export const list = createAsyncThunk(
@@ -47,6 +49,24 @@ export const register = createAsyncThunk(
     }
 );
 
+export const change = createAsyncThunk(
+    'pointLocals/change',
+    async({data, localId}, {getState, rejectWithValue}) => {
+        const userAuth = await getState().auth.userAuth;
+        const response = await useRequest().pointLocalEdit({
+            data,
+            localId,
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU2OTgyMTA1LCJpYXQiOjE3NTY1NTAxMDUsImp0aSI6ImMyNjkyMTg5ZTY5MTQwYjA5ZGZiM2IyNzNlZDMxMjkwIiwidXNlcl9pZCI6MX0.ecqDjsl8DigEwrjLYcNiWv_7H_1GaTyrZF6nL67GaF8"
+        });
+        console.log(response)
+        if(response.success){
+            return response;
+        } else {
+            return rejectWithValue(response);
+        }        
+    }
+);
+
 export const pointLocalsSlice = createSlice({
     name: 'pointLocals',
     initialState,
@@ -59,7 +79,11 @@ export const pointLocalsSlice = createSlice({
             state.successRegister = false;
             state.loadingRegister = false;
             state.errosRegister = [];
-        }   
+        },
+        resetStateChange: (state) => {
+            state.successChange = false;
+            state.loadingChange = false;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -92,11 +116,32 @@ export const pointLocalsSlice = createSlice({
                 state.loadingRegister = false;
                 state.successRegister = false;
                 state.errosRegister = action.payload.data;
-            })                                        
+            })   
+            //Aguardando carregamento alteração de local
+            .addCase(change.pending, (state) => {
+                state.loadingChange = true;
+                state.successChange = false;
+            })   
+            //Sucesso ao editar local
+            .addCase(change.fulfilled, (state, action) => {
+                state.loadingChange = false;
+                state.successChange = true;
+
+                const index = state.data.findIndex(obj => obj.id === action.payload.data.id);
+                if(index > -1){
+                    state.data[index] = action.payload.data;
+                }
+
+            })
+            //Falha ao editar local
+            .addCase(change.rejected, (state) => {
+                state.loadingChange = false;
+                state.successChange = false;
+            })                                                 
     }
 });
 
-export const { resetState, resetStateRegister } = pointLocalsSlice.actions;
+export const { resetState, resetStateRegister, resetStateChange } = pointLocalsSlice.actions;
 export default pointLocalsSlice.reducer;
 
 

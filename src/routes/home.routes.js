@@ -64,7 +64,14 @@ const HomeRoutes = () => {
         options={{
           headerShown: false
         }}
-      />                                     
+      />
+      <Stack.Screen
+        name="EditLocalPoint"
+        component={RegisterLocal}
+        options={{
+          headerShown: false
+        }}
+      />                                              
     </Stack.Navigator>
   )
 }

@@ -7,7 +7,7 @@ import InstructionArea from "../../../components/IntroductionArea";
 import MapView, { Marker } from 'react-native-maps';
 import ButtonLg from "../../../components/ButtonLg";
 //Redux
-import { register, resetStateRegister } from '../../../slices/pointLocalsSlice';
+import { register, resetStateRegister, change, resetStateChange } from '../../../slices/pointLocalsSlice';
 //Hooks
 import { useState, useEffect, useRef } from "react";
 import useKeyboardStatus from "../../../hooks/useKeyboardStatus";
@@ -22,24 +22,34 @@ import { Errors, Error } from '../../Register/styles';
 
 const RegisterLocal = ({ route }) => {
 
-  const navigate = useNavigation();
+  const navigation = useNavigation();
 
   const dispatch = useDispatch();
 
   const keyboardVisible = useKeyboardStatus();
 
   //Dados coletados durante a primeira navegação
-  const { color, companyId, searchRef } = route.params;  
+  const { color, companyId, searchRef, local } = route.params;  
   
   const [ currentColor, setCurrentColor ] = useState('');
   const [ currentCompany, setCurrentCompany ] = useState(null);
   const [ currentSearchRef, setCurrentSearchRef ] = useState(searchRef);
 
+  //Dados editáveis
+  const [ edit, setEdit ] = useState(false);
+  const [ currentLocal, setCurrentLocal ] = useState(null);
+
   useEffect(() => {
     dispatch(resetStateRegister());
+    dispatch(resetStateChange());
     setCurrentColor(color);
     setCurrentCompany(companyId);
     setCurrentSearchRef(searchRef);
+
+    if(local){
+      setCurrentLocal(local);
+      setEdit(true);
+    }
 
   }, []);
 
@@ -114,9 +124,9 @@ const RegisterLocal = ({ route }) => {
    */
   const [ name, setName ] = useState('');  
   const [ iden, setIden ] = useState(null);
-  const [ limitRadius, setLimitRadius ] = useState('100');  
+  const [ limitRadius, setLimitRadius ] = useState('100');
 
-  const { loadingRegister, successRegister, errosRegister } = useSelector(state => state.pointLocals);
+  const { loadingRegister, successRegister, errosRegister, loadingChange, successChange } = useSelector(state => state.pointLocals);
   
   const handleAddLocal = () => {  
     const data = {
@@ -127,20 +137,52 @@ const RegisterLocal = ({ route }) => {
       longitude: markerCoord.longitude,
       limit_radius: parseInt(limitRadius)
     };
-
-    dispatch(register(data));
+    
+    if(edit) {
+      dispatch(change({ data, localId: currentLocal.id }));
+    } else {
+      dispatch(register(data));
+    }
   
   };
 
   useEffect(() => { //Quero redirecionar para a página inicial de cadastro quando um novo local for cadastrado.
     if(successRegister){
       dispatch(resetStateRegister());
-      navigate.navigate('ElectronicPoint');
+      navigation.navigate('ElectronicPoint');
       currentSearchRef.current && currentSearchRef.current.clear();
       
     }
 
   }, [successRegister]);
+
+  /**
+   * Área editáveis 
+   */
+
+  useEffect(() => {
+    if(edit && currentLocal){
+      setName(currentLocal.name ? currentLocal.name:'');
+      setIden(currentLocal.identification_number ? currentLocal.identification_number.toString() : null);
+      setLimitRadius(currentLocal.limit_radius ? currentLocal.limit_radius.toString() : '100');
+      setMarkerCoord({
+        latitude: currentLocal.latitude,
+        longitude: currentLocal.longitude,
+      });
+
+    }
+
+  }, [edit, currentLocal]);
+
+  useEffect(() => {
+    if(successChange){
+      dispatch(resetStateChange());
+      navigation.goBack();
+      currentSearchRef.current && currentSearchRef.current.clear();
+      
+    }
+
+  }, [successChange]);
 
   return (
     <Container style={{ paddingTop: 20 }}>
@@ -148,7 +190,7 @@ const RegisterLocal = ({ route }) => {
       <PageArea style={{ flex: 1, justifyContent: 'space-between' }}>
         {
           !keyboardVisible && (
-            <TitleArea title={'Adicionar local'} color={ currentColor } subtitle={'Realizar o cadastro de um local de ponto '}/>
+            <TitleArea title={ edit ? 'Editar local' : 'Adicionar local'} color={ currentColor } subtitle={ edit ? name : 'Realizar o cadastro de um local de ponto'}/>
           )
         }
         <ScrollView scrollEventThrottle={16}> 
@@ -190,7 +232,13 @@ const RegisterLocal = ({ route }) => {
             </MapView>
           </MapArea> 
           <View style={{marginTop: 30, width: '100%', paddingLeft: 10, marginBottom: 20}}>
-            <ButtonLg loading={loadingRegister} disabled={loadingRegister} action={() => handleAddLocal()} title={'Adicionar'} color={currentColor} fontColor='#fff' largeWidth={335}/>  
+            {
+              edit ? (
+                <ButtonLg loading={loadingChange} disabled={loadingChange} action={() => handleAddLocal()} title={'Editar'} color={currentColor} fontColor='#fff' largeWidth={335}/>  
+              ) : (
+                <ButtonLg loading={loadingRegister} disabled={loadingRegister} action={() => handleAddLocal()} title={'Adicionar'} color={currentColor} fontColor='#fff' largeWidth={335}/>
+              )
+            }
           </View>              
         </ScrollView>               
       </PageArea> 
