@@ -11,7 +11,9 @@ const initialState = {
     errosRegister: [],
     loadingChange: false,
     successChange: false,
-    errorsChange: []
+    errorsChange: [],
+    loadingRemove: false,
+    successRemove: false
 };
 
 export const list = createAsyncThunk(
@@ -56,6 +58,23 @@ export const change = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointLocalEdit({
             data,
+            localId,
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU2OTgyMTA1LCJpYXQiOjE3NTY1NTAxMDUsImp0aSI6ImMyNjkyMTg5ZTY5MTQwYjA5ZGZiM2IyNzNlZDMxMjkwIiwidXNlcl9pZCI6MX0.ecqDjsl8DigEwrjLYcNiWv_7H_1GaTyrZF6nL67GaF8"
+        });
+
+        if(response.success){
+            return response;
+        } else {
+            return rejectWithValue(response);
+        }        
+    }
+);
+
+export const remove = createAsyncThunk(
+    'pointLocals/remove',
+    async(localId, {getState, rejectWithValue}) => {
+        const userAuth = await getState().auth.userAuth;
+        const response = await useRequest().pointLocalRemove({
             localId,
             token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU2OTgyMTA1LCJpYXQiOjE3NTY1NTAxMDUsImp0aSI6ImMyNjkyMTg5ZTY5MTQwYjA5ZGZiM2IyNzNlZDMxMjkwIiwidXNlcl9pZCI6MX0.ecqDjsl8DigEwrjLYcNiWv_7H_1GaTyrZF6nL67GaF8"
         });
@@ -140,7 +159,27 @@ export const pointLocalsSlice = createSlice({
                 state.loadingChange = false;
                 state.successChange = false;
                 state.errorsChange = action.payload.data;
-            })                                                 
+            })
+            //Carregando remove local
+            .addCase(remove.pending, (state) => {
+                state.loadingRemove = true;
+                state.successRemove = false;
+            })     
+            //Sucesso ao remover local
+            .addCase(remove.fulfilled, (state, action) => {
+                state.loadingRemove = false;
+                state.successRemove = true;
+                
+                const index = state.data.findIndex(obj => obj.id === action.payload.data.id);
+                if(index > -1){
+                    state.data.splice(index, 1);
+                }                
+            })
+            //Falha ao remover local
+            .addCase(remove.rejected, (state) => {
+                state.loadingRemove = false;
+                state.successRemove = false;
+            })                                                                   
     }
 });
 

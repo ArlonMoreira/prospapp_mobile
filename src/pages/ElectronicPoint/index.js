@@ -105,7 +105,11 @@ const ElectronicPoint = () => {
   };
 
   useEffect(() => {
-    if(successRemove) setShowModal(false);
+    if(successRemove) {
+      setShowModal(false);
+      searchRef.current && searchRef.current.clear();
+    }
+
   }, [successRemove]);
 
   //Rotas de navegação
@@ -595,34 +599,6 @@ const ElectronicPoint = () => {
                       headerShown: false,
                     }}
                   />
-                  {/* <Stack.Screen
-                    name="EditLocal"
-                    component={RegisterLocal}
-                    initialParams={{
-                      color: primaryColor,
-                      companyId,
-                      handleScroll,
-                      nameRef,
-                      searchRef
-                    }}               
-                    options={{
-                      headerShown: false,
-                    }}
-                  /> */}
-                  {/* <Stack.Screen
-                    name="RegisterLocal"
-                    component={RegisterLocal}
-                    initialParams={{
-                      color: primaryColor,
-                      companyId,
-                      handleScroll,
-                      nameRef,
-                      searchRef
-                    }}               
-                    options={{
-                      headerShown: false,
-                    }}
-                  />            */}
                   <Stack.Screen
                     name="RemoveLocals"
                     component={RemoveLocals}
