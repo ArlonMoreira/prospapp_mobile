@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
 import useUtil from '../../../hooks/useUtil';
 import { useDispatch, useSelector } from 'react-redux';
+import useKeyboardStatus from '../../../hooks/useKeyboardStatus';
 //Components
 import Header from '../../../components/Header';
 import ButtonLg from '../../../components/ButtonLg';
@@ -18,6 +19,9 @@ import { SelectContainer } from '../../ElectronicPoint/styles';
 import { Errors, Error } from '../../Register/styles';
 
 const Justify = ({ route }) => {
+
+  const keyboardVisible = useKeyboardStatus();
+
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -90,61 +94,67 @@ const Justify = ({ route }) => {
             <TitleArea style={{maxHeight: 100, borderBottomWidth: 1, borderColor: '#ddd', marginBottom: 20}}>
               <Instruction>Registrar ponto no local:</Instruction>
               <Text style={{fontFamily: 'montserrat-semibold', color: '#64748b'}}>{local ? local.name : '-'}</Text>
-            </TitleArea>          
-            <View style={{ alignItems: 'center', marginBottom: 20 }}>
-              <Instruction>Data</Instruction>
-              <Text style={{ fontFamily: 'montserrat-bold', fontSize: 14, color: '#64748b' }}>
-                {formatDate(now)}
-              </Text>
-            </View>           
-            <Instruction style={{ marginTop: 20, marginBottom: 10}}>Horário de entrada.</Instruction>
-            <SelectContainer>
-              <View style={{ width: '49%' }}>
-                <Select 
-                  label={'Hora'}
-                  color={ color }
-                  options={ hourOptions }
-                  setSelected={ setHourStart }
-                  zIndex={100}
-                />
-              </View>
-              <View style={{ width: '49%' }}>
-                <Select 
-                  label={'Minuto'}
-                  color={ color }
-                  options={ minuteOptions }
-                  setSelected={ setMinuteStart }
-                  zIndex={100}
-                />
-              </View>
-            </SelectContainer>
-            <Errors>
-              { errosJustify.entry_datetime && errosJustify.entry_datetime.map((error, i) => <Error key={i}>{ error }</Error>) }
-            </Errors>          
-            <Instruction style={{ marginTop: 20, marginBottom: 10}}>Horário de saída.</Instruction>
-            <SelectContainer>
-              <View style={{ width: '49%' }}>
-                <Select 
-                  label={'Hora'}
-                  color={ color }
-                  options={ hourOptions }
-                  setSelected={ setHourEnd }
-                  zIndex={90}
-                />
-              </View>
-              <View style={{ width: '49%' }}>
-                <Select 
-                  label={'Minuto'}
-                  color={ color }
-                  options={ minuteOptions }
-                  setSelected={ setMinuteEnd }
-                  zIndex={90}
-                />
-              </View>
-            </SelectContainer>
-            <Errors>
-              { errosJustify.exit_datetime && errosJustify.exit_datetime.map((error, i) => <Error key={i} style={{color: 'rgb(191, 159, 18)'}}>{ error }</Error>) }
-            </Errors>            
+            </TitleArea>
+            {
+              !keyboardVisible && (
+                <>
+                  <View style={{ alignItems: 'center', marginBottom: 20 }}>
+                    <Instruction>Data</Instruction>
+                    <Text style={{ fontFamily: 'montserrat-bold', fontSize: 14, color: '#64748b' }}>
+                      {formatDate(now)}
+                    </Text>
+                  </View>           
+                  <Instruction style={{ marginTop: 20, marginBottom: 10}}>Horário de entrada.</Instruction>
+                  <SelectContainer>
+                    <View style={{ width: '49%' }}>
+                      <Select 
+                        label={'Hora'}
+                        color={ color }
+                        options={ hourOptions }
+                        setSelected={ setHourStart }
+                        zIndex={100}
+                      />
+                    </View>
+                    <View style={{ width: '49%' }}>
+                      <Select 
+                        label={'Minuto'}
+                        color={ color }
+                        options={ minuteOptions }
+                        setSelected={ setMinuteStart }
+                        zIndex={100}
+                      />
+                    </View>
+                  </SelectContainer>
+                  <Errors>
+                    { errosJustify.entry_datetime && errosJustify.entry_datetime.map((error, i) => <Error key={i}>{ error }</Error>) }
+                  </Errors>          
+                  <Instruction style={{ marginTop: 20, marginBottom: 10}}>Horário de saída.</Instruction>
+                  <SelectContainer>
+                    <View style={{ width: '49%' }}>
+                      <Select 
+                        label={'Hora'}
+                        color={ color }
+                        options={ hourOptions }
+                        setSelected={ setHourEnd }
+                        zIndex={90}
+                      />
+                    </View>
+                    <View style={{ width: '49%' }}>
+                      <Select 
+                        label={'Minuto'}
+                        color={ color }
+                        options={ minuteOptions }
+                        setSelected={ setMinuteEnd }
+                        zIndex={90}
+                      />
+                    </View>
+                  </SelectContainer>
+                  <Errors>
+                    { errosJustify.exit_datetime && errosJustify.exit_datetime.map((error, i) => <Error key={i} style={{color: 'rgb(191, 159, 18)'}}>{ error }</Error>) }
+                  </Errors>                 
+                </>
+              )
+            }           
             <Instruction style={{ marginTop: 30 }}>Justificativa (máx. 125 caracteres)</Instruction>
             <TextInput
               style={{

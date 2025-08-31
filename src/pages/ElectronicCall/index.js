@@ -359,7 +359,7 @@ const ElectronicCall = () => {
               </TouchableWithoutFeedback>
             </Modal>
             <Header themeColor={primaryColor}/>
-            <Body style={{ marginBottom: 30 }}>
+            <Body>
               <TitleArea color={ primaryColor } title={'Turmas'}/>
               <SearchArea ref={ searchRef } color={ primaryColor } placeholder='Busque aqui pela turma desejada.' data={ data } setDataFiltered={ setDataFiltered } />
               {

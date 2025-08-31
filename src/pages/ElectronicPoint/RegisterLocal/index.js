@@ -218,7 +218,7 @@ const RegisterLocal = ({ route }) => {
                 style={{ backgroundColor: 'white', padding: 10, marginBottom: 10, width: '86%' }}
               />
               <MapButtonSearch onPress={searchLocation}>
-                <Octicons name='search' size={30} color={color} />
+                <Octicons name='search' size={30} color={currentColor} />
               </MapButtonSearch>              
             </MapSearchArea>
             <MapView
