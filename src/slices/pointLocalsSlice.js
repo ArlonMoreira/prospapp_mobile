@@ -10,7 +10,8 @@ const initialState = {
     successRegister: false,
     errosRegister: [],
     loadingChange: false,
-    successChange: false
+    successChange: false,
+    errorsChange: []
 };
 
 export const list = createAsyncThunk(
@@ -58,7 +59,7 @@ export const change = createAsyncThunk(
             localId,
             token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU2OTgyMTA1LCJpYXQiOjE3NTY1NTAxMDUsImp0aSI6ImMyNjkyMTg5ZTY5MTQwYjA5ZGZiM2IyNzNlZDMxMjkwIiwidXNlcl9pZCI6MX0.ecqDjsl8DigEwrjLYcNiWv_7H_1GaTyrZF6nL67GaF8"
         });
-        console.log(response)
+
         if(response.success){
             return response;
         } else {
@@ -83,6 +84,7 @@ export const pointLocalsSlice = createSlice({
         resetStateChange: (state) => {
             state.successChange = false;
             state.loadingChange = false;
+            state.errorsChange = [];
         }
     },
     extraReducers: (builder) => {
@@ -134,9 +136,10 @@ export const pointLocalsSlice = createSlice({
 
             })
             //Falha ao editar local
-            .addCase(change.rejected, (state) => {
+            .addCase(change.rejected, (state, action) => {
                 state.loadingChange = false;
                 state.successChange = false;
+                state.errorsChange = action.payload.data;
             })                                                 
     }
 });
