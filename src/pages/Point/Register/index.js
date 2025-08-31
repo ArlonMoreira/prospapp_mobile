@@ -12,7 +12,6 @@ import Fade from '../../../components/Fade';
 import { Modal } from 'react-native';
 import ButtonLg from '../../../components/ButtonLg';
 //styles
-import { StatusBar } from 'react-native';
 import { 
   Container,
   ModalView,
@@ -134,7 +133,7 @@ const Register = ({ route }) => {
   }, [color, formatHour, handleRemovePoint]);
 
   return (
-    <Container>
+    <Container style={{ paddingTop: 20 }}>
       {(showModalRemove || showJustify) && <Fade/>}   
       <Modal
         transparent={true}
@@ -169,10 +168,6 @@ const Register = ({ route }) => {
           </ModalView>
         </TouchableWithoutFeedback>
       </Modal>          
-      <StatusBar 
-        backgroundColor="#FFFFFF" // fundo branco
-        barStyle="dark-content"   // texto e ícones pretos
-      />
       <Header themeColor={color}/>      
       <PageArea>
         <TitleArea style={{maxHeight: 100, borderBottomWidth: 1, borderColor: '#ddd', marginBottom: 20}}>

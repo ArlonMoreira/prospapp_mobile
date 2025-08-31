@@ -5,7 +5,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import useRequest from "../hooks/useRequest";
 
 const initialState = {
-    loading: false,
+    loading: true,
     loadingJustify: false,
     loadingRemove: false,
     successRemove: false,

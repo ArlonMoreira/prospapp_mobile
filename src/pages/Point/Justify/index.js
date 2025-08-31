@@ -11,11 +11,10 @@ import Header from '../../../components/Header';
 import ButtonLg from '../../../components/ButtonLg';
 import Select from '../../../components/Select';
 //styles
-import { StatusBar } from 'react-native';
 import { Container } from '../../ElectronicCall/styles';
 import { PageArea, TitleArea } from '../styles';
 import { Instruction } from '../../ElectronicCall/ListClass/styles';
-import { SelectContainer, LabelSelect } from '../../ElectronicPoint/styles';
+import { SelectContainer } from '../../ElectronicPoint/styles';
 import { Errors, Error } from '../../Register/styles';
 
 const Justify = ({ route }) => {
@@ -79,11 +78,7 @@ const Justify = ({ route }) => {
   const { formatDate } = useUtil();
 
   return (
-    <Container>
-      <StatusBar 
-        backgroundColor="#FFFFFF" // fundo branco
-        barStyle="dark-content"   // texto e ícones pretos
-      />
+    <Container style={{ paddingTop: 20 }}>
       <Header themeColor={color}/>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
