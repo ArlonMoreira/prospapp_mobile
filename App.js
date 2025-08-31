@@ -15,7 +15,7 @@ import { store } from './store';
 //Context
 import { LoadingProvider } from './src/contexts/LoadingContext';
 
-const URL = "https://www.prosperefisio.com.br/prospapp"//process.env.EXPO_PUBLIC_API_URL;
+const URL = process.env.EXPO_PUBLIC_API_URL;
 
 export default function App() {
 
