@@ -42,7 +42,7 @@ const Header = ({ themeColor='#65747d', handleLogout, handlePerfil=true }) => {
   }, [userData]);  
   
   return (
-    <Container style={{ marginTop: Platform.OS == 'android' ? 16: 26 }}>
+    <Container style={{ marginTop: Platform.OS == 'android' ? 20: 26 }}>
       <Button onPress={() => navigation.goBack()}>
         <Ionicons name="chevron-back" size={22} color={ themeColor } />
         <Text style={{ color: themeColor }}>Voltar</Text>
@@ -57,7 +57,7 @@ const Header = ({ themeColor='#65747d', handleLogout, handlePerfil=true }) => {
       } 
       {
         handlePerfil && (
-          <PerfilArea onPress={() => navigation.navigate('Perfil')}>
+          <PerfilArea onPress={() => navigation.navigate('Perfil')} style={{ paddingRight: 16 }}>
               <PhotoContainer>
                   {
                       photoPerfil && <Photo source={{uri: photoPerfil}}/>
