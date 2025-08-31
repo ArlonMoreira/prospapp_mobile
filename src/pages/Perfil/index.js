@@ -372,9 +372,9 @@ const Perfil = () => {
                   photoPerfil && <Photo source={{ uri: photoPerfil }}></Photo>
                 }
               </PerfilPhoto>
-              <UploadFileButton style={{backgroundColor:primaryColor}}>
+              {/* <UploadFileButton style={{backgroundColor:primaryColor}}>
                 <Ionicons name='camera' size={32} color={'#fff'}/>
-              </UploadFileButton>                                          
+              </UploadFileButton>                                           */}
             </PerfilPhotoContainer>
             <ProfileName style={{ color:primaryColor }}>{ namePerfil }</ProfileName>
             <ProfileNameSubtitle>{rolePerfil}</ProfileNameSubtitle>                         

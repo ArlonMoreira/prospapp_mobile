@@ -8,7 +8,7 @@ export const Container = styled.View`
 `;
 
 export const PerfilArea = styled.View`
-  height: 180px;
+  height: 200px;
   width: 100%;
 `;
 

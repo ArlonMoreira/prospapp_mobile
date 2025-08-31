@@ -42,16 +42,16 @@ const Header = ({ themeColor='#65747d', handleLogout, handlePerfil=true }) => {
   }, [userData]);  
   
   return (
-    <Container style={{ marginTop: Platform.OS == 'android' ? 10: 26 }}>
+    <Container style={{ marginTop: Platform.OS == 'android' ? 16: 26 }}>
       <Button onPress={() => navigation.goBack()}>
         <Ionicons name="chevron-back" size={22} color={ themeColor } />
         <Text style={{ color: themeColor }}>Voltar</Text>
       </Button>
       {
         handleLogout && (
-          <ButtonExit onPress={() => handleLogout()}>
-            <Ionicons name="exit-outline" size={24} color={ themeColor } />
-            <Text style={{ color: themeColor, fontSize: 20, fontFamily: 'montserrat-medium' }}>Sair</Text>
+          <ButtonExit onPress={() => handleLogout()} style={{ backgroundColor: themeColor }}>
+            <Ionicons name="exit-outline" size={22} color={ '#ffffff' } />
+            <Text style={{ color: '#ffffff' }}>Sair</Text>
           </ButtonExit> 
         )
       } 

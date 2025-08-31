@@ -6,7 +6,6 @@ export const Container = styled.View`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding-right: 16px;
 `;
 
 export const Button = styled.TouchableOpacity`
@@ -30,8 +29,9 @@ export const ButtonExit = styled.TouchableOpacity`
     align-items: center;
     margin: 10px;
     padding: 5px;
-    max-width: 100px;
+    max-width: 115px;
     min-height: 45px;
+    background: #f0f2f5;
     border-radius: 50px;
     gap: 5px;
 `;
