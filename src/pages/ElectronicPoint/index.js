@@ -546,7 +546,7 @@ const ElectronicPoint = () => {
                               backgroundColor={currentRouteName !== 'RegisterLocalPoint' ? '#f0f2f5': primaryColor}
                               iconName={'add-circle'}
                               title={'Adicionar Local'}
-                              action={() => navigation.navigate('RegisterLocalPoint', { color: primaryColor, companyId })}
+                              action={() => navigation.navigate('RegisterLocalPoint', { color: primaryColor, companyId, searchRef })}
                             />
                             <BoxAction
                               color={(currentRouteName == 'EditLocals' || currentRouteName == 'EditLocal') ? '#f0f2f5': primaryColor}

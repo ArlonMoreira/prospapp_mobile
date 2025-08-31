@@ -7,7 +7,7 @@ import InstructionArea from "../../../components/IntroductionArea";
 import MapView, { Marker } from 'react-native-maps';
 import ButtonLg from "../../../components/ButtonLg";
 //Redux
-import { register } from '../../../slices/pointLocalsSlice';
+import { register, resetStateRegister } from '../../../slices/pointLocalsSlice';
 //Hooks
 import { useState, useEffect, useRef } from "react";
 import useKeyboardStatus from "../../../hooks/useKeyboardStatus";
@@ -18,6 +18,7 @@ import { Container } from "../styles";
 import { MapArea, MapSearchArea, MapButtonSearch } from "./styles";
 import { PageArea } from "../../ElectronicCall/styles";
 import { Octicons } from '@expo/vector-icons';
+import { Errors, Error } from '../../Register/styles';
 
 const RegisterLocal = ({ route }) => {
 
@@ -28,23 +29,23 @@ const RegisterLocal = ({ route }) => {
   const keyboardVisible = useKeyboardStatus();
 
   //Dados coletados durante a primeira navegação
-  const { color, companyId } = route.params;  
+  const { color, companyId, searchRef } = route.params;  
   
   const [ currentColor, setCurrentColor ] = useState('');
   const [ currentCompany, setCurrentCompany ] = useState(null);
+  const [ currentSearchRef, setCurrentSearchRef ] = useState(searchRef);
 
   useEffect(() => {
+    dispatch(resetStateRegister());
     setCurrentColor(color);
     setCurrentCompany(companyId);
+    setCurrentSearchRef(searchRef);
 
   }, []);
 
-  //Form
-  const [ name, setName ] = useState('');  
-  const [ iden, setIden ] = useState(null);
-  const [ limitRadius, setLimitRadius ] = useState('100');  
-
-  //Busca textual Mapa
+  /**
+   * Gerar mapa e busca no mapa
+   */
   const mapRef = useRef(null);
 
   const [ markerCoord, setMarkerCoord ] = useState({
@@ -111,7 +112,11 @@ const RegisterLocal = ({ route }) => {
   /**
    * Cadastrar local
    */
-  const { loadingRegister, successRegister } = useSelector(state => state.pointLocals);
+  const [ name, setName ] = useState('');  
+  const [ iden, setIden ] = useState(null);
+  const [ limitRadius, setLimitRadius ] = useState('100');  
+
+  const { loadingRegister, successRegister, errosRegister } = useSelector(state => state.pointLocals);
   
   const handleAddLocal = () => {  
     const data = {
@@ -129,10 +134,13 @@ const RegisterLocal = ({ route }) => {
 
   useEffect(() => { //Quero redirecionar para a página inicial de cadastro quando um novo local for cadastrado.
     if(successRegister){
+      dispatch(resetStateRegister());
       navigate.navigate('ElectronicPoint');
+      currentSearchRef.current && currentSearchRef.current.clear();
+      
     }
 
-  }, [successRegister])
+  }, [successRegister]);
 
   return (
     <Container style={{ paddingTop: 20 }}>
@@ -146,6 +154,11 @@ const RegisterLocal = ({ route }) => {
         <ScrollView scrollEventThrottle={16}> 
           <InstructionArea text={'Abaixo informe os dados de identificação do local de ponto'}/>
           <InputForm label='Nome do Local/Empresa' value={name} setValue={setName} color={currentColor} pointerColor={currentColor}/>
+          <Errors>
+           {
+              errosRegister.name && errosRegister.name.map((error, i) => <Error key={i}>{error}</Error>)
+           }
+          </Errors>          
           <InputForm label='CNPJ do Local/Empresa' mask={'cnpj'} value={iden} setValue={setIden} color={currentColor} pointerColor={currentColor}/>        
           <InstructionArea marginTop={20} text={'Defina o raio limite para marcação de ponto (em metros). Este valor representa o perímetro de tolerância para registros. Colaboradores fora desse raio não poderão realizar a marcação de ponto.'}/>      
           <InputForm label='Raio (Metros)' value={limitRadius} setValue={setLimitRadius} color={currentColor} pointerColor={currentColor} keyboardType='numeric'/>        

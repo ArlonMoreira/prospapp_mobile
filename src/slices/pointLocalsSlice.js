@@ -7,7 +7,8 @@ const initialState = {
     data: [],
     loading: true,
     loadingRegister: false,
-    successRegister: false
+    successRegister: false,
+    errosRegister: []
 };
 
 export const list = createAsyncThunk(
@@ -37,7 +38,7 @@ export const register = createAsyncThunk(
             data,
             token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU2OTgyMTA1LCJpYXQiOjE3NTY1NTAxMDUsImp0aSI6ImMyNjkyMTg5ZTY5MTQwYjA5ZGZiM2IyNzNlZDMxMjkwIiwidXNlcl9pZCI6MX0.ecqDjsl8DigEwrjLYcNiWv_7H_1GaTyrZF6nL67GaF8"
         });
-        console.log(response)
+
         if(response.success){
             return response;
         } else {
@@ -53,7 +54,12 @@ export const pointLocalsSlice = createSlice({
         resetState: (state) => {
             state.loading = true;
             state.data = [];
-        },    
+        },
+        resetStateRegister: (state) => {
+            state.successRegister = false;
+            state.loadingRegister = false;
+            state.errosRegister = [];
+        }   
     },
     extraReducers: (builder) => {
         builder
@@ -82,14 +88,15 @@ export const pointLocalsSlice = createSlice({
                 state.data.push(action.payload.data);
             })
             //Falha ao cadastrar local
-            .addCase(register.rejected, (state) => {
+            .addCase(register.rejected, (state, action) => {
                 state.loadingRegister = false;
                 state.successRegister = false;
+                state.errosRegister = action.payload.data;
             })                                        
     }
 });
 
-export const { resetState } = pointLocalsSlice.actions;
+export const { resetState, resetStateRegister } = pointLocalsSlice.actions;
 export default pointLocalsSlice.reducer;
 
 
