@@ -1,4 +1,4 @@
-import React from 'react'
+import { Platform } from 'react-native';
 //Hooks
 import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 //Styles
 import { Container, Button, ButtonExit, Text } from './styles';
 import { Ionicons } from '@expo/vector-icons';
-import { PerfilArea, PerfilLabel, NameArea, RoleArea, RoleText, PhotoContainer, Photo } from '../../pages/Home/styles';
+import { PerfilArea, PhotoContainer, Photo } from '../../pages/Home/styles';
 
 const URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -42,7 +42,7 @@ const Header = ({ themeColor='#65747d', handleLogout, handlePerfil=true }) => {
   }, [userData]);  
   
   return (
-    <Container>
+    <Container style={{ marginTop: Platform.OS == 'android' ? 10: 26 }}>
       <Button onPress={() => navigation.goBack()}>
         <Ionicons name="chevron-back" size={22} color={ themeColor } />
         <Text style={{ color: themeColor }}>Voltar</Text>

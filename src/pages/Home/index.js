@@ -9,10 +9,8 @@ import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { View } from 'react-native';
 //Styles
-import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
-    Container,
     Header,
     PerfilArea,
     Logo,
@@ -25,11 +23,7 @@ import {
     Body,
     ScrollArea,
     TitleArea,
-    Title,
-    ModuleContainer,
-    ImageContent,
-    TextArea,
-    TitleModule    
+    Title  
 } from './styles';
 
 const URL = process.env.EXPO_PUBLIC_API_URL;

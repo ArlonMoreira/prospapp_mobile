@@ -34,7 +34,8 @@ import { Container } from './styles';
 import { SelectContainer } from './styles';
 //PDF
 import * as Print from 'expo-print';
-import { shareAsync } from 'expo-sharing';
+import * as FileSystem from 'expo-file-system';
+import { shareAsync } from 'expo-sharing';0
 
 const URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -144,22 +145,6 @@ const ElectronicPoint = () => {
     );
 
   }, [dataFiltered, currentRouteName]); //Quando atualizar o dado vai renavegar pra página que estiver selecionada
-
-  //Scroll
-  const scrollOffsetY = useRef(0);
-  const debounceTimeout = useRef(null);
-  const nameRef = useRef(null);
-  
-  const handleScroll = (event) => {
-    const currentOffsetY = event.nativeEvent.contentOffset.y;
-    const isAtTop = currentOffsetY == 0;
-    scrollOffsetY.current = currentOffsetY;
-  
-    if (debounceTimeout.current) {
-      clearTimeout(debounceTimeout.current);
-    }
-
-  };
 
   //Gerar relatório
   const [ showModalReport, setShowModalReport ] = useState(false);
@@ -424,28 +409,39 @@ const ElectronicPoint = () => {
   };
 
   useEffect(() => {
-    if(successReport){
+    if (!successReport) return;
 
+    const user = usersOptions.length > 0 && usersOptions.filter(user => user.value == userSelected)[0].label;
+
+    const gerarECompartilhar = async () => {
       const { html } = printToFile(dataReport);
 
-      const sharePdf = async(html) => {
-        const { uri } = await Print.printToFileAsync({ html });
-  
-        await shareAsync(uri, { 
-          UTI: '.pdf',
-          mimeType: 'application/pdf'
-        });
+      // Gera o PDF (em cache, com nome aleatório)
+      const { uri } = await Print.printToFileAsync({ html });
 
-        dispatch(resetReportState()); //Reiniciar o estado do relatório quando o mesmo for gerado com sucesso
-        closeModalReport();
+      // Monta um nome seguro p/ arquivo
+      const nomeDesejado = `Relatorio_ponto_${user.replaceAll(' ','_')}_${yearSelected}_${monthSelected}.pdf`;
 
-      };
+      // Define destino com o nome desejado
+      const destino = `${FileSystem.documentDirectory}${nomeDesejado}`;
 
-      sharePdf(html);
+      // Move/renomeia do cache para documents
+      await FileSystem.moveAsync({ from: uri, to: destino });
 
-    }
+      // Compartilha a partir do novo caminho (com o nome correto)
+      await shareAsync(destino, {
+        UTI: '.pdf',
+        mimeType: 'application/pdf',
+      });
 
-  }, [dataReport]);
+      dispatch(resetReportState());
+      closeModalReport();
+
+    };
+
+    gerarECompartilhar().catch(console.error);
+
+  }, [successReport, dataReport]);
 
   return (
     <>
@@ -465,16 +461,26 @@ const ElectronicPoint = () => {
                 <ModalView>
                   <ModalContent>
                     <ModalTitle style={{color: primaryColor}}>Gerar relatório de ponto</ModalTitle>
-                    <ModalResume>Selecione o usuário e o período que deseja gerar o relatório.</ModalResume>
-                    <View style={{width: '100%', marginTop: 20}}>
-                      <Select 
-                        label={'Usuário'}
-                        color={ primaryColor }
-                        options={ usersOptions }
-                        setSelected={ setUserSlelected }
-                        zIndex={100}
-                      />                      
-                    </View>
+                    {
+                      staffPerfil ? (
+                        <ModalResume>Selecione o usuário e o período que deseja gerar o relatório.</ModalResume>
+                      ) : (
+                        <ModalResume style={{ marginBottom:20 }}>Selecione o período que deseja gerar o relatório.</ModalResume>
+                      )
+                    }
+                    {
+                      staffPerfil && (
+                        <View style={{width: '100%', marginTop: 20}}>
+                          <Select 
+                            label={'Usuário'}
+                            color={ primaryColor }
+                            options={ usersOptions }
+                            setSelected={ setUserSlelected }
+                            zIndex={100}
+                          />                      
+                        </View>
+                      )
+                    }
                     <SelectContainer>
                       <View style={{ width: '49%' }}>
                         <Select 

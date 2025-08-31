@@ -23,6 +23,7 @@ import SearchArea from '../../components/SearchArea';
 import { useSelector, useDispatch } from 'react-redux';
 import { register, list, call, change, remove, resetRegisterForm, resetChangeForm, resetState } from '../../slices/studentSlice';
 import { generated, resetReportState } from '../../slices/reportSlice';
+import useUtil from '../../hooks/useUtil';
 //Context
 import { LoadingContext } from '../../contexts/LoadingContext';
 //Navigation
@@ -51,7 +52,8 @@ import { Error, Errors } from '../Register/styles';
 import { SelectContainer } from '../ElectronicPoint/styles';
 //PDF
 import * as Print from 'expo-print';
-import { shareAsync } from 'expo-sharing';
+import * as FileSystem from 'expo-file-system';
+import { shareAsync } from 'expo-sharing';0
 
 const Stack = createNativeStackNavigator();
 
@@ -60,6 +62,8 @@ const URL = process.env.EXPO_PUBLIC_API_URL;
 const formatDate = dateStr => dateStr.split("-").reverse().join("/");
 
 const Call = ({ route }) => {
+
+  const { ordenarKeysObjectAsc } = useUtil();
 
   const keyboardVisible = useKeyboardStatus();  
 
@@ -462,16 +466,17 @@ const Call = ({ route }) => {
                     <li>Data de emissão: ${currentDate} ${currentHour}</li>
                     <li>Usuário que gerou o relatório: ${nameUser}</li>
                     <li>Quantidade de datas: ${dates_lengths}</li>
+                    <li>Período selecionado: ${yearSelected}/${monthSelected}</li>
                     <li>Média geral de participação: ${mean}</li>
                 </ul>
             </div>
         </div>
           ${
             tables.map((table) => {
-
-              const rows = Object.keys(table);
-              const columns = Object.keys(table[rows[0]]);
-
+              const orderTable = ordenarKeysObjectAsc(table);
+              const rows = Object.keys(orderTable);
+              const columns = Object.keys(orderTable[rows[0]]);
+              
               return `
                 <table>
                   <thead>
@@ -530,29 +535,38 @@ const Call = ({ route }) => {
   }; 
 
   //Caso for gerado com sucesso, irá fechar o modal e reiniciar os estados;
-  useEffect(()=>{
-    if(successReport){
+  useEffect(() => {
+    if (!successReport) return;
 
+    const gerarECompartilhar = async () => {
       const { html } = printToFile(dataReport);
 
-      const sharePdf = async(html) => {
-        const { uri } = await Print.printToFileAsync({ html });
-  
-        await shareAsync(uri, { 
-          UTI: '.pdf',
-          mimeType: 'application/pdf'
-        });
+      // Gera o PDF (em cache, com nome aleatório)
+      const { uri } = await Print.printToFileAsync({ html });
 
-        dispatch(resetReportState()); //Reiniciar o estado do relatório quando o mesmo for gerado com sucesso
-        closeModalReport();
+      // Monta um nome seguro p/ arquivo
+      const nomeDesejado = `Chamada_turma_${ classNameSelected }_${ yearSelected }_${ monthSelected }.pdf`;
 
-      };
+      // Define destino com o nome desejado
+      const destino = `${FileSystem.documentDirectory}${nomeDesejado}`;
 
-      sharePdf(html);
+      // Move/renomeia do cache para documents
+      await FileSystem.moveAsync({ from: uri, to: destino });
 
-    }
+      // Compartilha a partir do novo caminho (com o nome correto)
+      await shareAsync(destino, {
+        UTI: '.pdf',
+        mimeType: 'application/pdf',
+      });
 
-  }, [dataReport]);
+      dispatch(resetReportState());
+      closeModalReport();
+
+    };
+
+    gerarECompartilhar().catch(console.error);
+
+  }, [successReport, dataReport]);
 
   useEffect(()=>{
     //Limpar estudante assim que abre a página
@@ -748,7 +762,7 @@ const Call = ({ route }) => {
                   <ModalContent>
                     <ModalTitle style={{color: primaryColor}}>Gerar relatório</ModalTitle>
                     <ModalResume>Selecione o período que desejar para gerar o relatório de presença.</ModalResume>
-                    <SelectContainer>
+                    <SelectContainer style={{ marginTop: 20 }}>
                       <View style={{ width: '49%' }}>
                         <Select 
                           label={'Ano'}

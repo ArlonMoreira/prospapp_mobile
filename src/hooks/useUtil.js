@@ -18,6 +18,22 @@ const useUtil = () => {
         });
 
     },
+    ordenarKeysObjectAsc: (obj) => {
+      return Object.keys(obj)
+        .sort((a, b) => a.localeCompare(b, "pt-BR"))
+        .reduce((acc, key) => {
+          acc[key] = obj[key];
+          return acc;
+        }, {});
+    },
+    ordenarKeysObjectDesc: (obj) => {
+      return Object.keys(obj)
+        .sort((a, b) => b.localeCompare(a, "pt-BR"))
+        .reduce((acc, key) => {
+          acc[key] = obj[key];
+          return acc;
+        }, {});
+    },    
     formatDate: (date) => {
       if (!date) return ''; // Se for null ou undefined
       const d = new Date(date); // Garante que seja Date

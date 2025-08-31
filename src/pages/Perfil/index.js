@@ -22,7 +22,6 @@ import { updateUsersManager } from '../../slices/managerSlice';
 //Navigation
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 //Styles
-import { StatusBar } from 'expo-status-bar';
 import {  
   Container,
   PerfilArea,
@@ -223,11 +222,7 @@ const Perfil = () => {
   };
 
   return (
-    <Container>
-      <StatusBar 
-        translucent
-        backgroundColor="transparent"
-      />          
+    <Container>        
       <Header themeColor={primaryColor} handleLogout={handleLogout} handlePerfil={false}/>
       {
         showModal && <Fade/>

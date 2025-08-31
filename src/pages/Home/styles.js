@@ -7,14 +7,14 @@ export const Container = styled.View`
 
 export const Header = styled.View`
     width: 100%;
-    height: 100px;
+    height: 126px;
     background: #fff;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
     padding-left: 10px;
     padding-right: 10px;
-    padding-top: 20px;
+    padding-top: 40px;
 `;
 
 export const Logo = styled(Image).attrs({
