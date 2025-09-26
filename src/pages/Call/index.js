@@ -51,11 +51,9 @@ import { SimpleLineIcons, FontAwesome } from '@expo/vector-icons';
 import { Error, Errors } from '../Register/styles';
 import { SelectContainer } from '../ElectronicPoint/styles';
 //PDF
-import ExcelJS from "exceljs";
+import * as FileSystem from 'expo-file-system/legacy'; // <-- usa API legada
 import * as Print from 'expo-print';
-import * as FileSystem from "expo-file-system";
-import * as Sharing from "expo-sharing";
-import { shareAsync } from 'expo-sharing';0
+import { shareAsync } from 'expo-sharing';
 
 const Stack = createNativeStackNavigator();
 
@@ -269,14 +267,14 @@ const Call = ({ route }) => {
   };
 
   //Gerar gelatório
-  const handleReportGenerated = (type) => {
+  const handleReportGenerated = () => {
     const data = {
       classId: classIdSelected,
       year: yearSelected,
       month: monthSelected
     };
 
-    setTypeFile(type);
+    //setTypeFile(type);
     dispatch(generated(data));
 
   };
@@ -622,54 +620,43 @@ const Call = ({ route }) => {
 
   }; 
 
-  //Caso for gerado com sucesso, irá fechar o modal e reiniciar os estados;
   useEffect(() => {
     if (!successReport) return;
 
-    const gerarECompartilharPDF = async () => {
+    const gerarECompartilhar = async () => {
       const { html } = printToFile(dataReport);
 
-      // Gera o PDF (em cache, com nome aleatório)
-      const { uri } = await Print.printToFileAsync({ 
+      // gera o PDF (cache/temp) e retorna uri
+      const { uri } = await Print.printToFileAsync({
         html,
-        orientation: 'landscape'  // <<< força o relatório horizontal
+        orientation: 'landscape',
       });
 
-      // Monta um nome seguro p/ arquivo
-      const nomeDesejado = `Chamada_turma_${ classNameSelected }_${ yearSelected }_${ monthSelected }.pdf`;
-
-      // Define destino com o nome desejado
+      const nomeDesejado = `Chamada_turma_${classNameSelected}_${yearSelected}_${monthSelected}.pdf`;
       const destino = `${FileSystem.documentDirectory}${nomeDesejado}`;
 
-      // Move/renomeia do cache para documents
-      await FileSystem.moveAsync({ from: uri, to: destino });
-
-      // Compartilha a partir do novo caminho (com o nome correto)
-      await shareAsync(destino, {
-        UTI: '.pdf',
-        mimeType: 'application/pdf',
-      });
-
-    };
-
-    const gerarECompartilharXlsx = async () => {
       try {
-        await gerarExcel(dataReport);
+        // move para a pasta documentDirectory
+        await FileSystem.moveAsync({
+          from: uri,
+          to: destino,
+        });
+
+        // compartilhar usando o destino
+        await shareAsync(destino, {
+          UTI: '.pdf',
+          mimeType: 'application/pdf',
+        });
 
         dispatch(resetReportState());
         closeModalReport();
-      } catch (error) {
-        console.error("Erro ao gerar Excel:", error);
+      } catch (err) {
+        console.error('Erro ao mover arquivo (legacy API):', err);
       }
-    };    
-    
-    if(typeFile === 'pdf') gerarECompartilharPDF().catch(console.error);
-    if(typeFile === 'xlsx') gerarECompartilharXlsx();
+    };
 
-    dispatch(resetReportState());
-    closeModalReport();    
-
-  }, [successReport, dataReport, typeFile]);
+    gerarECompartilhar().catch(console.error);
+  }, [successReport, dataReport]);    
 
   useEffect(()=>{
     //Limpar estudante assim que abre a página
@@ -887,11 +874,12 @@ const Call = ({ route }) => {
                       </View>
                     </SelectContainer>
                     <View style={{marginTop: 20}}>
-                      <ButtonLg icon='file-pdf-o' title='Gerar PDF' disabled={loadingReport} color={'#dc3129'} fontColor={'#fff'} largeWidth='300px' action={() => handleReportGenerated('pdf')} />
+                      <ButtonLg icon='file-pdf-o' title='Salvar e compartilhar' loading={loadingReport} color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleReportGenerated}/>
+                      {/* <ButtonLg icon='file-pdf-o' title='Gerar Arquivo' disabled={primaryColor} color={'#dc3129'} fontColor={'#fff'} largeWidth='300px' action={() => handleReportGenerated('pdf')} /> */}
                     </View>
-                    <View style={{marginTop: 10}}>
+                    {/* <View style={{marginTop: 10}}>
                       <ButtonLg icon='file-excel-o' title='Gerar Planilha' disabled={loadingReport} color={'#1d6b40'} fontColor={'#fff'} largeWidth='300px' action={() => handleReportGenerated('xlsx')} />
-                    </View>                                                                                 
+                    </View>                                                                                  */}
                   </ModalContent>
                 </ModalView>
               </TouchableWithoutFeedback>

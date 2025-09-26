@@ -33,9 +33,9 @@ import { ToolsArea } from '../ElectronicCall/styles';
 import { Container } from './styles';
 import { SelectContainer } from './styles';
 //PDF
+import * as FileSystem from 'expo-file-system/legacy'; // <-- usa API legada
 import * as Print from 'expo-print';
-import * as FileSystem from 'expo-file-system';
-import { shareAsync } from 'expo-sharing';0
+import { shareAsync } from 'expo-sharing';
 
 const URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -411,39 +411,43 @@ const ElectronicPoint = () => {
   useEffect(() => {
     if (!successReport) return;
 
-    const user = usersOptions.length > 0 && usersOptions.filter(user => user.value == userSelected)[0].label;
+    const user =
+      usersOptions.length > 0 &&
+      usersOptions.filter((user) => user.value == userSelected)[0].label;
 
     const gerarECompartilhar = async () => {
       const { html } = printToFile(dataReport);
 
-      // Gera o PDF (em cache, com nome aleatório)
-      const { uri } = await Print.printToFileAsync({ 
+      // gera o PDF (cache/temp) e retorna uri
+      const { uri } = await Print.printToFileAsync({
         html,
-        orientation: 'landscape'  // <<< força o relatório horizontal
+        orientation: 'landscape',
       });
 
-      // Monta um nome seguro p/ arquivo
-      const nomeDesejado = `Relatorio_ponto_${user.replaceAll(' ','_')}_${yearSelected}_${monthSelected}.pdf`;
-
-      // Define destino com o nome desejado
+      const nomeDesejado = `Relatorio_ponto_${user.replaceAll(' ', '_')}_${yearSelected}_${monthSelected}.pdf`;
       const destino = `${FileSystem.documentDirectory}${nomeDesejado}`;
 
-      // Move/renomeia do cache para documents
-      await FileSystem.moveAsync({ from: uri, to: destino });
+      try {
+        // move para a pasta documentDirectory
+        await FileSystem.moveAsync({
+          from: uri,
+          to: destino,
+        });
 
-      // Compartilha a partir do novo caminho (com o nome correto)
-      await shareAsync(destino, {
-        UTI: '.pdf',
-        mimeType: 'application/pdf',
-      });
+        // compartilhar usando o destino
+        await shareAsync(destino, {
+          UTI: '.pdf',
+          mimeType: 'application/pdf',
+        });
 
-      dispatch(resetReportState());
-      closeModalReport();
-
+        dispatch(resetReportState());
+        closeModalReport();
+      } catch (err) {
+        console.error('Erro ao mover arquivo (legacy API):', err);
+      }
     };
 
     gerarECompartilhar().catch(console.error);
-
   }, [successReport, dataReport]);
 
   return (
