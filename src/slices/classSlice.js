@@ -22,7 +22,7 @@ export const register = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().classRegister({
             data,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU5MjY4MTM2LCJpYXQiOjE3NTg4MzYxMzYsImp0aSI6ImZiYWFkN2ZjNThlMTQxZTlhMGQxOWI0YWJkZjQ2NTg3IiwidXNlcl9pZCI6MX0.acXiUBPtmbN0nbZTkti9S752NKFPcj4g93e433BZ8Js"
         });
         
         if(response.success){
@@ -40,7 +40,7 @@ export const list = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().classList({
             company,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU5MjY4MTM2LCJpYXQiOjE3NTg4MzYxMzYsImp0aSI6ImZiYWFkN2ZjNThlMTQxZTlhMGQxOWI0YWJkZjQ2NTg3IiwidXNlcl9pZCI6MX0.acXiUBPtmbN0nbZTkti9S752NKFPcj4g93e433BZ8Js"
         });
 
         if(response.success){
@@ -59,7 +59,7 @@ export const change = createAsyncThunk(
         const response = await useRequest().classChange({
             classId,
             data,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU5MjY4MTM2LCJpYXQiOjE3NTg4MzYxMzYsImp0aSI6ImZiYWFkN2ZjNThlMTQxZTlhMGQxOWI0YWJkZjQ2NTg3IiwidXNlcl9pZCI6MX0.acXiUBPtmbN0nbZTkti9S752NKFPcj4g93e433BZ8Js"
         });
 
         if(response.success){
@@ -77,7 +77,7 @@ export const remove = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().classRemove({
             classId,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU5MjY4MTM2LCJpYXQiOjE3NTg4MzYxMzYsImp0aSI6ImZiYWFkN2ZjNThlMTQxZTlhMGQxOWI0YWJkZjQ2NTg3IiwidXNlcl9pZCI6MX0.acXiUBPtmbN0nbZTkti9S752NKFPcj4g93e433BZ8Js"
         });
 
         if(response.success){

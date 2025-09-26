@@ -51,8 +51,10 @@ import { SimpleLineIcons, FontAwesome } from '@expo/vector-icons';
 import { Error, Errors } from '../Register/styles';
 import { SelectContainer } from '../ElectronicPoint/styles';
 //PDF
+import ExcelJS from "exceljs";
 import * as Print from 'expo-print';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
 import { shareAsync } from 'expo-sharing';0
 
 const Stack = createNativeStackNavigator();
@@ -257,6 +259,8 @@ const Call = ({ route }) => {
   //Meses a serem filtrados
   const [ monthsOptions, setMonthsOptions ] = useState([]);
   const [ monthSelected, setMonthSelected ] = useState(null);
+  //Tipo de arquivo
+  const [ typeFile, setTypeFile ] = useState('pdf');
 
   const closeModalReport = () => {
     if(!loadingReport){
@@ -265,15 +269,89 @@ const Call = ({ route }) => {
   };
 
   //Gerar gelatório
-  const handleReportGenerated = () => {
+  const handleReportGenerated = (type) => {
     const data = {
       classId: classIdSelected,
       year: yearSelected,
       month: monthSelected
     };
-    
+
+    setTypeFile(type);
     dispatch(generated(data));
 
+  };
+
+  // helper para converter ArrayBuffer em Base64
+  function arrayBufferToBase64(buffer) {
+    let binary = "";
+    const bytes = new Uint8Array(buffer);
+    const chunkSize = 0x8000;
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+      const chunk = bytes.subarray(i, i + chunkSize);
+      binary += String.fromCharCode.apply(null, chunk);
+    }
+    return btoa(binary);
+  }
+
+  const gerarExcel = async (dataReport) => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Relatório de Presença");
+
+    // Cabeçalho com informações do relatório
+    worksheet.addRow(["Relatório de presença"]);
+    worksheet.addRow([`Turma: ${dataReport.classNameSelected}`]);
+    worksheet.addRow([`Data de emissão: ${dataReport.currentDate} ${dataReport.currentHour}`]);
+    worksheet.addRow([`Usuário: ${dataReport.nameUser}`]);
+    worksheet.addRow([`Quantidade de datas: ${dataReport.dates_lengths}`]);
+    worksheet.addRow([`Período: ${dataReport.yearSelected}/${dataReport.monthSelected}`]);
+    worksheet.addRow([`Média geral de participação: ${dataReport.mean}`]);
+    worksheet.addRow([]);
+
+    // Para cada tabela dentro de tables
+    dataReport.tables.forEach((table) => {
+      const orderTable = ordenarKeysObjectAsc(table);
+      const rows = Object.keys(orderTable);
+      const columns = Object.keys(orderTable[rows[0]]);
+
+      // Cabeçalho
+      const header = ["Aluno", ...columns];
+      worksheet.addRow(header);
+
+      // Linhas
+      rows.forEach((row) => {
+        const valores = [row];
+        columns.forEach((col) => {
+          if (col === "(%) presença") {
+            valores.push(dataReport.filteredData[row][col]);
+          } else {
+            const valor = dataReport.filteredData[row][col];
+            valores.push(valor == null ? "-" : valor ? "Presente" : "Falta");
+          }
+        });
+        worksheet.addRow(valores);
+      });
+
+      worksheet.addRow([]);
+    });
+
+    // Nome do arquivo
+    const fileName = `Chamada_turma_${dataReport.classNameSelected}_${dataReport.yearSelected}_${dataReport.monthSelected}.xlsx`;
+    const fileUri = FileSystem.documentDirectory + fileName;
+
+    // Grava no FileSystem
+    const buffer = await workbook.xlsx.writeBuffer();
+    await FileSystem.writeAsStringAsync(fileUri, arrayBufferToBase64(buffer), {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+
+    // Compartilhar
+    await Sharing.shareAsync(fileUri, {
+      mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      dialogTitle: "Compartilhar planilha",
+      UTI: "com.microsoft.excel.xlsx",
+    });
+
+    return fileUri;
   };
 
   const printToFile = (data) => {
@@ -341,37 +419,44 @@ const Call = ({ route }) => {
     //Quantidade de datas
     const dates_lengths = Object.keys(filteredData[Object.keys(filteredData)[0]]).length - 1;   
 
-    /**End: Remover todas as datas que não possui nenhum registro de chamada */    
+    let tables = [];
 
-    const breakObjectInParts = (o, daysPerPart) => {
-      const keys = Object.keys(o);
-      let result = [];
-      for (let i = 0; i < keys.length; i += daysPerPart) {
-        const part = keys.slice(i, i + daysPerPart).reduce((acc, key) => {
-          acc[key] = o[key];
-          return acc;
-        }, {});
-        result.push(part);
-      }
-      return result;
-    };
-    
-    const obj_n = {};
-    
-    Object.keys(filteredData).forEach((al) => {
-      obj_n[al] = breakObjectInParts(filteredData[al], 6);
-    }); 
-  
-    const tables = []
+    if (dates_lengths > 22){
+      /**End: Remover todas as datas que não possui nenhum registro de chamada */    
 
-    Object.keys(obj_n).forEach((key) => {
-      obj_n[key].forEach((x, i) => {
-        if (!tables[i]) {
-          tables[i] = {};  // Cria o objeto vazio para a posição i
+      const breakObjectInParts = (o, daysPerPart) => {
+        const keys = Object.keys(o);
+        let result = [];
+        for (let i = 0; i < keys.length; i += daysPerPart) {
+          const part = keys.slice(i, i + daysPerPart).reduce((acc, key) => {
+            acc[key] = o[key];
+            return acc; 
+          }, {});
+          result.push(part);
         }
-        tables[i][key] = x;  // Atribui o valor para a posição i e chave correspondente
+        return result;
+      };
+      
+      const obj_n = {};
+      
+      Object.keys(filteredData).forEach((al) => {
+        obj_n[al] = breakObjectInParts(filteredData[al], 22);
       });
-    });
+
+      Object.keys(obj_n).forEach((key) => {
+        obj_n[key].forEach((x, i) => {
+          if (!tables[i]) {
+            tables[i] = {};  // Cria o objeto vazio para a posição i
+          }
+          tables[i][key] = x;  // Atribui o valor para a posição i e chave correspondente
+        });
+      });      
+      
+
+    } else {
+      tables = [filteredData];
+
+    }
 
     const html = `
     <html lang="en">
@@ -381,6 +466,9 @@ const Call = ({ route }) => {
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>Tabela PDF</title>
           <style>
+            @page {
+              size: A4 landscape;
+            }
             body {
               font-family: Arial, sans-serif;
               font-size: 12px;
@@ -390,20 +478,20 @@ const Call = ({ route }) => {
             table {
               width: 100%;
               border-collapse: collapse;
-              font-size: 0.9em;
+              font-size: ${dates_lengths > 22 ? '0.66':'0.76'}em;
               font-family: sans-serif;
               margin-top: 20px;
             }
 
             table thead tr {
-              background-color: ${primaryColor};
+              background-color: #5c7977;
               color: #ffffff;
               text-align: left;
             }
 
             table th,
             table td {
-              padding: 12px 15px;
+              padding: 5px 15px;
             }
 
             table tbody tr {
@@ -415,12 +503,12 @@ const Call = ({ route }) => {
             }
 
             table tbody tr:last-of-type {
-              border-bottom: 2px solid ${primaryColor};
+              border-bottom: 2px solid #5c7977;
             }
 
             table tbody tr.active-row {
               font-weight: bold;
-              color: ${primaryColor};
+              color: #5c7977;
             }
 
             .report-head {
@@ -538,11 +626,14 @@ const Call = ({ route }) => {
   useEffect(() => {
     if (!successReport) return;
 
-    const gerarECompartilhar = async () => {
+    const gerarECompartilharPDF = async () => {
       const { html } = printToFile(dataReport);
 
       // Gera o PDF (em cache, com nome aleatório)
-      const { uri } = await Print.printToFileAsync({ html });
+      const { uri } = await Print.printToFileAsync({ 
+        html,
+        orientation: 'landscape'  // <<< força o relatório horizontal
+      });
 
       // Monta um nome seguro p/ arquivo
       const nomeDesejado = `Chamada_turma_${ classNameSelected }_${ yearSelected }_${ monthSelected }.pdf`;
@@ -559,14 +650,26 @@ const Call = ({ route }) => {
         mimeType: 'application/pdf',
       });
 
-      dispatch(resetReportState());
-      closeModalReport();
-
     };
 
-    gerarECompartilhar().catch(console.error);
+    const gerarECompartilharXlsx = async () => {
+      try {
+        await gerarExcel(dataReport);
 
-  }, [successReport, dataReport]);
+        dispatch(resetReportState());
+        closeModalReport();
+      } catch (error) {
+        console.error("Erro ao gerar Excel:", error);
+      }
+    };    
+    
+    if(typeFile === 'pdf') gerarECompartilharPDF().catch(console.error);
+    if(typeFile === 'xlsx') gerarECompartilharXlsx();
+
+    dispatch(resetReportState());
+    closeModalReport();    
+
+  }, [successReport, dataReport, typeFile]);
 
   useEffect(()=>{
     //Limpar estudante assim que abre a página
@@ -784,8 +887,11 @@ const Call = ({ route }) => {
                       </View>
                     </SelectContainer>
                     <View style={{marginTop: 20}}>
-                      <ButtonLg title='Salvar e compartilhar' loading={loadingReport} color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleReportGenerated}/>
-                    </View>                                                           
+                      <ButtonLg icon='file-pdf-o' title='Gerar PDF' disabled={loadingReport} color={'#dc3129'} fontColor={'#fff'} largeWidth='300px' action={() => handleReportGenerated('pdf')} />
+                    </View>
+                    <View style={{marginTop: 10}}>
+                      <ButtonLg icon='file-excel-o' title='Gerar Planilha' disabled={loadingReport} color={'#1d6b40'} fontColor={'#fff'} largeWidth='300px' action={() => handleReportGenerated('xlsx')} />
+                    </View>                                                                                 
                   </ModalContent>
                 </ModalView>
               </TouchableWithoutFeedback>

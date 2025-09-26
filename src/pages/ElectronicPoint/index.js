@@ -417,7 +417,10 @@ const ElectronicPoint = () => {
       const { html } = printToFile(dataReport);
 
       // Gera o PDF (em cache, com nome aleatório)
-      const { uri } = await Print.printToFileAsync({ html });
+      const { uri } = await Print.printToFileAsync({ 
+        html,
+        orientation: 'landscape'  // <<< força o relatório horizontal
+      });
 
       // Monta um nome seguro p/ arquivo
       const nomeDesejado = `Relatorio_ponto_${user.replaceAll(' ','_')}_${yearSelected}_${monthSelected}.pdf`;

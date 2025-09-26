@@ -4,10 +4,12 @@ import { ActivityIndicator } from 'react-native';
 import { 
     Container,
     Text,
-    Content
+    Content,
+    TextArea
 } from './styles';
+import { FontAwesome } from '@expo/vector-icons';
 
-const ButtonLg = ({title, action, loading=false, disabled=false, color='#fff', fontColor='#16443E', largeWidth=292}) => {
+const ButtonLg = ({title, action, loading=false, disabled=false, color='#fff', fontColor='#16443E', largeWidth=292, icon, iconSize=22, iconColor='#fff'}) => {
   
   const [styles, setStyles] = useState({ backgroundColor: color, width: largeWidth, opacity: 1 });
 
@@ -26,7 +28,12 @@ const ButtonLg = ({title, action, loading=false, disabled=false, color='#fff', f
           loading ? (
             <ActivityIndicator size="small" color={fontColor}/>
           ): (
-            <Text style={{color: fontColor}}>{title}</Text>            
+            <TextArea>
+              {
+                icon && <FontAwesome name={icon} size={iconSize} color={iconColor} />
+              }
+              <Text style={{color: fontColor}}>{title}</Text>             
+            </TextArea>
           )
         }
       </Content>

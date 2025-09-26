@@ -31,7 +31,7 @@ export const list = createAsyncThunk(
         const response = await useRequest().studentList({
             classId,
             date: `${ano}${mes}${dia}`,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU5MjY4MTM2LCJpYXQiOjE3NTg4MzYxMzYsImp0aSI6ImZiYWFkN2ZjNThlMTQxZTlhMGQxOWI0YWJkZjQ2NTg3IiwidXNlcl9pZCI6MX0.acXiUBPtmbN0nbZTkti9S752NKFPcj4g93e433BZ8Js"
         });
 
         if(response.success){
@@ -48,7 +48,7 @@ export const register = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().studentRegister({
             data,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU5MjY4MTM2LCJpYXQiOjE3NTg4MzYxMzYsImp0aSI6ImZiYWFkN2ZjNThlMTQxZTlhMGQxOWI0YWJkZjQ2NTg3IiwidXNlcl9pZCI6MX0.acXiUBPtmbN0nbZTkti9S752NKFPcj4g93e433BZ8Js"
         });
 
         if(response.success){
@@ -63,10 +63,10 @@ export const register = createAsyncThunk(
 export const call = createAsyncThunk(
     'student/call',
     async(data, {getState, rejectWithValue}) => {
-        const userAuth = await getState().auth.userAuth; //userAuth.token
+        const userAuth = await getState().auth.userAuth; //"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU5MjY4MTM2LCJpYXQiOjE3NTg4MzYxMzYsImp0aSI6ImZiYWFkN2ZjNThlMTQxZTlhMGQxOWI0YWJkZjQ2NTg3IiwidXNlcl9pZCI6MX0.acXiUBPtmbN0nbZTkti9S752NKFPcj4g93e433BZ8Js"
         const response = await useRequest().callRegister({
             data,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU5MjY4MTM2LCJpYXQiOjE3NTg4MzYxMzYsImp0aSI6ImZiYWFkN2ZjNThlMTQxZTlhMGQxOWI0YWJkZjQ2NTg3IiwidXNlcl9pZCI6MX0.acXiUBPtmbN0nbZTkti9S752NKFPcj4g93e433BZ8Js"
         });
 
         if(response.success){
@@ -84,7 +84,7 @@ export const change = createAsyncThunk(
         const response = await useRequest().studentChange({
             student,
             data,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU5MjY4MTM2LCJpYXQiOjE3NTg4MzYxMzYsImp0aSI6ImZiYWFkN2ZjNThlMTQxZTlhMGQxOWI0YWJkZjQ2NTg3IiwidXNlcl9pZCI6MX0.acXiUBPtmbN0nbZTkti9S752NKFPcj4g93e433BZ8Js"
         });
 
         if(response.success){
@@ -102,7 +102,7 @@ export const remove = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().studentRemove({
             student,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU5MjY4MTM2LCJpYXQiOjE3NTg4MzYxMzYsImp0aSI6ImZiYWFkN2ZjNThlMTQxZTlhMGQxOWI0YWJkZjQ2NTg3IiwidXNlcl9pZCI6MX0.acXiUBPtmbN0nbZTkti9S752NKFPcj4g93e433BZ8Js"
         });
 
         if(response.success){

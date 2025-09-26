@@ -14,5 +14,12 @@ export const Content = styled.View`
 
 export const Text = styled.Text`
     font-size: 18px;
-    font-family: 'montserrat-black';
+    font-family: 'montserrat-bold';
+`;
+
+export const TextArea = styled.View`
+    flex-direction: row;
+    justify-content: center;  
+    align-items: center;      
+    gap: 10px;
 `;
