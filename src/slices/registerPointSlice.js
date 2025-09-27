@@ -46,7 +46,7 @@ export const register = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointRegister({
             data,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU5NDA2MDQyLCJpYXQiOjE3NTg5NzQwNDIsImp0aSI6IjMwODRmMmVjZGZhMjRkZDk5ZmJhNzVlZjc0YTBhNWRhIiwidXNlcl9pZCI6MX0.MH8lmEHCFVSwSDDvh7MC1yh4ELjZ-HIJ3_UKfwumRnY"
         });
 
         if(response.success){
@@ -63,7 +63,7 @@ export const list = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointList({
             localId,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU5NDA2MDQyLCJpYXQiOjE3NTg5NzQwNDIsImp0aSI6IjMwODRmMmVjZGZhMjRkZDk5ZmJhNzVlZjc0YTBhNWRhIiwidXNlcl9pZCI6MX0.MH8lmEHCFVSwSDDvh7MC1yh4ELjZ-HIJ3_UKfwumRnY"
         });
 
         if(response.success){
@@ -80,7 +80,7 @@ export const removePointToday = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointRemoveToday({
             pointId,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU5NDA2MDQyLCJpYXQiOjE3NTg5NzQwNDIsImp0aSI6IjMwODRmMmVjZGZhMjRkZDk5ZmJhNzVlZjc0YTBhNWRhIiwidXNlcl9pZCI6MX0.MH8lmEHCFVSwSDDvh7MC1yh4ELjZ-HIJ3_UKfwumRnY"
         });
 
         if(response.success){
@@ -97,7 +97,7 @@ export const justify = createAsyncThunk(
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointJustify({
             data,
-            token: userAuth.token
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU5NDA2MDQyLCJpYXQiOjE3NTg5NzQwNDIsImp0aSI6IjMwODRmMmVjZGZhMjRkZDk5ZmJhNzVlZjc0YTBhNWRhIiwidXNlcl9pZCI6MX0.MH8lmEHCFVSwSDDvh7MC1yh4ELjZ-HIJ3_UKfwumRnY"
         });
 
         if(response.success){

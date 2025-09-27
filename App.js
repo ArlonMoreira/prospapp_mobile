@@ -3,7 +3,7 @@ import * as Application from 'expo-application';
 import { NavigationContainer } from '@react-navigation/native';
 //Components
 import LoadingPage from './src/components/LoadingPage';
-import { View, ActivityIndicator, Text } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 //Hooks
 import { useFonts } from 'expo-font';
 import { useForceUpdate } from './src/hooks/useForceUpdate';
@@ -43,15 +43,15 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <LoadingProvider>
-        <NavigationContainer>
-          <StatusBar
-            backgroundColor="#FFFFFF"
-            barStyle="dark-content"
-          />
-          <Routes/>
-        </NavigationContainer>
-      </LoadingProvider>
+        <LoadingProvider>
+          <NavigationContainer>
+            <StatusBar
+              backgroundColor="#FFFFFF"
+              barStyle="dark-content"
+            />
+            <Routes/>
+          </NavigationContainer>
+        </LoadingProvider>
     </Provider>
   );
 }

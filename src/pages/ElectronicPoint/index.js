@@ -510,7 +510,7 @@ const ElectronicPoint = () => {
                       </View>
                     </SelectContainer>
                     <View style={{marginTop: 20}}>
-                      <ButtonLg title='Salvar e compartilhar' loading={loadingReport} color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleReportGenerated}/>
+                      <ButtonLg icon='file-pdf-o' fontFamily={'montserrat-medium'} title='Salvar e compartilhar' fontStyle={''} loading={loadingReport} disabled={loadingReport} color='transparent' iconColor={'#dc3129'} borderColor={'#dc3129'} fontColor={'#dc3129'} largeWidth='300px' action={handleReportGenerated}/>
                     </View>                                           
                   </ModalContent>
                 </ModalView>

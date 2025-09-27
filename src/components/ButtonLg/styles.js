@@ -14,7 +14,6 @@ export const Content = styled.View`
 
 export const Text = styled.Text`
     font-size: 18px;
-    font-family: 'montserrat-bold';
 `;
 
 export const TextArea = styled.View`

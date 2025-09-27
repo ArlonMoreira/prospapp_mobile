@@ -54,6 +54,10 @@ import { SelectContainer } from '../ElectronicPoint/styles';
 import * as FileSystem from 'expo-file-system/legacy'; // <-- usa API legada
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
+// import * as FileSystem from 'expo-file-system/legacy'; // <-- usa API legada
+// import * as Print from 'expo-print';
+import * as SharingCSV from "expo-sharing";
+// import { Alert } from "react-native";
 
 const Stack = createNativeStackNavigator();
 
@@ -267,92 +271,19 @@ const Call = ({ route }) => {
   };
 
   //Gerar gelatório
-  const handleReportGenerated = () => {
+  const handleReportGenerated = (type) => {
     const data = {
       classId: classIdSelected,
       year: yearSelected,
       month: monthSelected
     };
 
-    //setTypeFile(type);
+    setTypeFile(type);
     dispatch(generated(data));
 
   };
-
-  // helper para converter ArrayBuffer em Base64
-  function arrayBufferToBase64(buffer) {
-    let binary = "";
-    const bytes = new Uint8Array(buffer);
-    const chunkSize = 0x8000;
-    for (let i = 0; i < bytes.length; i += chunkSize) {
-      const chunk = bytes.subarray(i, i + chunkSize);
-      binary += String.fromCharCode.apply(null, chunk);
-    }
-    return btoa(binary);
-  }
-
-  const gerarExcel = async (dataReport) => {
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet("Relatório de Presença");
-
-    // Cabeçalho com informações do relatório
-    worksheet.addRow(["Relatório de presença"]);
-    worksheet.addRow([`Turma: ${dataReport.classNameSelected}`]);
-    worksheet.addRow([`Data de emissão: ${dataReport.currentDate} ${dataReport.currentHour}`]);
-    worksheet.addRow([`Usuário: ${dataReport.nameUser}`]);
-    worksheet.addRow([`Quantidade de datas: ${dataReport.dates_lengths}`]);
-    worksheet.addRow([`Período: ${dataReport.yearSelected}/${dataReport.monthSelected}`]);
-    worksheet.addRow([`Média geral de participação: ${dataReport.mean}`]);
-    worksheet.addRow([]);
-
-    // Para cada tabela dentro de tables
-    dataReport.tables.forEach((table) => {
-      const orderTable = ordenarKeysObjectAsc(table);
-      const rows = Object.keys(orderTable);
-      const columns = Object.keys(orderTable[rows[0]]);
-
-      // Cabeçalho
-      const header = ["Aluno", ...columns];
-      worksheet.addRow(header);
-
-      // Linhas
-      rows.forEach((row) => {
-        const valores = [row];
-        columns.forEach((col) => {
-          if (col === "(%) presença") {
-            valores.push(dataReport.filteredData[row][col]);
-          } else {
-            const valor = dataReport.filteredData[row][col];
-            valores.push(valor == null ? "-" : valor ? "Presente" : "Falta");
-          }
-        });
-        worksheet.addRow(valores);
-      });
-
-      worksheet.addRow([]);
-    });
-
-    // Nome do arquivo
-    const fileName = `Chamada_turma_${dataReport.classNameSelected}_${dataReport.yearSelected}_${dataReport.monthSelected}.xlsx`;
-    const fileUri = FileSystem.documentDirectory + fileName;
-
-    // Grava no FileSystem
-    const buffer = await workbook.xlsx.writeBuffer();
-    await FileSystem.writeAsStringAsync(fileUri, arrayBufferToBase64(buffer), {
-      encoding: FileSystem.EncodingType.Base64,
-    });
-
-    // Compartilhar
-    await Sharing.shareAsync(fileUri, {
-      mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      dialogTitle: "Compartilhar planilha",
-      UTI: "com.microsoft.excel.xlsx",
-    });
-
-    return fileUri;
-  };
-
-  const printToFile = (data) => {
+  
+  const transformObjectReport = (data) => {
 
     const obj = JSON.parse(JSON.stringify(data)); // clone profundo e seguro
 
@@ -379,7 +310,15 @@ const Call = ({ route }) => {
           delete obj[person][date];
         });
       }
-    }
+    }    
+    
+    return { obj, dataNotNull };
+
+  };
+
+  const printToFile = (data) => {
+
+    const { obj, dataNotNull } = transformObjectReport(data);
 
     let globalTotalPresences = 0;
     let globalValidDates = 0;
@@ -623,7 +562,7 @@ const Call = ({ route }) => {
   useEffect(() => {
     if (!successReport) return;
 
-    const gerarECompartilhar = async () => {
+    const gerarECompartilharPDF = async () => {
       const { html } = printToFile(dataReport);
 
       // gera o PDF (cache/temp) e retorna uri
@@ -648,15 +587,122 @@ const Call = ({ route }) => {
           mimeType: 'application/pdf',
         });
 
-        dispatch(resetReportState());
-        closeModalReport();
       } catch (err) {
         console.error('Erro ao mover arquivo (legacy API):', err);
       }
     };
 
-    gerarECompartilhar().catch(console.error);
-  }, [successReport, dataReport]);    
+    const gerarCSV = async () => {
+      try {
+
+        const { obj } = transformObjectReport(dataReport);
+        
+        const objOrder = ordenarKeysObjectAsc(obj);   
+        
+        let globalTotalPresences = 0;
+        let globalValidDates = 0;        
+
+        // Gera as linhas do CSV
+        const rows = Object.entries(objOrder).map(([aluno, dias]) => {
+          let totalPresences = 0; 
+          let totalValidDates = 0;  
+
+          const chamadas = Object.values(dias).map(valor => {
+            if (valor === null) {
+              return "-"; // não conta na taxa
+            }
+            if (valor === true) {
+              totalPresences++;
+              totalValidDates++;
+              globalTotalPresences++; // ✅ presença global
+              globalValidDates++;     // ✅ data válida global
+              return "Presente";
+            }
+            if (valor === false) {
+              totalValidDates++;
+              globalValidDates++;     // ✅ só conta data válida, não presença
+              return "Falta";
+            }
+            return valor; // caso apareça algo inesperado
+          });
+
+          const taxaPresenca = totalValidDates > 0 
+            ? ((totalPresences / totalValidDates) * 100).toFixed(2)
+            : "0.00";
+
+          return [aluno, ...chamadas, taxaPresenca];
+        });
+
+        // Média geral
+        const mean = globalValidDates > 0 
+          ? ((globalTotalPresences / globalValidDates) * 100).toFixed(2) + " %"
+          : "0%";
+
+        // Pega o primeiro aluno
+        const primeiroAluno = Object.values(objOrder)[0];
+
+        // Pega as datas (chaves do objeto)
+        const datas = Object.keys(primeiroAluno);
+
+        // Monta header
+        const header = ['Aluno', ...datas, '(%) presença'];
+
+        // Monta os dados
+        const table = [
+          ["Turma", classNameSelected],
+          ["Data de emissão", `${currentDate} ${currentHour}`],
+          ["Usuário que gerou o relatório", nameUser],
+          ["Período selecionado", `${yearSelected}/${monthSelected}`],
+          ["Média geral de participação", mean],
+          [],
+          [],
+          [],
+          header,
+          ...rows
+        ];
+
+        // Converte para string CSV
+        const csvString = table.map(r => r.join(",")).join("\n");
+
+        // Caminho do arquivo (com extensão correta)
+        const nomeDesejado = `Chamada_turma_${classNameSelected}_${yearSelected}_${monthSelected}.csv`;
+        const destino = `${FileSystem.documentDirectory}${nomeDesejado}`;
+
+        // Salva no armazenamento interno
+        await FileSystem.writeAsStringAsync(destino, csvString, {
+          encoding: FileSystem.EncodingType.UTF8,
+        });
+
+        // Compartilha
+        if (await SharingCSV.isAvailableAsync()) {
+          await SharingCSV.shareAsync(destino, {
+            mimeType: "text/csv",
+            UTI: "public.comma-separated-values-text",
+          });
+        } else {
+          Alert.alert("Compartilhamento não suportado neste dispositivo.");
+        }
+
+      } catch (error) {
+        console.error("Erro ao gerar CSV:", error);
+        Alert.alert("Erro", "Não foi possível gerar o CSV.");
+      }
+    };
+
+    if (typeFile === 'pdf') {
+      gerarECompartilharPDF().catch(console.error);
+    } else if (typeFile === 'xlsx') {
+      gerarCSV().catch(console.error);
+    }
+
+    dispatch(resetReportState());
+    closeModalReport();
+
+  }, [successReport, dataReport, typeFile]);
+  
+  useEffect(()=>{
+    setLoading(loadingReport);
+  }, [loadingReport]);  
 
   useEffect(()=>{
     //Limpar estudante assim que abre a página
@@ -873,13 +919,13 @@ const Call = ({ route }) => {
                         />                        
                       </View>
                     </SelectContainer>
+                    <ModalResume>Escolha o formato que deseja gerar o relatório.</ModalResume>
                     <View style={{marginTop: 20}}>
-                      <ButtonLg icon='file-pdf-o' title='Salvar e compartilhar' loading={loadingReport} color={primaryColor} fontColor={'#fff'} largeWidth='300px' action={handleReportGenerated}/>
-                      {/* <ButtonLg icon='file-pdf-o' title='Gerar Arquivo' disabled={primaryColor} color={'#dc3129'} fontColor={'#fff'} largeWidth='300px' action={() => handleReportGenerated('pdf')} /> */}
+                      <ButtonLg icon='file-pdf-o' fontFamily={'montserrat-medium'} title='Salvar e compartilhar' fontStyle={''} disabled={loadingReport} color='transparent' iconColor={'#dc3129'} borderColor={'#dc3129'} fontColor={'#dc3129'} largeWidth='300px' action={() => handleReportGenerated('pdf')}/>
                     </View>
-                    {/* <View style={{marginTop: 10}}>
-                      <ButtonLg icon='file-excel-o' title='Gerar Planilha' disabled={loadingReport} color={'#1d6b40'} fontColor={'#fff'} largeWidth='300px' action={() => handleReportGenerated('xlsx')} />
-                    </View>                                                                                  */}
+                    <View style={{marginTop: 10}}>
+                      <ButtonLg icon='file-excel-o' fontFamily={'montserrat-medium'} title='Salvar e compartilhar' disabled={loadingReport} color='transparent' iconColor={'#1d6b40'} borderColor={'#1d6b40'} fontColor={'#1d6b40'} largeWidth='300px' action={() => handleReportGenerated('xlsx')} />
+                    </View>                                                                 
                   </ModalContent>
                 </ModalView>
               </TouchableWithoutFeedback>

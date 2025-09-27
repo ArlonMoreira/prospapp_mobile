@@ -9,15 +9,15 @@ import {
 } from './styles';
 import { FontAwesome } from '@expo/vector-icons';
 
-const ButtonLg = ({title, action, loading=false, disabled=false, color='#fff', fontColor='#16443E', largeWidth=292, icon, iconSize=22, iconColor='#fff'}) => {
+const ButtonLg = ({title, action, loading=false, disabled=false, color='#fff', fontColor='#16443E', largeWidth=292, icon, iconSize=22, iconColor='#fff', borderColor='transparent', fontFamily='montserrat-black'}) => {
   
   const [styles, setStyles] = useState({ backgroundColor: color, width: largeWidth, opacity: 1 });
 
   useEffect(() => {
     if (disabled) {
-      setStyles({ backgroundColor: '#cecece', width: largeWidth, opacity: 1 });
+      setStyles({ backgroundColor: color == 'transparent'? color: '#cecece', width: largeWidth, opacity: 1, borderWidth: 1, borderColor: borderColor });
     } else {
-      setStyles({ backgroundColor: color, width: largeWidth, opacity: 1 });
+      setStyles({ backgroundColor: color, width: largeWidth, opacity: 1, borderWidth: 1, borderColor: borderColor });
     }
   }, [disabled, color, largeWidth]);
 
@@ -32,7 +32,7 @@ const ButtonLg = ({title, action, loading=false, disabled=false, color='#fff', f
               {
                 icon && <FontAwesome name={icon} size={iconSize} color={iconColor} />
               }
-              <Text style={{color: fontColor}}>{title}</Text>             
+              <Text style={{color: fontColor, fontFamily}}>{title}</Text>             
             </TextArea>
           )
         }
