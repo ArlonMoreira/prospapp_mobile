@@ -24,8 +24,8 @@ const ListLocals = ({ route }) => {
   }, [data]);
 
   return (
-    <Container>
-      <InstructionArea text={'Escolha um local/empresa para registro de ponto.'}/>
+    <Container style={{ paddingTop: 10 }}>
+      {/* <InstructionArea text={'Escolha um local/empresa para registro de ponto.'}/> */}
       <ListArea>
         <FlatList
           data={ dataOrder }

@@ -312,6 +312,19 @@ const useRequest = () => {
                 }                
             });             
         },
+        callRemove: ({data, classId, token}) => {
+            return request({
+                endpoint: `call/call/remover/${classId}/`,
+                params: {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }                
+            });             
+        },        
         reportCall: ({ classId, year, month, token }) => {
             return request({
                 endpoint: `call/call/report/${classId}/${year}/${month}/`,

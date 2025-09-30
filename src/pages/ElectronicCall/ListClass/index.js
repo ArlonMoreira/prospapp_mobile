@@ -23,8 +23,8 @@ const ListClass = ({ route }) => {
     }, [classes]);
     
     return (
-        <Container>
-            <InstructionArea text={'Escolha uma turma para acessar a área de chamada.'}/>
+        <Container style={{ paddingTop: 10 }}>
+            {/* <InstructionArea text={'Escolha uma turma para acessar a área de chamada.'}/> */}
             <ListArea>
                 <FlatList
                     data={classesOrder}

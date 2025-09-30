@@ -19,9 +19,10 @@ import RNDateTimePicker from "@react-native-community/datetimepicker";
 import Select from '../../components/Select';
 import TitleArea from '../../components/TitleArea';
 import SearchArea from '../../components/SearchArea';
+import InstructionArea from '../../components/IntroductionArea';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { register, list, call, change, remove, resetRegisterForm, resetChangeForm, resetState } from '../../slices/studentSlice';
+import { register, list, call, change, remove, resetRegisterForm, resetChangeForm, resetState, callRemove } from '../../slices/studentSlice';
 import { generated, resetReportState } from '../../slices/reportSlice';
 import useUtil from '../../hooks/useUtil';
 //Context
@@ -105,7 +106,7 @@ const Call = ({ route }) => {
   }, [userData]);
 
   //Register student  
-  const { success, loadingList, loadingRegister, errorRegister, errorsRegister, data, loadingCall, successChange, loadingChange, errorsChange, loadingRemove, successRemove  } = useSelector((state) => state.student);
+  const { success, loadingList, loadingRegister, errorRegister, errorsRegister, data, loadingCall, successChange, loadingChange, errorsChange, loadingRemove, successRemove, loadingCallRemove, successCallRemove  } = useSelector((state) => state.student);
   
   const dispatch = useDispatch();
 
@@ -699,10 +700,6 @@ const Call = ({ route }) => {
     closeModalReport();
 
   }, [successReport, dataReport, typeFile]);
-  
-  useEffect(()=>{
-    setLoading(loadingReport);
-  }, [loadingReport]);  
 
   useEffect(()=>{
     //Limpar estudante assim que abre a página
@@ -846,12 +843,46 @@ const Call = ({ route }) => {
 
   }, [dataFiltered, currentRouteName]);  
 
+
+  //Limpar registros de ponto
+  const [ showModalClear, setShowModalClear ] = useState(false);
+
+  const submitRemoveRegister = () => {
+
+    if (date) {
+      const d = date.toLocaleDateString("pt-BR")
+      const formatted = `${d.split('/')[2]}-${d.split('/')[1]}-${d.split('/')[0]}`;
+
+      dispatch(callRemove({ 
+        classId: classIdSelected,
+        data: {
+          date: formatted
+        }
+      }));
+
+    }
+
+  };
+
+  const closeModalClearCall = () => {
+    if(!loadingCallRemove){
+      setShowModalClear(false);
+    }
+  };
+  
+  useEffect(() => {
+    if(successCallRemove){
+      closeModalClearCall();
+    }
+
+  }, [successCallRemove]);
+
   return (
     <>
       {
-        loading ? <LoadingPage backgroundColor={primaryColor} logo={logo}/> : (
+        (loadingCallRemove || loading) ? <LoadingPage backgroundColor={primaryColor} logo={logo}/> : (
           <Container>
-            {(showModal || showModalCall || showModalReport || showModalEditStudent || showModalRemoveStudent || showModalSelectDate) && <Fade/>}
+            {(showModal || showModalCall || showModalReport || showModalEditStudent || showModalRemoveStudent || showModalSelectDate || showModalClear) && <Fade/>}
             {
               Platform.OS === 'android' && showModalSelectDate && (
                 <RNDateTimePicker
@@ -921,11 +952,30 @@ const Call = ({ route }) => {
                     </SelectContainer>
                     <ModalResume>Escolha o formato que deseja gerar o relatório.</ModalResume>
                     <View style={{marginTop: 20}}>
-                      <ButtonLg icon='file-pdf-o' fontFamily={'montserrat-medium'} title='Salvar e compartilhar' fontStyle={''} disabled={loadingReport} color='transparent' iconColor={'#dc3129'} borderColor={'#dc3129'} fontColor={'#dc3129'} largeWidth='300px' action={() => handleReportGenerated('pdf')}/>
+                      <ButtonLg icon='file-pdf-o' fontFamily={'montserrat-medium'} title='Salvar e compartilhar' loading={loadingReport} disabled={loadingReport} color='transparent' iconColor={'#dc3129'} borderColor={'#dc3129'} fontColor={'#dc3129'} largeWidth='300px' action={() => handleReportGenerated('pdf')}/>
                     </View>
                     <View style={{marginTop: 10}}>
-                      <ButtonLg icon='file-excel-o' fontFamily={'montserrat-medium'} title='Salvar e compartilhar' disabled={loadingReport} color='transparent' iconColor={'#1d6b40'} borderColor={'#1d6b40'} fontColor={'#1d6b40'} largeWidth='300px' action={() => handleReportGenerated('xlsx')} />
+                      <ButtonLg icon='file-excel-o' fontFamily={'montserrat-medium'} title='Salvar e compartilhar' loading={loadingReport} disabled={loadingReport} color='transparent' iconColor={'#1d6b40'} borderColor={'#1d6b40'} fontColor={'#1d6b40'} largeWidth='300px' action={() => handleReportGenerated('xlsx')} />
                     </View>                                                                 
+                  </ModalContent>
+                </ModalView>
+              </TouchableWithoutFeedback>
+            </Modal>
+            <Modal
+              transparent={true}
+              animationType='slide'
+              visible={showModalClear}
+              onRequestClose={() => closeModalClearCall()}
+            >
+              <TouchableWithoutFeedback onPress={() => closeModalClearCall()}>
+                <ModalView>
+                  <ModalContent>
+                    <ModalTitle style={{color: primaryColor}}>Limpar registro de ponto</ModalTitle>
+                    <ModalResume>Irá limpar todos os registros de ponto do dia <Text style={{fontFamily:'montserrat-semibold'}}>{date.toLocaleDateString("pt-BR")}</Text>.</ModalResume>
+                    <InstructionArea width={246} text={'Uma vez que o registro de ponto for apagado, todos os registros nesse dia para essa turma serão apagados permanentemente.'}/>
+                    <View style={{marginTop: 20}}>
+                      <ButtonLg title='Limpar' loading={loadingRemove} color={'#e3222c'} fontColor={'#fff'} largeWidth='300px' action={submitRemoveRegister}/>
+                    </View>                    
                   </ModalContent>
                 </ModalView>
               </TouchableWithoutFeedback>
@@ -1056,7 +1106,7 @@ const Call = ({ route }) => {
               </TouchableWithoutFeedback>
             </Modal>   
             <Header themeColor={primaryColor}></Header>
-            <Body style={{ marginBottom: 30 }}>             
+            <Body>             
               <TitleArea title={'Chamada'} color={ primaryColor } subtitle={classNameSelected && classNameSelected}/>
               <SearchArea ref={ searchRef } color={ primaryColor } placeholder='Busque aqui pelo aluno desejado.' setDataFiltered={ setDataFiltered } data={ students } fieldFilter='name'/>              
               {
@@ -1073,6 +1123,7 @@ const Call = ({ route }) => {
                     <ToolsArea>
                       <BoxAction action={() => setShowModal(true)} color={primaryColor} iconName={'person-add'} title={'Adicionar aluno'}></BoxAction>
                       <BoxAction action={() => setShowModalReport(true)} color={primaryColor} iconName={'download'} title={'Baixa relatório'}></BoxAction>
+                      <BoxAction action={() => setShowModalClear(true)} color={primaryColor} iconName={'trash-outline'} title={'Limpar registro'}></BoxAction>
                       <BoxAction 
                         color={currentRouteName == 'CallRegister' ? '#f0f2f5': primaryColor}
                         iconName={'notifications'}

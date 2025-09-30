@@ -1,12 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
-import * as Application from 'expo-application';
+import * as NavigationBar from 'expo-navigation-bar';
 import { NavigationContainer } from '@react-navigation/native';
 //Components
 import LoadingPage from './src/components/LoadingPage';
-import { SafeAreaView } from 'react-native-safe-area-context';
 //Hooks
 import { useFonts } from 'expo-font';
 import { useForceUpdate } from './src/hooks/useForceUpdate';
+import { useEffect } from 'react';
+import { View, Platform } from 'react-native';
 //Routes
 import Routes from './src/routes';
 //Redux
@@ -18,6 +19,11 @@ import { LoadingProvider } from './src/contexts/LoadingContext';
 const URL = process.env.EXPO_PUBLIC_API_URL;
 
 export default function App() {
+
+  useEffect(() => {
+    NavigationBar.setPositionAsync('relative'); // impede barra flutuante
+    NavigationBar.setBackgroundColorAsync('#ffffff');
+  }, []);
 
   const [fontsLoaded] = useFonts({
     'montserrat-black': require('./assets/fonts/Montserrat-Black.ttf'),
@@ -46,10 +52,13 @@ export default function App() {
         <LoadingProvider>
           <NavigationContainer>
             <StatusBar
-              backgroundColor="#FFFFFF"
+              backgroundColor="#ffffffff"
               barStyle="dark-content"
             />
             <Routes/>
+            {
+              Platform.OS === "android" && (<View style={{ paddingBottom: 36 }}></View>)
+            } 
           </NavigationContainer>
         </LoadingProvider>
     </Provider>

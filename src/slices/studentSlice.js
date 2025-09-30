@@ -11,7 +11,9 @@ const initialState = {
     loadingRemove: false,
     success: false,
     loadingCall: false,
+    loadingCallRemove: false,
     successCall: false,
+    successCallRemove: false,
     errorRegister: false,
     errorsRegister: [],
     errorMenssageRegister: null,
@@ -33,7 +35,7 @@ export const list = createAsyncThunk(
             date: `${ano}${mes}${dia}`,
             token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU5NDA2MDQyLCJpYXQiOjE3NTg5NzQwNDIsImp0aSI6IjMwODRmMmVjZGZhMjRkZDk5ZmJhNzVlZjc0YTBhNWRhIiwidXNlcl9pZCI6MX0.MH8lmEHCFVSwSDDvh7MC1yh4ELjZ-HIJ3_UKfwumRnY"
         });
-
+        console.log(response)
         if(response.success){
             return response;
         } else {
@@ -63,7 +65,7 @@ export const register = createAsyncThunk(
 export const call = createAsyncThunk(
     'student/call',
     async(data, {getState, rejectWithValue}) => {
-        const userAuth = await getState().auth.userAuth; //"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU5NDA2MDQyLCJpYXQiOjE3NTg5NzQwNDIsImp0aSI6IjMwODRmMmVjZGZhMjRkZDk5ZmJhNzVlZjc0YTBhNWRhIiwidXNlcl9pZCI6MX0.MH8lmEHCFVSwSDDvh7MC1yh4ELjZ-HIJ3_UKfwumRnY"
+        const userAuth = await getState().auth.userAuth;
         const response = await useRequest().callRegister({
             data,
             token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU5NDA2MDQyLCJpYXQiOjE3NTg5NzQwNDIsImp0aSI6IjMwODRmMmVjZGZhMjRkZDk5ZmJhNzVlZjc0YTBhNWRhIiwidXNlcl9pZCI6MX0.MH8lmEHCFVSwSDDvh7MC1yh4ELjZ-HIJ3_UKfwumRnY"
@@ -74,6 +76,25 @@ export const call = createAsyncThunk(
         } else {
             return rejectWithValue(response);
         }                
+    }
+);
+
+export const callRemove = createAsyncThunk(
+    'student/callRemove',
+    async({ classId, data }, {getState, rejectWithValue}) => {
+        console.log(data)
+        const userAuth = await getState().auth.userAuth;
+        const response = await useRequest().callRemove({
+            classId,
+            data,
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU5NDA2MDQyLCJpYXQiOjE3NTg5NzQwNDIsImp0aSI6IjMwODRmMmVjZGZhMjRkZDk5ZmJhNzVlZjc0YTBhNWRhIiwidXNlcl9pZCI6MX0.MH8lmEHCFVSwSDDvh7MC1yh4ELjZ-HIJ3_UKfwumRnY"            
+        });
+
+        if(response.success){
+            return response;
+        } else {
+            return rejectWithValue(response);
+        }        
     }
 );
 
@@ -120,6 +141,7 @@ export const studentSlice = createSlice({
     reducers: {
         resetState:(state) => {
             state.loadingList = true;
+            state.loadingCallRemove = false;
             state.data = [];
         },
         resetRegisterForm:(state) => {
@@ -191,6 +213,22 @@ export const studentSlice = createSlice({
             .addCase(list.rejected, (state) => {
                 state.loadingList = false;
             })
+            //Aguardando finalizar remover chamada
+            .addCase(callRemove.pending, (state) => {
+                state.loadingCallRemove = true;
+                state.successCallRemove = false;
+            })
+            //Sucesso remover chamada
+            .addCase(callRemove.fulfilled, (state, action) => {
+                state.loadingCallRemove = false;
+                state.successCallRemove = true;
+                state.data = action.payload.data;
+            })
+            //Falha remover chamada
+            .addCase(callRemove.rejected, (state) => {
+                state.loadingCallRemove = false;
+                state.successCallRemove = false;
+            })            
             //Aguardando finalizar chamada
             .addCase(call.pending, (state) => {
                 state.loadingCall = true;
