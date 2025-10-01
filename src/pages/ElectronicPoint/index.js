@@ -166,8 +166,8 @@ const ElectronicPoint = () => {
   }, [companyId]);
 
   useEffect(() => {
-    if(users && users.length > 0){
-      if(staffPerfil){
+
+    if(staffPerfil && users && users.length > 0){
         setUserOptions(users.map(obj => 
           (
             {
@@ -175,18 +175,15 @@ const ElectronicPoint = () => {
               'label': obj.full_name
             }
           )
-        ));
-      } else {
-        const option = users.filter(option => option.email === userData.email)[0];
+        ));    
+    } else {
         setUserOptions([{
-          'value': option.user_id,
-          'label': option.full_name      
-        }]);
-      }
-
+          'value': userData.id,
+          'label': userData.full_name      
+        }]);      
     }
 
-  }, [users, staffPerfil]);
+  }, [users, staffPerfil, userData]);
 
   useEffect(() => {
     if(usersOptions.length > 0){
@@ -226,7 +223,7 @@ const ElectronicPoint = () => {
       "year": yearSelected,
       "month": parseInt(monthSelected)
     }
-
+    console.log(data)
     dispatch(generated(data));
 
   };

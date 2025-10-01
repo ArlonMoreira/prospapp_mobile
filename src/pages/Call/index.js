@@ -572,7 +572,7 @@ const Call = ({ route }) => {
         orientation: 'landscape',
       });
 
-      const nomeDesejado = `Chamada_turma_${classNameSelected}_${yearSelected}_${monthSelected}.pdf`;
+      const nomeDesejado = `Chamada_turma_${classNameSelected.replaceAll('/', '')}_${yearSelected}_${monthSelected}.pdf`;
       const destino = `${FileSystem.documentDirectory}${nomeDesejado}`;
 
       try {
@@ -666,7 +666,7 @@ const Call = ({ route }) => {
         const csvString = table.map(r => r.join(",")).join("\n");
 
         // Caminho do arquivo (com extensão correta)
-        const nomeDesejado = `Chamada_turma_${classNameSelected}_${yearSelected}_${monthSelected}.csv`;
+        const nomeDesejado = `Chamada_turma_${classNameSelected.replaceAll('/', '')}_${yearSelected}_${monthSelected}.csv`;
         const destino = `${FileSystem.documentDirectory}${nomeDesejado}`;
 
         // Salva no armazenamento interno

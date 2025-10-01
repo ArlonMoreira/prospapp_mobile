@@ -3,6 +3,7 @@ import * as NavigationBar from 'expo-navigation-bar';
 import { NavigationContainer } from '@react-navigation/native';
 //Components
 import LoadingPage from './src/components/LoadingPage';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 //Hooks
 import { useFonts } from 'expo-font';
 import { useForceUpdate } from './src/hooks/useForceUpdate';
@@ -48,20 +49,24 @@ export default function App() {
   }
 
   return (
-    <Provider store={store}>
-        <LoadingProvider>
-          <NavigationContainer>
-            <StatusBar
-              backgroundColor="#ffffffff"
-              barStyle="dark-content"
-            />
-            <Routes/>
-            {
-              Platform.OS === "android" && (<View style={{ paddingBottom: 36 }}></View>)
-            } 
-          </NavigationContainer>
-        </LoadingProvider>
-    </Provider>
+      <SafeAreaProvider>
+        <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }} edges={['bottom', 'left', 'right']}>
+          <Provider store={store}>
+              <LoadingProvider>
+                <NavigationContainer>
+                  <StatusBar
+                    backgroundColor="#ffffffff"
+                    barStyle="dark-content"
+                  />
+                  <Routes/>
+                  {/* {
+                    Platform.OS === "android" && (<View style={{ paddingBottom: 40 }}></View>)
+                  }  */}
+                </NavigationContainer>
+              </LoadingProvider>
+          </Provider>          
+        </SafeAreaView>
+      </SafeAreaProvider>
   );
 }
 
