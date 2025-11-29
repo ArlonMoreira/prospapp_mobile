@@ -11,6 +11,7 @@ import useKeyboardStatus from '../../../hooks/useKeyboardStatus';
 import Header from '../../../components/Header';
 import ButtonLg from '../../../components/ButtonLg';
 import Select from '../../../components/Select';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 //styles
 import { Container } from '../../ElectronicCall/styles';
 import { PageArea, TitleArea } from '../styles';
@@ -84,20 +85,18 @@ const Justify = ({ route }) => {
   return (
     <Container style={{ paddingTop: 20 }}>
       <Header themeColor={color}/>
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <KeyboardAwareScrollView
+          nestedScrollEnabled={false}
+          enableOnAndroid={false}
+          keyboardShouldPersistTaps="handled"
+        >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <PageArea>
             <TitleArea style={{maxHeight: 100, borderBottomWidth: 1, borderColor: '#ddd', marginBottom: 20}}>
               <Instruction>Registrar ponto no local:</Instruction>
               <Text style={{fontFamily: 'montserrat-semibold', color: '#64748b'}}>{local ? local.name : '-'}</Text>
             </TitleArea>
-            {
-              !keyboardVisible && (
-                <>
+
                   <View style={{ alignItems: 'center', marginBottom: 20 }}>
                     <Instruction>Data</Instruction>
                     <Text style={{ fontFamily: 'montserrat-bold', fontSize: 14, color: '#64748b' }}>
@@ -152,9 +151,7 @@ const Justify = ({ route }) => {
                   <Errors>
                     { errosJustify.exit_datetime && errosJustify.exit_datetime.map((error, i) => <Error key={i} style={{color: 'rgb(191, 159, 18)'}}>{ error }</Error>) }
                   </Errors>                 
-                </>
-              )
-            }           
+      
             <Instruction style={{ marginTop: 30 }}>Justificativa (máx. 125 caracteres)</Instruction>
             <TextInput
               style={{
@@ -184,9 +181,9 @@ const Justify = ({ route }) => {
             <View style={{marginTop: 30, width: '100%', paddingLeft: 10, marginBottom: 20}}>
               <ButtonLg loading={loadingJustify} disabled={loadingJustify} action={() => handleRegister()} title={'Registrar'} color={color} fontColor='#fff' largeWidth={330}/>  
             </View> 
-          </PageArea>           
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+          </PageArea>  
+        </TouchableWithoutFeedback>         
+      </KeyboardAwareScrollView>
     </Container>
   )
 };

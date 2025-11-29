@@ -94,6 +94,7 @@ export const removePointToday = createAsyncThunk(
 export const justify = createAsyncThunk(
     'registerPoint/justify',
     async(data, {getState, rejectWithValue}) => {
+
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointJustify({
             data,

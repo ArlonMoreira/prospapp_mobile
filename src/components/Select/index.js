@@ -48,6 +48,10 @@ export default function Select({zIndex, zIndexInverse, label, color, options, se
             dropDownContainerStyle={{...styles.dropdownContainer, borderColor: color}}
             zIndex={zIndex}
             zIndexInverse={zIndexInverse}
+            listMode="SCROLLVIEW"
+            scrollViewProps={{
+              nestedScrollEnabled: true
+            }}            
             mode="BADGE"         
           />
         )

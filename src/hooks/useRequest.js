@@ -13,7 +13,7 @@ const useRequest = () => {
                 ...params,
                 redirect: 'manual' // Evita perda de header em redirect no iOS
             });
-            
+
             const result = await response.json();
 
             return {
