@@ -86,9 +86,19 @@ const Justify = ({ route }) => {
     <Container style={{ paddingTop: 20 }}>
       <Header themeColor={color}/>
         <KeyboardAwareScrollView
-          nestedScrollEnabled={false}
-          enableOnAndroid={false}
+          enableOnAndroid={true}
+          enableAutomaticScroll={true}
+          keyboardOpeningTime={0}
           keyboardShouldPersistTaps="handled"
+          extraScrollHeight={120}
+          extraHeight={0}
+          style={{ flex: 1 }}
+          nestedScrollEnabled={false}
+          contentContainerStyle={{
+            paddingBottom: 40,
+            flexGrow: 1,
+          }}
+          showsVerticalScrollIndicator={false}
         >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <PageArea>
