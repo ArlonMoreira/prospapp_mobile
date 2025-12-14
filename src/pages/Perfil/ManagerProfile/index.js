@@ -1,16 +1,19 @@
-import React, { useEffect, useContext } from 'react'
+import { useEffect, useMemo } from 'react'
 import { ScrollView, Text, View } from 'react-native';
 //Redux
 import { listUsersManager } from '../../../slices/managerSlice';
+import useUtil from '../../../hooks/useUtil';
 //Hooks
 import { useDispatch, useSelector } from 'react-redux';
 //Styles
-import { CardUser, Label, LabelsArea, IconArea, RoleUser, RoleContainer, CardUserLoading } from './styles';
+import { CardUser, Label, LabelsArea, IconArea, RoleUser, RoleContainer, CardUserLoading, UserNameArea, UserName } from './styles';
 import { TitleArea, Title } from '../EditProfile/styles';
 
 import { FontAwesome } from '@expo/vector-icons';
 
 const ManagerProfile = ({ route }) => {
+
+    const { ordenarObjectAsc } = useUtil();
 
     //Redux
     const dispatch = useDispatch();
@@ -24,6 +27,15 @@ const ManagerProfile = ({ route }) => {
         dispatch(listUsersManager(companyId));
     }, [route]);
 
+    const dataOrder = useMemo(() => {
+        if (data && data.length > 0){
+            return ordenarObjectAsc([...data], 'full_name');
+        } else {
+            return [];
+        }
+
+    }, [data]);
+
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: color, padding: 10, alignItems: 'flex-start' }}>
             <TitleArea style={{ alignSelf: 'stretch', marginBottom: 10 }}>
@@ -33,30 +45,34 @@ const ManagerProfile = ({ route }) => {
                 !loadingManager ? (
                     <View style={{paddingInline: 10, marginBottom: 20}}>
                     {
-                        data && data.length > 0 && data.map((user, i) => (
-                            <CardUser key={i} onPress={() => action(user)}>
-                                <LabelsArea>
-                                    <Label style={{fontFamily: 'montserrat-semibold'}}>{user.full_name}</Label>
-                                    <Label style={{color: '#e9e9e9', fontSize: 11}}>{user.email}</Label>
-                                    <RoleUser>
-                                        <Text style={{color: '#e9e9e9', fontSize: 11}}>Perfil:</Text>
-                                        <RoleContainer>
-                                            <Text style={{color: color, fontSize: 11, fontFamily: 'montserrat-bold'}}>{user.role}</Text>
-                                        </RoleContainer>
-                                    </RoleUser>
-                                </LabelsArea>
-                                <IconArea>
-                                    {
-                                        user.is_joined ? <FontAwesome name="check" size={32} color="#fff" /> : null
-                                    }
-                                    {
-                                        user.is_pending ? <FontAwesome name="refresh" size={32} color="#fff" /> : null
-                                    }
-                                    {
-                                        !user.is_pending && !user.is_joined ? <FontAwesome name="remove" size={32} color="#fff" /> : null
-                                    }                                                                            
-                                </IconArea>
-                            </CardUser>                    
+                        dataOrder.map((user, i) => (
+                            user.is_pending || user.is_joined && (
+                                <CardUser key={i} onPress={() => action(user)}>
+                                    <LabelsArea>
+                                        <UserNameArea>
+                                            <UserName>{user.full_name}</UserName>   
+                                        </UserNameArea>
+                                        <Label style={{color: '#e9e9e9', fontSize: 11}}>{user.email}</Label>
+                                        <RoleUser>
+                                            <Text style={{color: '#e9e9e9', fontSize: 11}}>Perfil:</Text>
+                                            <RoleContainer>
+                                                <Text style={{color: color, fontSize: 11, fontFamily: 'montserrat-bold'}}>{user.role}</Text>
+                                            </RoleContainer>
+                                        </RoleUser>
+                                    </LabelsArea>
+                                    <IconArea>
+                                        {
+                                            user.is_joined ? <FontAwesome name="check" size={32} color="#fff" /> : null
+                                        }
+                                        {
+                                            user.is_pending ? <FontAwesome name="refresh" size={32} color="#fff" /> : null
+                                        }
+                                        {
+                                            !user.is_pending && !user.is_joined ? <FontAwesome name="remove" size={32} color="#fff" /> : null
+                                        }                                                                            
+                                    </IconArea>
+                                </CardUser> 
+                            )                  
                         ))
                     }            
                     </View>

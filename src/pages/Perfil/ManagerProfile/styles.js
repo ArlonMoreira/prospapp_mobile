@@ -54,3 +54,18 @@ export const RoleContainer = styled.View`
     padding-inline: 10px;
     border-radius: 20px;
 `;
+
+export const UserNameArea = styled.View`
+    align-items: start;
+    justify-content: center;
+`;
+
+export const UserName = styled.Text.attrs({
+  numberOfLines: 1,
+  ellipsizeMode: 'tail'
+})`
+  font-size: 14px;
+  font-family: 'montserrat-semibold';
+  width: 250px;
+  color: #fff;
+`;
