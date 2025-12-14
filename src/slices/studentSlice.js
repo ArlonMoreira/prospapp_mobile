@@ -1,5 +1,6 @@
 //Redux
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { refreshToken } from "./authSlice";
 //Hooks
 import useRequest from "../hooks/useRequest";
 
@@ -26,7 +27,9 @@ const initialState = {
 
 export const list = createAsyncThunk(
     'student/list',
-    async({classId, date}, {getState, rejectWithValue}) => {
+    async({classId, date}, {dispatch, getState, rejectWithValue}) => {
+        await dispatch(refreshToken());
+
         const [dia, mes, ano] = date.split("/");
 
         const userAuth = await getState().auth.userAuth;
@@ -46,7 +49,9 @@ export const list = createAsyncThunk(
 
 export const register = createAsyncThunk(
     'student/register',
-    async(data, {getState, rejectWithValue}) => {
+    async(data, {dispatch, getState, rejectWithValue}) => {
+        await dispatch(refreshToken());
+
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().studentRegister({
             data,
@@ -64,7 +69,9 @@ export const register = createAsyncThunk(
 
 export const call = createAsyncThunk(
     'student/call',
-    async(data, {getState, rejectWithValue}) => {
+    async(data, {dispatch, getState, rejectWithValue}) => {
+        await dispatch(refreshToken());
+
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().callRegister({
             data,
@@ -81,7 +88,9 @@ export const call = createAsyncThunk(
 
 export const callRemove = createAsyncThunk(
     'student/callRemove',
-    async({ classId, data }, {getState, rejectWithValue}) => {
+    async({ classId, data }, {dispatch, getState, rejectWithValue}) => {
+        await dispatch(refreshToken());
+
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().callRemove({
             classId,
@@ -99,7 +108,9 @@ export const callRemove = createAsyncThunk(
 
 export const change = createAsyncThunk(
     'student/change',
-    async({student, data}, {getState, rejectWithValue}) => {
+    async({student, data}, {dispatch, getState, rejectWithValue}) => {
+        await dispatch(refreshToken());
+
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().studentChange({
             student,
@@ -118,7 +129,9 @@ export const change = createAsyncThunk(
 
 export const remove = createAsyncThunk(
     'student/remove',
-    async(student, {getState, rejectWithValue}) => {
+    async(student, {dispatch, getState, rejectWithValue}) => {
+        await dispatch(refreshToken());
+
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().studentRemove({
             student,

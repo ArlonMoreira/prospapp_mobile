@@ -1,5 +1,6 @@
 //Redux
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { refreshToken } from "./authSlice";
 //Hooks
 import useRequest from "../hooks/useRequest";
 
@@ -11,7 +12,9 @@ const initialState = {
 
 export const list = createAsyncThunk(
     'companys/list',
-    async(_, { getState, rejectWithValue }) => {
+    async(_, {dispatch, getState, rejectWithValue}) => {
+        await dispatch(refreshToken());
+
         const userAuth = await getState().auth.userAuth; //Obter token que encontra-se no estado de autenticação
         const response = await useRequest().companyList(userAuth.token)
 
@@ -26,7 +29,9 @@ export const list = createAsyncThunk(
 
 export const sendRequest = createAsyncThunk(
     'companys/pending',
-    async(data, {getState, rejectWithValue}) => {
+    async(data, {dispatch, getState, rejectWithValue}) => {
+        await dispatch(refreshToken());
+        
         const userAuth = await getState().auth.userAuth; //Obter token que encontra-se no estado de autenticação
         const response = await useRequest().companyPending({
             data,

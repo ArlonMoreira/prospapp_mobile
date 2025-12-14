@@ -1,4 +1,6 @@
 import React from 'react';
+import { jwtDecode } from "jwt-decode";
+import dayjs from "dayjs";
 
 const URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -42,6 +44,50 @@ const useRequest = () => {
                     body: JSON.stringify(data)
                 }
             });
+        },
+        refreshToken: async (user) => {
+
+            try {
+                const { token, refresh } = user;
+
+                const decodedToken = jwtDecode(token);
+
+                const tokenExpirationDate = dayjs.unix(decodedToken.exp);
+                const isTokenExpired = tokenExpirationDate.diff(dayjs()) < 1;
+
+                if (!isTokenExpired) {
+                    return {
+                        success: true,
+                        message: 'Token ainda nao foi expirado.',
+                        isRefresh: false,
+                        data: user
+                    };
+                }
+
+                const response = await fetch(`${URL.replace(/\/$/, '')}/user/token/refresh/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ refresh })
+                });
+
+                const result = await response.json();
+
+                return {
+                    success: response.ok,
+                    isRefresh: true,
+                    ...result
+                };
+
+            } catch (error) {
+                console.log("ERRO NO REFRESH TOKEN:", error);
+                return {
+                    success: false,
+                    message: 'Erro ao decodificar token ou no refresh.'
+                };
+            }
+            
         },
         register: (data) => {
             return request({

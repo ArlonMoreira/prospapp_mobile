@@ -8,7 +8,6 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
 import { useForceUpdate } from './src/hooks/useForceUpdate';
 import { useEffect } from 'react';
-import { View, Platform } from 'react-native';
 //Routes
 import Routes from './src/routes';
 //Redux

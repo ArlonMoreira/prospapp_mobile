@@ -1,5 +1,6 @@
 //Redux
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { refreshToken } from "./authSlice";
 //Hooks
 import useRequest from "../hooks/useRequest";
 
@@ -12,7 +13,9 @@ const initialState = {
 
 export const reset = createAsyncThunk(
     'resetPassword/reset',
-    async(data, { getState, rejectWithValue }) => {
+    async(data, {dispatch, getState, rejectWithValue}) => {
+        await dispatch(refreshToken());
+
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().resetpassword({
             data,

@@ -1,5 +1,6 @@
 //Redux
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { refreshToken } from "./authSlice";
 //Hooks
 import useRequest from "../hooks/useRequest";
 
@@ -18,7 +19,10 @@ const initialState = {
 
 export const register = createAsyncThunk(
     'class/register',
-    async(data, {getState, rejectWithValue}) => {
+    async(data, {dispatch, getState, rejectWithValue}) => {
+        //Atualizar token
+        await dispatch(refreshToken());
+        
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().classRegister({
             data,
@@ -36,7 +40,10 @@ export const register = createAsyncThunk(
 
 export const list = createAsyncThunk(
     'class/list',
-    async(company, {getState, rejectWithValue}) => {
+    async(company, {dispatch, getState, rejectWithValue}) => {
+        //Atualizar token
+        await dispatch(refreshToken());
+
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().classList({
             company,
@@ -54,7 +61,10 @@ export const list = createAsyncThunk(
 
 export const change = createAsyncThunk(
     'class/change',
-    async({classId, data}, {getState, rejectWithValue}) => {
+    async({classId, data}, {dispatch, getState, rejectWithValue}) => {
+        //Atualizar token
+        await dispatch(refreshToken());
+
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().classChange({
             classId,
@@ -73,7 +83,10 @@ export const change = createAsyncThunk(
 
 export const remove = createAsyncThunk(
     'class/remove',
-    async(classId, {getState, rejectWithValue}) => {
+    async(classId, {dispatch, getState, rejectWithValue}) => {
+        //Atualizar token
+        await dispatch(refreshToken());
+
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().classRemove({
             classId,

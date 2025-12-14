@@ -9,7 +9,6 @@ import { useState, useEffect, useRef } from 'react';
 //Pages
 import ListLocals from './ListLocals';
 import EditLocals from './EditLocals';
-import RegisterLocal from './RegisterLocal';
 import RemoveLocals from './RemoveLocals';
 //Components
 import Header from '../../components/Header';

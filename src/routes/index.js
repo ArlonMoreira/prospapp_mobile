@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 //Redux
 import { useDispatch, useSelector } from 'react-redux';
 import { me } from '../slices/meSlice';
+import { loadStoredUserAuth } from '../slices/authSlice';
 //Pages
 import Company from '../pages/Company';
 //Navigation
@@ -18,10 +19,15 @@ const Routes = () => {
   //const { loading } = useContext(LoadingContext);
 
   //Verificar se está atenticado
-  const { auth } = userAuth();
+  const { auth, hydrated } = userAuth();
 
-  //Dados do usuário
+  //Dados do usuárior
   const dispatch = useDispatch();
+  
+  //Carregar autenticação em cache
+  useEffect(() => {
+    dispatch(loadStoredUserAuth());
+  }, []);
 
   useEffect(()=>{ //Quando for autenticado, será obtido os dados pessoais do usuário;
     if(auth){
@@ -70,7 +76,7 @@ const Routes = () => {
           }        
         </>
       ): (
-        <AuthRoutes />
+        !hydrated ? <LoadingPage backgroundColor={'#0C6661'}/>: <AuthRoutes />
       )
     }
     </>

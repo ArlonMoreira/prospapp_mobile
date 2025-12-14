@@ -1,6 +1,7 @@
 import * as Location from 'expo-location';
 //Redux
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { refreshToken } from './authSlice';
 //Hooks
 import useRequest from "../hooks/useRequest";
 
@@ -19,7 +20,8 @@ const initialState = {
 
 export const register = createAsyncThunk(
     'registerPoint/register',
-    async(data, {getState, rejectWithValue}) => {
+    async(data, {dispatch, getState, rejectWithValue}) => {
+        await dispatch(refreshToken());
         // Inicia o loading antes da captura de coordenadas
 
         let { status } = await Location.requestForegroundPermissionsAsync();
@@ -59,7 +61,9 @@ export const register = createAsyncThunk(
 
 export const list = createAsyncThunk(
     'registerPoint/list',
-    async(localId, {getState, rejectWithValue}) => {
+    async(localId, {dispatch, getState, rejectWithValue}) => {
+        await dispatch(refreshToken());
+
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointList({
             localId,
@@ -76,7 +80,9 @@ export const list = createAsyncThunk(
 
 export const removePointToday = createAsyncThunk(
     'registerPoint/removePointToday',
-    async(pointId, {getState, rejectWithValue}) => {
+    async(pointId, {dispatch, getState, rejectWithValue}) => {
+        await dispatch(refreshToken());
+
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointRemoveToday({
             pointId,
@@ -93,7 +99,8 @@ export const removePointToday = createAsyncThunk(
 
 export const justify = createAsyncThunk(
     'registerPoint/justify',
-    async(data, {getState, rejectWithValue}) => {
+    async(data, {dispatch, getState, rejectWithValue}) => {
+        await dispatch(refreshToken());
 
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointJustify({

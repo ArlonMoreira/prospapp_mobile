@@ -572,7 +572,12 @@ const Call = ({ route }) => {
         orientation: 'landscape',
       });
 
-      const nomeDesejado = `Chamada_turma_${classNameSelected.replaceAll('/', '')}_${yearSelected}_${monthSelected}.pdf`;
+      const file_name = classNameSelected
+      .normalize("NFD")                 // remove acentos
+      .replace(/[\u0300-\u036f]/g, "")  // remove marcas de acentuação
+      .replace(/[^a-zA-Z0-9]/g, "");    // mantém só letras e números
+
+      const nomeDesejado = `Chamada_turma_${file_name}_${yearSelected}_${monthSelected}.pdf`;
       const destino = `${FileSystem.documentDirectory}${nomeDesejado}`;
 
       try {

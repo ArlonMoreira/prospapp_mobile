@@ -1,5 +1,6 @@
 //Redux
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { refreshToken } from "./authSlice";
 //Hooks
 import useRequest from "../hooks/useRequest";
 
@@ -10,7 +11,9 @@ const initialState = {
 
 export const list = createAsyncThunk(
     'classUsers/List',
-    async({ company, classId }, {getState, rejectWithValue}) => {
+    async({ company, classId }, {dispatch, getState, rejectWithValue}) => {
+        await dispatch(refreshToken());
+
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().classUsersList({
             company,
@@ -29,7 +32,9 @@ export const list = createAsyncThunk(
 
 export const addUser = createAsyncThunk(
     'classUsers/AddUser',
-    async(data, {getState, rejectWithValue}) => {
+    async(data, {dispatch, getState, rejectWithValue}) => {
+        await dispatch(refreshToken());
+        
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().classUsersAddUser({
             data,

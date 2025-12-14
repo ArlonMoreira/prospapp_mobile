@@ -1,5 +1,6 @@
 //Redux
 import { createAsyncThunk, createSlice  } from "@reduxjs/toolkit";
+import { refreshToken } from "./authSlice";
 //Hooks
 import useRequest from "../hooks/useRequest";
 
@@ -10,7 +11,9 @@ const initialState = {
 
 export const listUsersManager = createAsyncThunk(
     'manager/list',
-    async(companyId,  { getState, rejectWithValue }) => {
+    async(companyId, {dispatch, getState, rejectWithValue}) => {
+        await dispatch(refreshToken());
+
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().listUsersManager({
             companyId,
@@ -28,7 +31,9 @@ export const listUsersManager = createAsyncThunk(
 
 export const updateUsersManager = createAsyncThunk(
     'manager/update',
-    async({ companyId, userId, data }, { getState, rejectWithValue }) => {
+    async({ companyId, userId, data }, {dispatch, getState, rejectWithValue}) => {
+        await dispatch(refreshToken());
+
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().updateUsersManager({
             companyId,

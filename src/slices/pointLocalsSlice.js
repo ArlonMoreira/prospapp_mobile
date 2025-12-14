@@ -1,5 +1,6 @@
 //Redux
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { refreshToken } from "./authSlice";
 //Hooks
 import useRequest from "../hooks/useRequest";
 
@@ -18,7 +19,8 @@ const initialState = {
 
 export const list = createAsyncThunk(
     'pointLocals/list',
-    async(companyId, {getState, rejectWithValue}) => {
+    async(companyId, {dispatch, getState, rejectWithValue}) => {
+        await dispatch(refreshToken());
         
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointLocalsList({
@@ -37,7 +39,9 @@ export const list = createAsyncThunk(
 
 export const register = createAsyncThunk(
     'pointLocals/register',
-    async(data, {getState, rejectWithValue}) => {
+    async(data, {dispatch, getState, rejectWithValue}) => {
+        await dispatch(refreshToken());
+
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointLocalRegister({
             data,
@@ -54,7 +58,9 @@ export const register = createAsyncThunk(
 
 export const change = createAsyncThunk(
     'pointLocals/change',
-    async({data, localId}, {getState, rejectWithValue}) => {
+    async({data, localId}, {dispatch, getState, rejectWithValue}) => {
+        await dispatch(refreshToken());
+
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointLocalEdit({
             data,
@@ -72,7 +78,9 @@ export const change = createAsyncThunk(
 
 export const remove = createAsyncThunk(
     'pointLocals/remove',
-    async(localId, {getState, rejectWithValue}) => {
+    async(localId, {dispatch, getState, rejectWithValue}) => {
+        await dispatch(refreshToken());
+        
         const userAuth = await getState().auth.userAuth;
         const response = await useRequest().pointLocalRemove({
             localId,
