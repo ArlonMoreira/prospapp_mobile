@@ -46,7 +46,7 @@ const ManagerProfile = ({ route }) => {
                     <View style={{paddingInline: 10, marginBottom: 20}}>
                     {
                         dataOrder.map((user, i) => (
-                            user.is_pending || user.is_joined && (
+                            (user.is_pending || user.is_joined) && (
                                 <CardUser key={i} onPress={() => action(user)}>
                                     <LabelsArea>
                                         <UserNameArea>
