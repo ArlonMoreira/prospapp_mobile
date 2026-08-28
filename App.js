@@ -69,6 +69,7 @@ export default function App() {
   );
 }
 
+// nvm use 20.15.0
 
 // eas build --platform android --profile preview
 
